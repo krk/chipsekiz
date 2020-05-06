@@ -22,6 +22,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op8XY6;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
+import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 
 import java.util.Optional;
@@ -82,7 +83,8 @@ public class Decoder {
                     case 0:
                         return Optional.of(new Op9XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 }
-
+            case 0xA:
+                return Optional.of(new OpANNN(value & 0xFFF));
         }
 
         return Optional.empty();
