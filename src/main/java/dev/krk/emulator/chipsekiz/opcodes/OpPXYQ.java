@@ -25,6 +25,7 @@ public abstract class OpPXYQ extends Opcode {
     }
 
     @Override public String toString() {
-        return p + Integer.toHexString(vx()) + Integer.toHexString(vy()) + q;
+        return p + Integer.toHexString(vx()).toUpperCase() + Integer.toHexString(vy()).toUpperCase()
+            + q;
     }
 }

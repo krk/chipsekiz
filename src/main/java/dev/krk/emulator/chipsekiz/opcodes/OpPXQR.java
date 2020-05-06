@@ -22,6 +22,6 @@ public abstract class OpPXQR extends Opcode {
     }
 
     @Override public String toString() {
-        return p + Integer.toHexString(vx()) + q + r;
+        return p + Integer.toHexString(vx()).toUpperCase() + q + r;
     }
 }

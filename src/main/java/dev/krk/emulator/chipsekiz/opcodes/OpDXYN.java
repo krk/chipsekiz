@@ -25,7 +25,7 @@ public class OpDXYN extends Opcode {
     }
 
     @Override public String toString() {
-        return "D" + Integer.toHexString(vx()) + Integer.toHexString(vy()) + Integer
-            .toHexString(imm());
+        return "D" + Integer.toHexString(vx()).toUpperCase() + Integer.toHexString(vy())
+            .toUpperCase() + Integer.toHexString(imm()).toUpperCase();
     }
 }

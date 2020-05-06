@@ -25,8 +25,8 @@ public abstract class OpPXNN extends Opcode {
     }
 
     @Override public String toString() {
-        return p + Integer.toHexString(vx()) + padStart(Integer.toHexString(imm()).toUpperCase(), 2,
-            '0');
+        return p + Integer.toHexString(vx()).toUpperCase() + padStart(String.format("%02X", imm()),
+            2, '0');
     }
 }
 
