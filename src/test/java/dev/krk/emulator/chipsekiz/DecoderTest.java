@@ -25,6 +25,16 @@ import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
+import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX07;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX0A;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX33;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX55;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX65;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import junit.framework.TestCase;
 
@@ -226,6 +236,86 @@ public class DecoderTest extends TestCase {
         assertOpcodeValidVx(decoder.decode((short) 0xE09E), OpEX9E.class, 0);
         assertOpcodeValidVx(decoder.decode((short) 0xE49E), OpEX9E.class, 4);
         assertOpcodeValidVx(decoder.decode((short) 0xEF9E), OpEX9E.class, 0xF);
+    }
+
+    public void testDecodeEXA1() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xE0A1), OpEXA1.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xE4A1), OpEXA1.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xEFA1), OpEXA1.class, 0xF);
+    }
+
+    public void testDecodeFX07() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF007), OpFX07.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF407), OpFX07.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF07), OpFX07.class, 0xF);
+    }
+
+    public void testDecodeFX0A() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF00A), OpFX0A.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF40A), OpFX0A.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF0A), OpFX0A.class, 0xF);
+    }
+
+    public void testDecodeFX15() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF015), OpFX15.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF415), OpFX15.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF15), OpFX15.class, 0xF);
+    }
+
+    public void testDecodeFX18() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF018), OpFX18.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF418), OpFX18.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF18), OpFX18.class, 0xF);
+    }
+
+    public void testDecodeFX1E() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF01E), OpFX1E.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF41E), OpFX1E.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF1E), OpFX1E.class, 0xF);
+    }
+
+    public void testDecodeFX29() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF029), OpFX29.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF429), OpFX29.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF29), OpFX29.class, 0xF);
+    }
+
+    public void testDecodeFX33() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF033), OpFX33.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF433), OpFX33.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF33), OpFX33.class, 0xF);
+    }
+
+    public void testDecodeFX55() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF055), OpFX55.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF455), OpFX55.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF55), OpFX55.class, 0xF);
+    }
+
+    public void testDecodeFX65() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xF065), OpFX65.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xF465), OpFX65.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xFF65), OpFX65.class, 0xF);
     }
 
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type) {

@@ -27,6 +27,16 @@ import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
+import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX07;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX0A;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX33;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX55;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX65;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 
 import java.util.Optional;
@@ -100,6 +110,29 @@ public class Decoder {
                 switch (value & 0xFF) {
                     case 0x9E:
                         return Optional.of(new OpEX9E((value & 0xF00) >> 8));
+                    case 0xA1:
+                        return Optional.of(new OpEXA1((value & 0xF00) >> 8));
+                }
+            case 0xF:
+                switch (value & 0xFF) {
+                    case 7:
+                        return Optional.of(new OpFX07((value & 0xF00) >> 8));
+                    case 0xA:
+                        return Optional.of(new OpFX0A((value & 0xF00) >> 8));
+                    case 0x15:
+                        return Optional.of(new OpFX15((value & 0xF00) >> 8));
+                    case 0x18:
+                        return Optional.of(new OpFX18((value & 0xF00) >> 8));
+                    case 0x1E:
+                        return Optional.of(new OpFX1E((value & 0xF00) >> 8));
+                    case 0x29:
+                        return Optional.of(new OpFX29((value & 0xF00) >> 8));
+                    case 0x33:
+                        return Optional.of(new OpFX33((value & 0xF00) >> 8));
+                    case 0x55:
+                        return Optional.of(new OpFX55((value & 0xF00) >> 8));
+                    case 0x65:
+                        return Optional.of(new OpFX65((value & 0xF00) >> 8));
                 }
         }
 
