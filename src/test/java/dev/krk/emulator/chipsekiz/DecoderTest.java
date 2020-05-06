@@ -6,6 +6,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import junit.framework.TestCase;
 
@@ -55,6 +56,14 @@ public class DecoderTest extends TestCase {
         assertOpcodeValid(decoder.decode((short) 0x3000), Op3XNN.class, 0, 0);
         assertOpcodeValid(decoder.decode((short) 0x34A5), Op3XNN.class, 4, 0xA5);
         assertOpcodeValid(decoder.decode((short) 0x3FFF), Op3XNN.class, 0xF, 0xFF);
+    }
+
+    public void testDecode4XNN() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x4000), Op4XNN.class, 0, 0);
+        assertOpcodeValid(decoder.decode((short) 0x44A5), Op4XNN.class, 4, 0xA5);
+        assertOpcodeValid(decoder.decode((short) 0x4FFF), Op4XNN.class, 0xF, 0xFF);
     }
 
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type) {
