@@ -13,6 +13,14 @@ import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op7XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY0;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY1;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY2;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY3;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY4;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY5;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY6;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 
 import java.util.Optional;
@@ -52,6 +60,22 @@ public class Decoder {
                 switch (b3) {
                     case 0:
                         return Optional.of(new Op8XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 1:
+                        return Optional.of(new Op8XY1((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 2:
+                        return Optional.of(new Op8XY2((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 3:
+                        return Optional.of(new Op8XY3((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 4:
+                        return Optional.of(new Op8XY4((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 5:
+                        return Optional.of(new Op8XY5((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 6:
+                        return Optional.of(new Op8XY6((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 7:
+                        return Optional.of(new Op8XY7((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                    case 0xE:
+                        return Optional.of(new Op8XYE((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 }
 
         }

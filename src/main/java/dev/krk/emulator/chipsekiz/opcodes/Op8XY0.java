@@ -5,3 +5,5 @@ public class Op8XY0 extends OpPXYQ {
         super('8', vx, vy, '0');
     }
 }
+
+
