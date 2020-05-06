@@ -24,6 +24,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
+import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import junit.framework.TestCase;
 
@@ -219,6 +220,14 @@ public class DecoderTest extends TestCase {
         assertOpcodeValid(decoder.decode((short) 0xDFFF), OpDXYN.class, 0xF, 0xF, Optional.of(0xF));
     }
 
+    public void testDecodeEX9E() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValidVx(decoder.decode((short) 0xE09E), OpEX9E.class, 0);
+        assertOpcodeValidVx(decoder.decode((short) 0xE49E), OpEX9E.class, 4);
+        assertOpcodeValidVx(decoder.decode((short) 0xEF9E), OpEX9E.class, 0xF);
+    }
+
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type) {
         assertTrue(opcode.isPresent());
         assertTrue(type.isInstance(opcode.get()));
@@ -237,6 +246,18 @@ public class DecoderTest extends TestCase {
         assertEquals(opcode.get().getAddress(), Optional.of(address));
 
         assertTrue(opcode.get().getVx().isEmpty());
+        assertTrue(opcode.get().getVy().isEmpty());
+    }
+
+    private static void assertOpcodeValidVx(Optional<Opcode> opcode, Class type, int vx) {
+        assertTrue(opcode.isPresent());
+        assertTrue(type.isInstance(opcode.get()));
+
+        assertTrue(opcode.get().getAddress().isEmpty());
+
+        assertTrue(opcode.get().getVx().isPresent());
+        assertTrue(opcode.get().getVx().get() == vx);
+
         assertTrue(opcode.get().getVy().isEmpty());
     }
 
