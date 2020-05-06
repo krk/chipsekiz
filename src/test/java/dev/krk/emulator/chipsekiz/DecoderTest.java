@@ -1,0 +1,94 @@
+package dev.krk.emulator.chipsekiz;
+
+import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
+import dev.krk.emulator.chipsekiz.opcodes.Op00EE;
+import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Opcode;
+import junit.framework.TestCase;
+
+import java.util.Optional;
+
+public class DecoderTest extends TestCase {
+
+    public void testDecode00E0() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x00E0), Op00E0.class);
+    }
+
+    public void testDecode00EE() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x00EE), Op00EE.class);
+    }
+
+    public void testDecode0NNN() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x0000), Op0NNN.class, 0);
+        assertOpcodeValid(decoder.decode((short) 0x0958), Op0NNN.class, 0x958);
+        assertOpcodeValid(decoder.decode((short) 0x0FFF), Op0NNN.class, 0xFFF);
+    }
+
+    public void testDecode1NNN() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x1000), Op1NNN.class, 0);
+        assertOpcodeValid(decoder.decode((short) 0x1424), Op1NNN.class, 0x424);
+        assertOpcodeValid(decoder.decode((short) 0x1FFF), Op1NNN.class, 0xFFF);
+    }
+
+    public void testDecode2NNN() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x2000), Op2NNN.class, 0);
+        assertOpcodeValid(decoder.decode((short) 0x2424), Op2NNN.class, 0x424);
+        assertOpcodeValid(decoder.decode((short) 0x2FFF), Op2NNN.class, 0xFFF);
+    }
+
+    public void testDecode3XNN() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeValid(decoder.decode((short) 0x3000), Op3XNN.class, 0, 0);
+        assertOpcodeValid(decoder.decode((short) 0x34A5), Op3XNN.class, 4, 0xA5);
+        assertOpcodeValid(decoder.decode((short) 0x3FFF), Op3XNN.class, 0xF, 0xFF);
+    }
+
+    private static void assertOpcodeValid(Optional<Opcode> opcode, Class type) {
+        assertTrue(opcode.isPresent());
+        assertTrue(type.isInstance(opcode.get()));
+
+        assertTrue(opcode.get().getAddress().isEmpty());
+
+        assertTrue(opcode.get().getVx().isEmpty());
+        assertTrue(opcode.get().getVy().isEmpty());
+    }
+
+    private static void assertOpcodeValid(Optional<Opcode> opcode, Class type, int address) {
+        assertTrue(opcode.isPresent());
+        assertTrue(type.isInstance(opcode.get()));
+
+        assertTrue(opcode.get().getAddress().isPresent());
+        assertEquals(opcode.get().getAddress(), Optional.of(address));
+
+        assertTrue(opcode.get().getVx().isEmpty());
+        assertTrue(opcode.get().getVy().isEmpty());
+    }
+
+    private static void assertOpcodeValid(Optional<Opcode> opcode, Class type, int vx,
+        int address) {
+        assertTrue(opcode.isPresent());
+        assertTrue(type.isInstance(opcode.get()));
+
+        assertTrue(opcode.get().getAddress().isPresent());
+        assertEquals(opcode.get().getAddress(), Optional.of(address));
+
+        assertTrue(opcode.get().getVx().isPresent());
+        assertTrue(opcode.get().getVx().get() == vx);
+
+        assertTrue(opcode.get().getVy().isEmpty());
+    }
+}

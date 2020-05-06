@@ -1,5 +1,3 @@
-package dev.krk.emulator;
-
 /**
  * Hello world!
  *
