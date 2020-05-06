@@ -16,10 +16,24 @@ public class Opcode {
 
     public Optional<Integer> getAddress() {return address;}
 
+    public Opcode(OpcodeType type) {
+        this.type = type;
+        this.address = Optional.empty();
+        this.vx = Optional.empty();
+        this.vy = Optional.empty();
+    }
+
     public Opcode(OpcodeType type, int address) {
         this.type = type;
         this.address = Optional.of(address);
         this.vx = Optional.empty();
+        this.vy = Optional.empty();
+    }
+
+    public Opcode(OpcodeType type, Register vx, int address) {
+        this.type = type;
+        this.address = Optional.of(address);
+        this.vx = Optional.of(vx);
         this.vy = Optional.empty();
     }
 }
