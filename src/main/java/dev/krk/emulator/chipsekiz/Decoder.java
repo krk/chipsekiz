@@ -92,11 +92,12 @@ public class Decoder {
                     case 0xE:
                         return Optional.of(new Op8XYE((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 }
+                break;
             case 9:
-                switch (value & 0xF) {
-                    case 0:
-                        return Optional.of(new Op9XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
+                if ((value & 0xF) == 0) {
+                    return Optional.of(new Op9XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 }
+                break;
             case 0xA:
                 return Optional.of(new OpANNN(value & 0xFFF));
             case 0xB:
@@ -113,6 +114,7 @@ public class Decoder {
                     case 0xA1:
                         return Optional.of(new OpEXA1((value & 0xF00) >> 8));
                 }
+                break;
             case 0xF:
                 switch (value & 0xFF) {
                     case 7:
@@ -134,6 +136,7 @@ public class Decoder {
                     case 0x65:
                         return Optional.of(new OpFX65((value & 0xF00) >> 8));
                 }
+                break;
         }
 
         return Optional.empty();

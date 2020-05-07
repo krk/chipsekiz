@@ -44,6 +44,22 @@ import static com.google.common.base.Strings.padStart;
 
 public class DecoderTest extends TestCase {
 
+    public void testDecodeInvalid() {
+        Decoder decoder = new Decoder();
+
+        assertOpcodeInvalid(decoder.decode((short) 0x5001));
+        assertOpcodeInvalid(decoder.decode((short) 0x8008));
+        assertOpcodeInvalid(decoder.decode((short) 0x8009));
+        assertOpcodeInvalid(decoder.decode((short) 0x800A));
+        assertOpcodeInvalid(decoder.decode((short) 0x800B));
+        assertOpcodeInvalid(decoder.decode((short) 0x800C));
+        assertOpcodeInvalid(decoder.decode((short) 0x800D));
+        assertOpcodeInvalid(decoder.decode((short) 0x800F));
+        assertOpcodeInvalid(decoder.decode((short) 0x9001));
+        assertOpcodeInvalid(decoder.decode((short) 0xE000));
+        assertOpcodeInvalid(decoder.decode((short) 0xF000));
+    }
+
     public void testDecode00E0() {
         Decoder decoder = new Decoder();
 
@@ -431,6 +447,10 @@ public class DecoderTest extends TestCase {
 
         assertEquals(s, opcode.get().toString());
         assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
+    }
+
+    private static void assertOpcodeInvalid(Optional<Opcode> opcode) {
+        assertTrue(opcode.isEmpty());
     }
 
     private static String shortToHex(short s) {
