@@ -5,6 +5,10 @@ public class Op00EE extends Opcode {
         super();
     }
 
+    @Override public short getValue() {
+        return (short) 0x00EE;
+    }
+
     @Override public String toString() {
         return "00EE";
     }

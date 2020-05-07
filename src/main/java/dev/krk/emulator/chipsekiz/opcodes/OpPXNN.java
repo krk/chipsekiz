@@ -6,14 +6,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.padStart;
 
 public abstract class OpPXNN extends Opcode {
-    private final char p;
+    private final byte p;
 
-    public OpPXNN(char p, int vx, int imm) {
+    public OpPXNN(int p, int vx, int imm) {
         super(Optional.of(vx), Optional.empty(), Optional.of(imm));
-        checkArgument(imm == (imm & 0xFF), "immediate out of bounds");
+        checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
+        checkArgument(imm == (imm & 0xFF), "immediate out of bounds");
 
-        this.p = p;
+        this.p = (byte) p;
     }
 
     public int vx() {
@@ -24,9 +25,12 @@ public abstract class OpPXNN extends Opcode {
         return super.getAddress().get().byteValue();
     }
 
+    @Override public short getValue() {
+        return (short) (p << 12 | vx() << 8 | (imm() & 0xFF));
+    }
+
     @Override public String toString() {
-        return p + Integer.toHexString(vx()).toUpperCase() + padStart(String.format("%02X", imm()),
-            2, '0');
+        return String.format("%1X%1X%02X", p, vx(), imm());
     }
 }
 

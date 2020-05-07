@@ -4,19 +4,25 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.padStart;
 
 public abstract class OpPNNN extends Opcode {
-    private final char p;
+    private final byte p;
 
-    public OpPNNN(char p, int address) {
+    public OpPNNN(int p, int address) {
         super(address);
+        checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(address == (address & 0xFFF), "address out of bounds");
-        this.p = p;
+
+        this.p = (byte) p;
     }
 
     public int address() {
         return super.getAddress().get();
     }
 
+    @Override public short getValue() {
+        return (short) (p << 12 | address());
+    }
+
     @Override public String toString() {
-        return p + padStart(Integer.toHexString(address()).toUpperCase(), 3, '0');
+        return String.format("%1X%03X", p, address());
     }
 }

@@ -8,6 +8,10 @@ public class Op00E0 extends Opcode {
         super();
     }
 
+    @Override public short getValue() {
+        return (short) 0x00E0;
+    }
+
     @Override public String toString() {
         return "00E0";
     }

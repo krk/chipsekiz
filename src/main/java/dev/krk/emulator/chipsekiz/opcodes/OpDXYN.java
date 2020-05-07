@@ -24,8 +24,11 @@ public class OpDXYN extends Opcode {
         return super.getAddress().get();
     }
 
+    @Override public short getValue() {
+        return (short) (0xD << 12 | vx() << 8 | vy() << 4 | imm());
+    }
+
     @Override public String toString() {
-        return "D" + Integer.toHexString(vx()).toUpperCase() + Integer.toHexString(vy())
-            .toUpperCase() + Integer.toHexString(imm()).toUpperCase();
+        return String.format("D%1X%1X%1X", vx(), vy(), imm());
     }
 }

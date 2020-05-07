@@ -40,6 +40,8 @@ import junit.framework.TestCase;
 
 import java.util.Optional;
 
+import static com.google.common.base.Strings.padStart;
+
 public class DecoderTest extends TestCase {
 
     public void testDecode00E0() {
@@ -364,6 +366,7 @@ public class DecoderTest extends TestCase {
         assertTrue(opcode.get().getVy().isEmpty());
 
         assertEquals(s, opcode.get().toString());
+        assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
     }
 
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type, int address,
@@ -378,6 +381,7 @@ public class DecoderTest extends TestCase {
         assertTrue(opcode.get().getVy().isEmpty());
 
         assertEquals(s, opcode.get().toString());
+        assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
     }
 
     private static void assertOpcodeValidVx(Optional<Opcode> opcode, Class type, int vx, String s) {
@@ -392,6 +396,7 @@ public class DecoderTest extends TestCase {
         assertTrue(opcode.get().getVy().isEmpty());
 
         assertEquals(s, opcode.get().toString());
+        assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
     }
 
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type, int vx, int address,
@@ -408,6 +413,7 @@ public class DecoderTest extends TestCase {
         assertTrue(opcode.get().getVy().isEmpty());
 
         assertEquals(s, opcode.get().toString());
+        assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
     }
 
     private static void assertOpcodeValid(Optional<Opcode> opcode, Class type, int vx, int vy,
@@ -424,5 +430,10 @@ public class DecoderTest extends TestCase {
         assertTrue(opcode.get().getVy().get() == vy);
 
         assertEquals(s, opcode.get().toString());
+        assertEquals(s, padStart(shortToHex(opcode.get().getValue()).toUpperCase(), 4, '0'));
+    }
+
+    private static String shortToHex(short s) {
+        return String.format("%02X%02X", (byte) ((s & 0xFF00) >> 8), (byte) (s & 0xFF));
     }
 }

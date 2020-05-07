@@ -20,6 +20,8 @@ public abstract class Opcode {
         this.vy = Optional.empty();
     }
 
+    public abstract short getValue();
+
     public Opcode(int address) {
         this(Optional.empty(), Optional.empty(), Optional.of(address));
     }
