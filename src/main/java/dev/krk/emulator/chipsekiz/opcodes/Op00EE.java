@@ -9,7 +9,7 @@ public class Op00EE extends Opcode {
         return (short) 0x00EE;
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return "00EE";
     }
 }

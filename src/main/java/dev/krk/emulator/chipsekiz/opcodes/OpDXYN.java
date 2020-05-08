@@ -28,7 +28,7 @@ public class OpDXYN extends Opcode {
         return (short) (0xD << 12 | vx() << 8 | vy() << 4 | imm());
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return String.format("D%1X%1X%1X", vx(), vy(), imm());
     }
 }

@@ -4,9 +4,9 @@ package dev.krk.emulator.chipsekiz.opcodes;
 import java.util.Optional;
 
 public abstract class Opcode {
-    private Optional<Integer> vx;
-    private Optional<Integer> vy;
-    private Optional<Integer> address;
+    private final Optional<Integer> vx;
+    private final Optional<Integer> vy;
+    private final Optional<Integer> address;
 
     public Optional<Integer> getVx() {return vx;}
 
@@ -20,8 +20,6 @@ public abstract class Opcode {
         this.vy = Optional.empty();
     }
 
-    public abstract short getValue();
-
     public Opcode(int address) {
         this(Optional.empty(), Optional.empty(), Optional.of(address));
     }
@@ -30,5 +28,13 @@ public abstract class Opcode {
         this.address = address;
         this.vx = vx;
         this.vy = vy;
+    }
+
+    public abstract short getValue();
+
+    public abstract String encode();
+
+    @Override public String toString() {
+        return encode();
     }
 }

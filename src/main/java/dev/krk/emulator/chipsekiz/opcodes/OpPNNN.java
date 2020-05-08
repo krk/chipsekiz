@@ -1,7 +1,6 @@
 package dev.krk.emulator.chipsekiz.opcodes;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.padStart;
 
 public abstract class OpPNNN extends Opcode {
     private final byte p;
@@ -22,7 +21,7 @@ public abstract class OpPNNN extends Opcode {
         return (short) (p << 12 | address());
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return String.format("%1X%03X", p, address());
     }
 }

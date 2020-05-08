@@ -29,7 +29,7 @@ public abstract class OpPXQR extends Opcode {
         return (short) (p << 12 | vx() << 8 | q << 4 | r);
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return String.format("%1X%1X%1X%1X", p, vx(), q, r);
     }
 }

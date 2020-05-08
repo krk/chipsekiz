@@ -31,7 +31,7 @@ public abstract class OpPXYQ extends Opcode {
         return (short) (p << 12 | vx() << 8 | vy() << 4 | q);
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return String.format("%1X%1X%1X%1X", p, vx(), vy(), q);
     }
 }

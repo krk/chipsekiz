@@ -3,7 +3,6 @@ package dev.krk.emulator.chipsekiz.opcodes;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.padStart;
 
 public abstract class OpPXNN extends Opcode {
     private final byte p;
@@ -29,7 +28,7 @@ public abstract class OpPXNN extends Opcode {
         return (short) (p << 12 | vx() << 8 | (imm() & 0xFF));
     }
 
-    @Override public String toString() {
+    @Override public String encode() {
         return String.format("%1X%1X%02X", p, vx(), imm());
     }
 }
