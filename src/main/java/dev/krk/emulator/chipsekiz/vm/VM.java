@@ -1,4 +1,4 @@
-package dev.krk.emulator.chipsekiz.loader;
+package dev.krk.emulator.chipsekiz.vm;
 
 import java.util.Optional;
 import java.util.Stack;
@@ -6,8 +6,8 @@ import java.util.Stack;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+
 public class VM {
-    private final int memorySize;
     private final int origin;
     private final byte[] memory;
     private final byte[] registers;
@@ -22,13 +22,15 @@ public class VM {
     private Optional<Byte> key;
 
     public VM() {
-        this(0x200, 0x1000);
+        this(0x200, new byte[0x1000]);
     }
 
-    public VM(int origin, int memorySize) {
+    public VM(int origin, byte[] memory) {
+        checkArgument(origin >= 0 && origin < memory.length, "origin must be inside the memory");
+        checkArgument(memory.length > 0, "memory cannot be of zero length");
+
         this.origin = origin;
-        this.memorySize = memorySize;
-        this.memory = new byte[memorySize];
+        this.memory = memory;
         this.registers = new byte[16];
         this.stack = new Stack();
         this.key = Optional.empty();
@@ -58,7 +60,7 @@ public class VM {
     }
 
     public int getMemorySize() {
-        return memorySize;
+        return memory.length;
     }
 
     public byte getRegister(int i) {
@@ -153,24 +155,13 @@ public class VM {
     public short getShort(int address) {
         checkArgument(address >= 0 && address + 1 < memory.length, "address out of bounds.");
 
-        return (short) (memory[address] << 8 | memory[address + 1]);
+        return (short) (getByte(address) << 8 | (0xFF & getByte(address + 1)));
     }
 
     public int getInt(int address) {
         checkArgument(address >= 0 && address + 3 < memory.length, "address out of bounds.");
 
-        return memory[address] << 24 | memory[address + 1] << 16 | memory[address + 2] << 8
-            | memory[address + 3];
-    }
-
-    public void load(byte[] program, Layout layout) {
-        checkArgument(program.length > 0, "empty program is invalid.");
-        checkArgument(layout.isValid(getOrigin(), program.length, getMemorySize()),
-            "layout is not compatible with the program.");
-
-        for (Section section : layout.getSections()) {
-            System.arraycopy(section.data(), 0, memory, section.start(), section.data().length);
-        }
-        System.arraycopy(program, 0, memory, getOrigin(), program.length);
+        return (0xFF & getByte(address)) << 24 | (0xFF & getByte(address + 1)) << 16
+            | (0xFF & getByte(address + 2)) << 8 | (0xFF & getByte(address + 3));
     }
 }

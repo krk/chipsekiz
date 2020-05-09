@@ -3,6 +3,7 @@ package dev.krk.emulator.chipsekiz.loader;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +12,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class Layout {
     private ImmutableList<Section> sections;
+
+    public static Layout empty() {
+        return new Layout(Collections.emptyList());
+    }
 
     public List<Section> getSections() {
         return sections;
