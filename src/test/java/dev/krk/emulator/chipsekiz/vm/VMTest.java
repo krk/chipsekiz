@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,8 +46,10 @@ class VMTest {
         vm.setPC(0);
         assertEquals(0, vm.getPC());
         assertThrows(IllegalArgumentException.class, () -> vm.setPC(-1));
-        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize()));
-        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 1));
+        assertDoesNotThrow(() -> vm.setPC(vm.getMemorySize()));
+        assertDoesNotThrow(() -> vm.setPC(vm.getMemorySize() + 1));
+        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 2));
+        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 3));
     }
 
     @Test void stack() {

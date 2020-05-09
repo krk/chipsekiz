@@ -1,6 +1,7 @@
 package dev.krk.emulator.chipsekiz.interpreter;
 
 import dev.krk.emulator.chipsekiz.Decoder;
+import dev.krk.emulator.chipsekiz.executor.Executor;
 import dev.krk.emulator.chipsekiz.executor.IExecutor;
 import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Loader;
@@ -88,6 +89,30 @@ class InterpreterTest {
         Op8XY4 op = (Op8XY4) opcodeCaptor.getValue();
         assertEquals(0, op.vx());
         assertEquals(2, op.vy());
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void jumper_NoHal() {
+        assertTicks(new byte[] {0x10, 0x00}, 1000);
+        assertTicks(new byte[] {0x10, 0x02, 0x10, 0x00}, 1000);
+        assertTicks(new byte[] {0x10, 0x03, 0x00, 0x10, 0x00}, 1000);
+        assertTicks(new byte[] {0x10, 0x04, 0x00, 0x00, 0x10, 0x00}, 1000);
+    }
+
+    private static void assertTicks(byte[] program, int ticks) {
+        Loader loader = new Loader();
+        Decoder decoder = new Decoder();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        Interpreter interpreter =
+            new Interpreter(loader, decoder, executor, hal, 0, program, program.length,
+                Layout.empty());
+
+        for (int i = 0; i < ticks; i++) {
+            assertDoesNotThrow(() -> interpreter.tick());
+        }
 
         Mockito.verifyNoInteractions(hal);
     }
