@@ -100,10 +100,10 @@ public class VM {
     }
 
     public void tickTimers() {
-        if (timerDelay > 0) {
+        if (timerDelay != 0) {
             timerDelay--;
         }
-        if (timerSound > 0) {
+        if (timerSound != 0) {
             timerSound--;
         }
     }
@@ -113,7 +113,7 @@ public class VM {
     }
 
     public boolean hasSound() {
-        return timerSound > 0;
+        return timerSound != 0;
     }
 
     public byte getDelayTimer() {

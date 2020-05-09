@@ -42,11 +42,16 @@ public class Interpreter {
     }
 
     public void tick() {
+        boolean hasSound = vm.hasSound();
+        vm.tickTimers();
+
         short instruction = fetch();
         OpcodeOrData od = decode(instruction);
         checkState(od.getKind() == OpcodeOrData.Kind.OPCODE, "cannot execute data.");
         execute(od.opcode());
 
-        vm.tickTimers();
+        if (hasSound != vm.hasSound()) {
+            hal.sound(vm.hasSound());
+        }
     }
 }

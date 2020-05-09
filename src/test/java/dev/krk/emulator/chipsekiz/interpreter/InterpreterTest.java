@@ -100,6 +100,38 @@ class InterpreterTest {
         assertTicks(new byte[] {0x10, 0x04, 0x00, 0x00, 0x10, 0x00}, 1000);
     }
 
+    @Test void sound_NoHal() {
+        Loader loader = new Loader();
+        Decoder decoder = new Decoder();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+            byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
+
+            Interpreter interpreter =
+                new Interpreter(loader, decoder, executor, hal, 0, program, program.length,
+                    Layout.empty());
+
+            interpreter.tick();
+            Mockito.verifyNoInteractions(hal);
+
+            byte timer = (byte) imm;
+            while (timer != 0) {
+                interpreter.tick();
+                verify(hal).sound(true);
+                timer--;
+            }
+
+            interpreter.tick();
+            if (imm != 0) {
+                verify(hal).sound(false);
+            }
+
+            Mockito.reset(hal);
+        }
+    }
+
     private static void assertTicks(byte[] program, int ticks) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();

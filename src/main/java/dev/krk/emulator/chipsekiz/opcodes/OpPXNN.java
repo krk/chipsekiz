@@ -11,7 +11,8 @@ public abstract class OpPXNN extends Opcode {
         super(Optional.of(vx), Optional.empty(), Optional.of(imm));
         checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
-        checkArgument(imm >= Byte.MIN_VALUE && imm <= Byte.MAX_VALUE, "immediate out of bounds");
+        checkArgument(((byte) imm & 0xFF) >= Byte.MIN_VALUE && (byte) imm <= Byte.MAX_VALUE,
+            "immediate out of bounds");
 
         this.p = (byte) p;
     }

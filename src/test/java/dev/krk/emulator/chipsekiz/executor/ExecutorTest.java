@@ -3,6 +3,7 @@ package dev.krk.emulator.chipsekiz.executor;
 import dev.krk.emulator.chipsekiz.interpreter.IHal;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,6 +38,24 @@ class ExecutorTest {
                 byte value = vm.getRegister(vx);
 
                 assertEquals(imm, value, String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_FX18() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                executor.execute(vm, hal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, new OpFX18(vx));
+
+                assertEquals(vm.hasSound(), imm != 0,
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
