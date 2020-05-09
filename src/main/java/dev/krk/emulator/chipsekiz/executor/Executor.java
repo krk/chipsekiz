@@ -20,6 +20,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op8XY5;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY6;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
+import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
@@ -93,6 +94,10 @@ public class Executor implements IExecutor {
             vm.setDelayTimer(vm.getRegister(o.vx()));
         } else if (opcode instanceof OpFX18 o) {
             vm.setSoundTimer(vm.getRegister(o.vx()));
+        } else if (opcode instanceof Op9XY0 o) {
+            if (vm.getRegister(o.vx()) != vm.getRegister(o.vy())) {
+                vm.setPC(vm.getPC() + 2);
+            }
         } else {
             throw new IllegalArgumentException("unsupported opcode.");
         }
