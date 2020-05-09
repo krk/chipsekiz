@@ -21,6 +21,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op8XY6;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
+import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -440,6 +441,20 @@ class ExecutorTest {
                     assertEquals(pc + 2, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
                 }
             }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_ANNN() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (short address = 0; address <= 0xFFF; address++) {
+            executor.execute(vm, hal, new OpANNN(address));
+
+            assertEquals(address, vm.getI(), String.format("address: %X", address));
         }
 
         Mockito.verifyNoInteractions(hal);
