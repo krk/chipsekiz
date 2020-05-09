@@ -1,5 +1,6 @@
 package dev.krk.emulator.chipsekiz.loader;
 
+import java.util.Optional;
 import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -18,6 +19,8 @@ public class VM {
     private byte timerDelay;
     private byte timerSound;
 
+    private Optional<Byte> key;
+
     public VM() {
         this(0x200, 0x1000);
     }
@@ -28,6 +31,7 @@ public class VM {
         this.memory = new byte[memorySize];
         this.registers = new byte[16];
         this.stack = new Stack();
+        this.key = Optional.empty();
         setPC(origin);
     }
 
@@ -124,6 +128,20 @@ public class VM {
 
     public void setSoundTimer(byte value) {
         timerSound = value;
+    }
+
+    public void keyDown(byte key) {
+        checkArgument(key >= 0 && key <= 0xF, "key out of bounds.");
+
+        this.key = Optional.of(key);
+    }
+
+    public void keyUp() {
+        this.key = Optional.empty();
+    }
+
+    public Optional<Byte> getKey() {
+        return this.key;
     }
 
     public byte getByte(int address) {
