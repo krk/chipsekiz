@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class OpPNNN extends Opcode {
     private final byte p;
 
-    public OpPNNN(int p, int address) {
+    public OpPNNN(int p, short address) {
         super(address & 0xFFF);
         checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(address >= 0 && address <= 0xFFF, "address out of bounds");
@@ -13,8 +13,8 @@ public abstract class OpPNNN extends Opcode {
         this.p = (byte) p;
     }
 
-    public int address() {
-        return super.getAddress().get();
+    public short address() {
+        return super.getAddress().get().shortValue();
     }
 
     @Override public short getValue() {

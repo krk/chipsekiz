@@ -64,7 +64,7 @@ class ExecutorTest {
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
 
-        for (int address = 0; address <= 0xFFF; address++) {
+        for (short address = 0; address <= 0xFFF; address++) {
             int ret = vm.getPC();
             executor.execute(vm, hal, new Op0NNN(address));
             int pc = vm.getPC();
@@ -81,7 +81,7 @@ class ExecutorTest {
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
 
-        for (int address = 0; address <= 0xFFF; address++) {
+        for (short address = 0; address <= 0xFFF; address++) {
             executor.execute(vm, hal, new Op1NNN(address));
             int pc = vm.getPC();
 
@@ -96,7 +96,7 @@ class ExecutorTest {
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
 
-        for (int address = 0; address <= 0xFFF; address++) {
+        for (short address = 0; address <= 0xFFF; address++) {
             int ret = vm.getPC();
             executor.execute(vm, hal, new Op2NNN(address));
             int pc = vm.getPC();

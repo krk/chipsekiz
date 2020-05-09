@@ -6,7 +6,7 @@ package dev.krk.emulator.chipsekiz.opcodes;
  * Implemented as 2NNN.
  */
 public class Op0NNN extends OpPNNN {
-    public Op0NNN(int address) {
+    public Op0NNN(short address) {
         super(0, address);
     }
 }
