@@ -7,6 +7,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
@@ -108,6 +109,27 @@ class ExecutorTest {
                 executor.execute(vm, hal, new Op3XNN(vx, imm));
 
                 assertEquals(imm == magic ? pc + 2 : pc, vm.getPC(),
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_4XNN() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        int pc = vm.getOrigin();
+        byte magic = 0x8;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            vm.setRegister(vx, magic);
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                vm.setPC(pc);
+                executor.execute(vm, hal, new Op4XNN(vx, imm));
+
+                assertEquals(imm != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
