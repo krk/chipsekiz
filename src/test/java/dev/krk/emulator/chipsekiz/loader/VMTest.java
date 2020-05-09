@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VMTest {
 
@@ -70,6 +72,17 @@ class VMTest {
         assertEquals(1, vm.getRegister(0xF));
         vm.resetCarryFlag();
         assertEquals(0, vm.getRegister(0xF));
+
+        assertEquals(0, vm.getI());
+        vm.setI((short) 0xF035);
+        assertEquals((short) 0xF035, vm.getI());
+
+        assertEquals(vm.getOrigin(), vm.getPC());
+        vm.setPC(0);
+        assertEquals(0, vm.getPC());
+        assertThrows(IllegalArgumentException.class, () -> vm.setPC(-1));
+        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize()));
+        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 1));
     }
 
     @Test void stack() {
@@ -87,5 +100,42 @@ class VMTest {
         }
 
         assertThrows(IllegalStateException.class, () -> vm.push((short) 0xF435));
+    }
+
+    @Test void timers() {
+        VM vm = new VM();
+
+        assertFalse(vm.hasDelay());
+        assertFalse(vm.hasSound());
+
+        vm.setDelayTimer((byte) 2);
+        assertTrue(vm.hasDelay());
+        vm.tickTimers();
+        assertTrue(vm.hasDelay());
+        vm.tickTimers();
+        assertFalse(vm.hasSound());
+
+        vm.setDelayTimer((byte) 1);
+        vm.setSoundTimer((byte) 2);
+        assertTrue(vm.hasDelay());
+        assertTrue(vm.hasSound());
+
+        vm.tickTimers();
+        assertFalse(vm.hasDelay());
+        assertTrue(vm.hasSound());
+
+        vm.tickTimers();
+        assertFalse(vm.hasDelay());
+        assertFalse(vm.hasSound());
+
+        vm.tickTimers();
+        assertFalse(vm.hasDelay());
+        assertFalse(vm.hasSound());
+
+        vm.setDelayTimer((byte) 100);
+        vm.setSoundTimer((byte) 0xFF);
+
+        assertEquals(100, vm.getDelayTimer());
+        assertEquals((byte) 0xFF, vm.getSoundTimer());
     }
 }

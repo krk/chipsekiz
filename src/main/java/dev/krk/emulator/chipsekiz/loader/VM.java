@@ -12,6 +12,11 @@ public class VM {
     private final byte[] registers;
     private final Stack<Short> stack;
     private static final int StackLimit = 16;
+    private short regI;
+    private int regPC;
+
+    private byte timerDelay;
+    private byte timerSound;
 
     public VM() {
         this(0x200, 0x1000);
@@ -23,6 +28,25 @@ public class VM {
         this.memory = new byte[memorySize];
         this.registers = new byte[16];
         this.stack = new Stack();
+        setPC(origin);
+    }
+
+    public int getPC() {
+        return regPC;
+    }
+
+    public void setPC(int pc) {
+        checkArgument(pc >= 0 && pc < getMemorySize(), "PC out of bounds.");
+
+        regPC = pc;
+    }
+
+    public short getI() {
+        return regI;
+    }
+
+    public void setI(short i) {
+        regI = i;
     }
 
     public int getOrigin() {
@@ -67,6 +91,39 @@ public class VM {
         checkState(stack.size() > 0, "VM stack underflow.");
 
         return stack.pop();
+    }
+
+    public void tickTimers() {
+        if (timerDelay > 0) {
+            timerDelay--;
+        }
+        if (timerSound > 0) {
+            timerSound--;
+        }
+    }
+
+    public boolean hasDelay() {
+        return timerDelay > 0;
+    }
+
+    public boolean hasSound() {
+        return timerSound > 0;
+    }
+
+    public byte getDelayTimer() {
+        return timerDelay;
+    }
+
+    public void setDelayTimer(byte value) {
+        timerDelay = value;
+    }
+
+    public byte getSoundTimer() {
+        return timerSound;
+    }
+
+    public void setSoundTimer(byte value) {
+        timerSound = value;
     }
 
     public byte getByte(int address) {
