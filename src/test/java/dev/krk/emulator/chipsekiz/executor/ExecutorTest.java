@@ -107,7 +107,7 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setPC(pc);
-                executor.execute(vm, hal, new Op3XNN(vx, imm));
+                executor.execute(vm, hal, new Op3XNN(vx, (byte) imm));
 
                 assertEquals(imm == magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
@@ -128,7 +128,7 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setPC(pc);
-                executor.execute(vm, hal, new Op4XNN(vx, imm));
+                executor.execute(vm, hal, new Op4XNN(vx, (byte) imm));
 
                 assertEquals(imm != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
@@ -173,7 +173,7 @@ class ExecutorTest {
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
                 byte value = vm.getRegister(vx);
 
                 assertEquals(imm, value, String.format("vx: %X, imm: %X", vx, (byte) imm));
@@ -190,7 +190,7 @@ class ExecutorTest {
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
                 executor.execute(vm, hal, new OpFX18(vx));
 
                 assertEquals(vm.hasSound(), imm != 0,
@@ -208,7 +208,7 @@ class ExecutorTest {
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
                 executor.execute(vm, hal, new OpFX15(vx));
 
                 assertEquals(vm.getDelayTimer(), (byte) imm,

@@ -53,16 +53,16 @@ public class Decoder implements IDecoder {
             };
             case 1 -> Optional.of(new Op1NNN(value & 0xFFF));
             case 2 -> Optional.of(new Op2NNN(value & 0xFFF));
-            case 3 -> Optional.of(new Op3XNN((value & 0xF00) >> 8, value & 0xFF));
-            case 4 -> Optional.of(new Op4XNN((value & 0xF00) >> 8, value & 0xFF));
+            case 3 -> Optional.of(new Op3XNN((value & 0xF00) >> 8, (byte) (value & 0xFF)));
+            case 4 -> Optional.of(new Op4XNN((value & 0xF00) >> 8, (byte) (value & 0xFF)));
             case 5 -> {
                 if ((value & 0xF) == 0) {
                     yield Optional.of(new Op5XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 }
                 yield Optional.empty();
             }
-            case 6 -> Optional.of(new Op6XNN((value & 0xF00) >> 8, value & 0xFF));
-            case 7 -> Optional.of(new Op7XNN((value & 0xF00) >> 8, value & 0xFF));
+            case 6 -> Optional.of(new Op6XNN((value & 0xF00) >> 8, (byte) (value & 0xFF)));
+            case 7 -> Optional.of(new Op7XNN((value & 0xF00) >> 8, (byte) (value & 0xFF)));
             case 8 -> switch (value & 0xF) {
                 case 0 -> Optional.of(new Op8XY0((value & 0xF00) >> 8, (value & 0xF0) >> 4));
                 case 1 -> Optional.of(new Op8XY1((value & 0xF00) >> 8, (value & 0xF0) >> 4));
@@ -83,7 +83,7 @@ public class Decoder implements IDecoder {
             }
             case 0xA -> Optional.of(new OpANNN(value & 0xFFF));
             case 0xB -> Optional.of(new OpBNNN(value & 0xFFF));
-            case 0xC -> Optional.of(new OpCXNN((value & 0xF00) >> 8, value & 0xFF));
+            case 0xC -> Optional.of(new OpCXNN((value & 0xF00) >> 8, (byte) (value & 0xFF)));
             case 0xD -> Optional
                 .of(new OpDXYN((value & 0xF00) >> 8, (value & 0xF0) >> 4, value & 0xF));
             case 0xE -> switch (value & 0xFF) {
