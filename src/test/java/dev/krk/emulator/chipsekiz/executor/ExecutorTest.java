@@ -8,6 +8,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
@@ -131,6 +132,34 @@ class ExecutorTest {
 
                 assertEquals(imm != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_5XY0() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        int pc = vm.getOrigin();
+        byte magic = 0x8;
+        byte notMagic = 0x6;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            vm.setRegister(vx, magic);
+            for (int vy = 0; vy <= 0xF; vy++) {
+                vm.setPC(pc);
+                vm.setRegister(vy, magic);
+                executor.execute(vm, hal, new Op5XY0(vx, vy));
+                assertEquals(pc + 2, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
+
+                if (vx != vy) {
+                    vm.setPC(pc);
+                    vm.setRegister(vy, notMagic);
+                    executor.execute(vm, hal, new Op5XY0(vx, vy));
+                    assertEquals(pc, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
+                }
             }
         }
 

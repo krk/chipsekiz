@@ -8,6 +8,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
@@ -34,6 +35,10 @@ public class Executor implements IExecutor {
             }
         } else if (opcode instanceof Op4XNN o) {
             if (vm.getRegister(o.vx()) != o.imm()) {
+                vm.setPC(vm.getPC() + 2);
+            }
+        } else if (opcode instanceof Op5XY0 o) {
+            if (vm.getRegister(o.vx()) == vm.getRegister(o.vy())) {
                 vm.setPC(vm.getPC() + 2);
             }
         } else if (opcode instanceof Op6XNN o) {
