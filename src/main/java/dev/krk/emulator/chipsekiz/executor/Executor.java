@@ -1,6 +1,7 @@
 package dev.krk.emulator.chipsekiz.executor;
 
 import dev.krk.emulator.chipsekiz.interpreter.IHal;
+import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op00EE;
 import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
@@ -13,7 +14,9 @@ import dev.krk.emulator.chipsekiz.vm.VM;
 
 public class Executor implements IExecutor {
     @Override public void execute(VM vm, IHal hal, Opcode opcode) {
-        if (opcode instanceof Op00EE) {
+        if (opcode instanceof Op00E0) {
+            hal.clearScreen();
+        } else if (opcode instanceof Op00EE) {
             vm.setPC(vm.pop());
         } else if (opcode instanceof Op0NNN o) {
             vm.push(vm.getPC());

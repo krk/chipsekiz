@@ -1,5 +1,8 @@
 package dev.krk.emulator.chipsekiz.opcodes;
 
+/**
+ * Clears the screen.
+ */
 public class Op00E0 extends Opcode {
     public Op00E0() {
         super();

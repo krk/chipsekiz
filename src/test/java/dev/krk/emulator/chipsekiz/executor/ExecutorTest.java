@@ -1,6 +1,7 @@
 package dev.krk.emulator.chipsekiz.executor;
 
 import dev.krk.emulator.chipsekiz.interpreter.IHal;
+import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op00EE;
 import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
@@ -14,8 +15,19 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class ExecutorTest {
+    @Test void execute_00E0() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        executor.execute(vm, hal, new Op00E0());
+
+        verify(hal).clearScreen();
+    }
+
     @Test void execute_00EE() {
         VM vm = new VM();
         IExecutor executor = new Executor();

@@ -1,5 +1,8 @@
 package dev.krk.emulator.chipsekiz.opcodes;
 
+/**
+ * Returns from a subroutine.
+ */
 public class Op00EE extends Opcode {
     public Op00EE() {
         super();
