@@ -12,6 +12,14 @@ import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op7XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY0;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY1;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY2;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY3;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY4;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY5;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY6;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -19,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -218,6 +227,189 @@ class ExecutorTest {
                 vm.setRegister(vy, notMagic);
                 executor.execute(vm, hal, new Op8XY0(vx, vy));
                 assertEquals(vm.getRegister(vy), notMagic, String.format("vx: %X, vy: %X", vx, vy));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY1() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY1(vx, 8));
+                assertEquals(vx == 8 ? (byte) imm : (byte) (magic | imm), vm.getRegister(vx),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY2() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY2(vx, 8));
+                assertEquals(vx == 8 ? (byte) imm : (byte) (magic & imm), vm.getRegister(vx),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY3() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY3(vx, 8));
+                assertEquals(vx == 8 ? 0 : (byte) (magic ^ imm), vm.getRegister(vx),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY4() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY4(vx, 8));
+                int expectedSum = vx == 8 ? (imm + imm) : (magic + imm);
+
+                if (vx != 0xF) {
+                    assertEquals((byte) expectedSum, vm.getRegister(vx),
+                        String.format("vx: %X, imm: %X", vx, imm));
+                }
+
+                assertTrue(vm.hasCarry() == ((expectedSum & 0x1FF) != (expectedSum & 0xFF)),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY5() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY5(vx, 8));
+                int expectedDiff = vx == 8 ? 0 : (magic - imm);
+
+                if (vx != 0xF) {
+                    assertEquals((byte) expectedDiff, vm.getRegister(vx),
+                        String.format("vx: %X, imm: %X", vx, imm));
+                }
+
+                assertTrue(vm.hasCarry() == ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY6() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY6(vx, 8));
+                int expected = ((imm & 0xFF) >> 1);
+
+                if (vx != 0xF) {
+                    assertEquals((byte) (expected), vm.getRegister(vx),
+                        String.format("vx: %X, imm: %X", vx, imm));
+                }
+
+                assertTrue(vm.hasCarry() == ((imm & 0x1) == 0x1),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY7() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = (byte) 0x7;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, magic);
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XY7(vx, 8));
+                int expectedDiff = vx == 8 ? 0 : (-magic + imm);
+
+                if (vx != 0xF) {
+                    assertEquals((byte) expectedDiff, vm.getRegister(vx),
+                        String.format("vx: %X, imm: %X", vx, imm));
+                }
+
+                assertTrue(vm.hasCarry() == ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
+                    String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XYE() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(8, (byte) imm);
+                executor.execute(vm, hal, new Op8XYE(vx, 8));
+                int expected = ((imm & 0xFF) << 1);
+
+                if (vx != 0xF) {
+                    assertEquals((byte) (expected), vm.getRegister(vx),
+                        String.format("vx: %X, imm: %X", vx, imm));
+                }
+
+                assertTrue(vm.hasCarry() == ((imm & 0x100) == 0x100),
+                    String.format("vx: %X, imm: %X", vx, imm));
             }
         }
 

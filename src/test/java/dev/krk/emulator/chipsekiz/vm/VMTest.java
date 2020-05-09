@@ -32,10 +32,10 @@ class VMTest {
         assertThrows(IllegalArgumentException.class, () -> vm.getRegister(16));
 
         assertEquals(0, vm.getRegister(0xF));
-        vm.setCarryFlag();
-        assertEquals(true, vm.getCarryFlag());
+        vm.setCarry();
+        assertEquals(true, vm.hasCarry());
         assertEquals(1, vm.getRegister(0xF));
-        vm.resetCarryFlag();
+        vm.setCarry(false);
         assertEquals(0, vm.getRegister(0xF));
 
         assertEquals(0, vm.getI());

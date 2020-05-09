@@ -75,16 +75,16 @@ public class VM {
         registers[i] = value;
     }
 
-    public boolean getCarryFlag() {
+    public boolean hasCarry() {
         return registers[0xF] == 1;
     }
 
-    public void setCarryFlag() {
-        registers[0xF] = 1;
+    public void setCarry(boolean carry) {
+        registers[0xF] = (byte) (carry ? 1 : 0);
     }
 
-    public void resetCarryFlag() {
-        registers[0xF] = 0;
+    public void setCarry() {
+        setCarry(true);
     }
 
     public void push(int value) {
