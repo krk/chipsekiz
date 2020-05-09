@@ -10,6 +10,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op3XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op7XNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -177,6 +178,26 @@ class ExecutorTest {
                 byte value = vm.getRegister(vx);
 
                 assertEquals(imm, value, String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_7XNN() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = 99;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                vm.setRegister(vx, magic);
+                executor.execute(vm, hal, new Op7XNN(vx, (byte) imm));
+                byte value = vm.getRegister(vx);
+
+                assertEquals((byte) (magic + imm), value,
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
