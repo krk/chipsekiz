@@ -11,6 +11,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op4XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op5XY0;
 import dev.krk.emulator.chipsekiz.opcodes.Op6XNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op7XNN;
+import dev.krk.emulator.chipsekiz.opcodes.Op8XY0;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -198,6 +199,25 @@ class ExecutorTest {
 
                 assertEquals((byte) (magic + imm), value,
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_8XY0() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        byte magic = 0x8;
+        byte notMagic = 0x6;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            vm.setRegister(vx, magic);
+            for (int vy = 0; vy <= 0xF; vy++) {
+                vm.setRegister(vy, notMagic);
+                executor.execute(vm, hal, new Op8XY0(vx, vy));
+                assertEquals(vm.getRegister(vy), notMagic, String.format("vx: %X, vy: %X", vx, vy));
             }
         }
 
