@@ -42,7 +42,7 @@ public class VM {
     }
 
     public void setPC(int pc) {
-        checkArgument(pc >= 0 && pc < getMemorySize(), "PC out of bounds.");
+        checkArgument(pc >= 0 && pc < getMemorySize() + 2, "PC out of bounds.");
 
         regPC = pc;
     }

@@ -2,7 +2,7 @@ package dev.krk.emulator.chipsekiz.loader;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class Loader {
+public class Loader implements ILoader {
     public static final int DefaultOrigin = 0x200;
     public static final int DefaultMemorySize = 0x1000;
 
@@ -10,7 +10,7 @@ public class Loader {
         return load(DefaultOrigin, program, DefaultMemorySize, layout);
     }
 
-    public byte[] load(int origin, byte[] program, int memorySize, Layout layout) {
+    @Override public byte[] load(int origin, byte[] program, int memorySize, Layout layout) {
         checkArgument(program.length > 0, "empty program is invalid.");
         checkArgument(layout.isValid(origin, program.length, memorySize),
             "layout is not compatible with the program.");

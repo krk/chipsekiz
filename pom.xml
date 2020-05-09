@@ -53,6 +53,11 @@
       <artifactId>auto-value-annotations</artifactId>
       <version>${auto-value.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.3.3</version>
+    </dependency>
   </dependencies>
 
   <build>
