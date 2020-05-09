@@ -48,7 +48,7 @@ class VMTest {
         assertThrows(IllegalArgumentException.class, () -> vm.setPC(-1));
         assertDoesNotThrow(() -> vm.setPC(vm.getMemorySize()));
         assertDoesNotThrow(() -> vm.setPC(vm.getMemorySize() + 1));
-        assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 2));
+        assertDoesNotThrow(() -> vm.setPC(vm.getMemorySize() + 2));
         assertThrows(IllegalArgumentException.class, () -> vm.setPC(vm.getMemorySize() + 3));
     }
 

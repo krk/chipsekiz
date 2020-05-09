@@ -22,6 +22,7 @@ import dev.krk.emulator.chipsekiz.opcodes.Op8XY7;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
 import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
+import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -455,6 +457,30 @@ class ExecutorTest {
             executor.execute(vm, hal, new OpANNN(address));
 
             assertEquals(address, vm.getI(), String.format("address: %X", address));
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_BNNN() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int imm = 0; imm <= 0xFF; imm++) {
+            vm.setRegister(0, (byte) imm);
+            for (short address = 0; address <= 0xFFF; address++) {
+                if (((address + imm) & 0xFFFF) > vm.getMemorySize() + 2) {
+                    short finalAddress = address;
+                    assertThrows(IllegalArgumentException.class,
+                        () -> executor.execute(vm, hal, new OpBNNN(finalAddress)),
+                        String.format("imm: %X, address: %X", imm, address));
+                } else {
+                    executor.execute(vm, hal, new OpBNNN(address));
+                    assertEquals(address + imm, vm.getPC(),
+                        String.format("imm: %X, address: %X", imm, address));
+                }
+            }
         }
 
         Mockito.verifyNoInteractions(hal);
