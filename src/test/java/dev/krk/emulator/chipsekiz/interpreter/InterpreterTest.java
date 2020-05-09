@@ -132,6 +132,10 @@ class InterpreterTest {
         }
     }
 
+    @Test void callret() {
+        assertTicks(new byte[] {0x20, 0x04, 0x10, 0x00, 0x00, (byte) 0xEE}, 1000);
+    }
+
     private static void assertTicks(byte[] program, int ticks) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();

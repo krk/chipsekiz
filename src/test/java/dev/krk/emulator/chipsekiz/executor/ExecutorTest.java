@@ -1,6 +1,7 @@
 package dev.krk.emulator.chipsekiz.executor;
 
 import dev.krk.emulator.chipsekiz.interpreter.IHal;
+import dev.krk.emulator.chipsekiz.opcodes.Op00EE;
 import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op1NNN;
 import dev.krk.emulator.chipsekiz.opcodes.Op2NNN;
@@ -15,6 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 class ExecutorTest {
+    @Test void execute_00EE() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int address = 0; address <= 0xFFF; address++) {
+            vm.push(address);
+            executor.execute(vm, hal, new Op00EE());
+            int pc = vm.getPC();
+
+            assertEquals(address, pc, String.format("address: %X", address));
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
     @Test void execute_0NNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
