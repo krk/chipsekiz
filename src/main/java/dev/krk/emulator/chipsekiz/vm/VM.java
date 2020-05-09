@@ -11,7 +11,7 @@ public class VM {
     private final int origin;
     private final byte[] memory;
     private final byte[] registers;
-    private final Stack<Short> stack;
+    private final Stack<Integer> stack;
     private static final int StackLimit = 16;
     private short regI;
     private int regPC;
@@ -87,13 +87,13 @@ public class VM {
         registers[0xF] = 0;
     }
 
-    public void push(short value) {
+    public void push(int value) {
         checkState(stack.size() < StackLimit, "VM stack overflow.");
 
         stack.push(value);
     }
 
-    public short pop() {
+    public int pop() {
         checkState(stack.size() > 0, "VM stack underflow.");
 
         return stack.pop();
