@@ -1,11 +1,17 @@
 package dev.krk.emulator.chipsekiz.loader;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import java.util.Stack;
 
-class VM {
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
+public class VM {
     private final int memorySize;
     private final int origin;
     private final byte[] memory;
+    private final byte[] registers;
+    private final Stack<Short> stack;
+    private static final int StackLimit = 16;
 
     public VM() {
         this(0x200, 0x1000);
@@ -15,6 +21,8 @@ class VM {
         this.origin = origin;
         this.memorySize = memorySize;
         this.memory = new byte[memorySize];
+        this.registers = new byte[16];
+        this.stack = new Stack();
     }
 
     public int getOrigin() {
@@ -23,6 +31,42 @@ class VM {
 
     public int getMemorySize() {
         return memorySize;
+    }
+
+    public byte getRegister(int i) {
+        checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
+
+        return registers[i];
+    }
+
+    public void setRegister(int i, byte value) {
+        checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
+
+        registers[i] = value;
+    }
+
+    public boolean getCarryFlag() {
+        return registers[0xF] == 1;
+    }
+
+    public void setCarryFlag() {
+        registers[0xF] = 1;
+    }
+
+    public void resetCarryFlag() {
+        registers[0xF] = 0;
+    }
+
+    public void push(short value) {
+        checkState(stack.size() < StackLimit, "VM stack overflow.");
+
+        stack.push(value);
+    }
+
+    public short pop() {
+        checkState(stack.size() > 0, "VM stack underflow.");
+
+        return stack.pop();
     }
 
     public byte getByte(int address) {
