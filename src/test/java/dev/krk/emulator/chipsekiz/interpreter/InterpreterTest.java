@@ -8,6 +8,7 @@ import dev.krk.emulator.chipsekiz.loader.Loader;
 import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY4;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
+import dev.krk.emulator.chipsekiz.sprites.CharacterSprites;
 import dev.krk.emulator.chipsekiz.tracer.ITracer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -152,8 +153,7 @@ class InterpreterTest {
 
         Interpreter interpreter =
             new Interpreter(loader, decoder, executor, fbhal, Optional.empty(), 0x200, program,
-                0x1000,
-                new Layout(Arrays.asList(new Section[] {new Section(0, CharacterSprites.get())})));
+                0x1000, CharacterSprites.DefaultLayout());
 
         assertThrows(IllegalStateException.class, () -> interpreter.tick());
     }
@@ -172,7 +172,7 @@ class InterpreterTest {
 
         Interpreter interpreter =
             new Interpreter(loader, decoder, executor, hal, tracer, 0x200, program, 0x1000,
-                Layout.empty());
+                CharacterSprites.DefaultLayout());
 
         // Run roms for 600 cycles.
         for (int i = 0; i < 600; i++) {
