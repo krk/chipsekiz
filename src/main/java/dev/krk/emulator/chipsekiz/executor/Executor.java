@@ -123,7 +123,7 @@ public class Executor implements IExecutor {
                 byte row = vm.getByte(I + n);
                 for (byte bit = 0; bit < 8; bit++) {
                     boolean flip = (row & (1 << bit)) == 1 << bit;
-                    flipped = flipped | hal.draw((byte) (vm.getRegister(o.vx()) + bit),
+                    flipped = flipped | hal.draw((byte) (vm.getRegister(o.vx()) + 7 - bit),
                         (byte) (vm.getRegister(o.vy()) + n), flip);
                 }
             }

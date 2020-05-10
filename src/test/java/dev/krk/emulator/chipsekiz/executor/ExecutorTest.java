@@ -573,7 +573,8 @@ class ExecutorTest {
                     for (byte dy = 0; dy < n; dy++) {
                         for (byte dx = 0; dx < 8; dx++) {
                             byte row = (byte) (coordY + dy);
-                            byte col = vx == vy ? (byte) (coordY + dx) : (byte) (coordX + dx);
+                            byte col =
+                                vx == vy ? (byte) (coordY + 7 - dx) : (byte) (coordX + 7 - dx);
 
                             String message =
                                 String.format("vx: %d vy: %d dy: %d dx: %d", vx, vy, dy, dx);
