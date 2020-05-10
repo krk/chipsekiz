@@ -12,4 +12,6 @@ public interface IHal {
     void sound(boolean active);
 
     Optional<Byte> getKey();
+
+    short getCharacterAddress(byte character);
 }

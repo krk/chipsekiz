@@ -32,6 +32,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpFX0A;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -44,6 +45,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyByte;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -729,5 +731,28 @@ class ExecutorTest {
         }
 
         Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_FX29() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        short[] addresses =
+            {0x5465, (short) 0x9925, 0x1234, 0x4568, (short) 0x9986, 0x5565, (short) 0x9987,
+                (short) 0x9858, 0x2926, 0x0000, (short) 0xFFFF, 0x5383, 0x0025, (short) 0x8900,
+                0x2a10, (short) 0xffed};
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (byte imm = 0; imm <= 0xF; imm++) {
+                when(hal.getCharacterAddress(anyByte())).then(invocationOnMock -> addresses[Byte
+                    .toUnsignedInt(invocationOnMock.getArgument(0))]);
+
+                executor.execute(vm, hal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, new OpFX29(vx));
+
+                assertEquals(addresses[imm], vm.getI(), String.format("vx: %X, imm: %X", vx, imm));
+            }
+        }
     }
 }
