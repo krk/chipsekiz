@@ -27,6 +27,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
 import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX07;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -628,6 +629,24 @@ class ExecutorTest {
                     String.format("vx: %X key :%X", vx, key));
             }
         }
+    }
+
+    @Test void execute_FX07() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                vm.setDelayTimer((byte) imm);
+                executor.execute(vm, hal, new OpFX07(vx));
+
+                assertEquals(imm, vm.getRegister(vx),
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
     }
 
     @Test void execute_FX18() {
