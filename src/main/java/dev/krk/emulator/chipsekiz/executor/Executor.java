@@ -94,10 +94,6 @@ public class Executor implements IExecutor {
             int y = vm.getRegister(o.vy()) & 0xFF;
             vm.setRegister(o.vx(), (byte) (y << 1));
             vm.setCarry((y & 0x100) == 0x100);
-        } else if (opcode instanceof OpFX15 o) {
-            vm.setDelayTimer(vm.getRegister(o.vx()));
-        } else if (opcode instanceof OpFX18 o) {
-            vm.setSoundTimer(vm.getRegister(o.vx()));
         } else if (opcode instanceof Op9XY0 o) {
             if (vm.getRegister(o.vx()) != vm.getRegister(o.vy())) {
                 vm.setPC(vm.getPC() + 2);
@@ -121,6 +117,10 @@ public class Executor implements IExecutor {
                 }
             }
             vm.setCarry(flipped);
+        } else if (opcode instanceof OpFX15 o) {
+            vm.setDelayTimer(vm.getRegister(o.vx()));
+        } else if (opcode instanceof OpFX18 o) {
+            vm.setSoundTimer(vm.getRegister(o.vx()));
         } else {
             throw new IllegalArgumentException("unsupported opcode.");
         }
