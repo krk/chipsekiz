@@ -12,8 +12,6 @@ import dev.krk.emulator.chipsekiz.vm.VM;
 
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkState;
-
 public class Interpreter {
     private final VM vm;
     private final IDecoder decoder;
@@ -58,8 +56,13 @@ public class Interpreter {
 
         int pc = vm.getPC();
         short instruction = fetch();
+
         OpcodeOrData od = decode(instruction);
-        checkState(od.getKind() == OpcodeOrData.Kind.OPCODE, "cannot execute data.");
+        if (od.getKind() != OpcodeOrData.Kind.OPCODE) {
+            throw new IllegalStateException(
+                String.format("cannot execute data at %04X: %s", pc, od.encode()));
+        }
+
         execute(od.opcode());
 
         if (hasSound != vm.hasSound()) {

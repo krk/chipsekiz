@@ -142,6 +142,22 @@ class InterpreterTest {
         assertTicks(new byte[] {0x20, 0x04, 0x10, 0x00, 0x00, (byte) 0xEE}, 1000);
     }
 
+    @Test public void invalidExecuteData() {
+        byte[] program = {(byte) 0x80, 0x0A};
+
+        Loader loader = new Loader();
+        Decoder decoder = new Decoder();
+        IExecutor executor = new Executor();
+        IHal fbhal = mock(IHal.class);
+
+        Interpreter interpreter =
+            new Interpreter(loader, decoder, executor, fbhal, Optional.empty(), 0x200, program,
+                0x1000,
+                new Layout(Arrays.asList(new Section[] {new Section(0, CharacterSprites.get())})));
+
+        assertThrows(IllegalStateException.class, () -> interpreter.tick());
+    }
+
     @ParameterizedTest @MethodSource("dev.krk.emulator.chipsekiz.Rom#Names")
     public void testRunRoms(String name) throws IOException {
         byte[] program = getClass().getClassLoader().getResourceAsStream(name).readAllBytes();
