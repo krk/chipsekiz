@@ -1,6 +1,8 @@
 package dev.krk.emulator.chipsekiz.opcodes;
 
 
+import com.google.common.base.Objects;
+
 import java.util.Optional;
 
 public abstract class Opcode {
@@ -36,5 +38,21 @@ public abstract class Opcode {
 
     @Override public String toString() {
         return encode();
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Opcode opcode = (Opcode) o;
+        return Objects.equal(vx, opcode.vx) && Objects.equal(vy, opcode.vy) && Objects
+            .equal(address, opcode.address);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hashCode(vx, vy, address);
     }
 }
