@@ -2,6 +2,8 @@ package dev.krk.emulator.chipsekiz.hal;
 
 import dev.krk.emulator.chipsekiz.interpreter.IHal;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 import java.util.Random;
 
@@ -61,6 +63,12 @@ public class FramebufferHal implements IHal {
     public String renderFramebuffer() {
         dirty = false;
         return fb.toString();
+    }
+
+    public void renderFramebuffer(int pixelWidth, int pixelHeight, OutputStream output)
+        throws IOException {
+        dirty = false;
+        fb.writeImage(pixelWidth, pixelHeight, output);
     }
 
     public boolean framebufferDirty() {

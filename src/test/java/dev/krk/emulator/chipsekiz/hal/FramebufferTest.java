@@ -2,10 +2,14 @@ package dev.krk.emulator.chipsekiz.hal;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FramebufferTest {
-    @Test void draw() {
+    @Test void draw() throws IOException {
         Framebuffer fb = new Framebuffer(8, 5);
 
         assertEquals(8, fb.getWidth());
@@ -57,6 +61,12 @@ class FramebufferTest {
             │  █ █   │
             └────────┘
             """, fb.toString());
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        fb.writeImage(1, 1, outputStream);
+        assertEquals(
+            "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQAAAABQ6pD4AAAAEklEQVR4XmOoZ/jPsJ/hH8N1ABMGBBNtSDdyAAAAAElFTkSuQmCC",
+            Base64.getEncoder().encodeToString(outputStream.toByteArray()));
 
         assertEquals(false, fb.getPixel((byte) 1, (byte) 1));
 
