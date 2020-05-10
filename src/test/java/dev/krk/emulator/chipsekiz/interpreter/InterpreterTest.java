@@ -3,8 +3,10 @@ package dev.krk.emulator.chipsekiz.interpreter;
 import dev.krk.emulator.chipsekiz.Decoder;
 import dev.krk.emulator.chipsekiz.executor.Executor;
 import dev.krk.emulator.chipsekiz.executor.IExecutor;
+import dev.krk.emulator.chipsekiz.hal.FramebufferHal;
 import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Loader;
+import dev.krk.emulator.chipsekiz.loader.Section;
 import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY4;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
@@ -20,6 +22,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -165,13 +168,13 @@ class InterpreterTest {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
         IExecutor executor = new Executor();
-        IHal hal = mock(IHal.class);
+        FramebufferHal fbhal = new FramebufferHal(64, 32, character -> (short) 0);
 
         final int[] instructionCount = {0};
         Optional<ITracer> tracer = Optional.of((address, opcode) -> instructionCount[0]++);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, tracer, 0x200, program, 0x1000,
+            new Interpreter(loader, decoder, executor, fbhal, tracer, 0x200, program, 0x1000,
                 CharacterSprites.DefaultLayout());
 
         // Run roms for 600 cycles.
@@ -179,13 +182,12 @@ class InterpreterTest {
             interpreter.tick();
 
             if (interpreter.getStatus() != InterpreterStatus.READY) {
-                System.out.println(String
-                    .format("%s %s in %d instructions", name, interpreter.getStatus(),
-                        instructionCount[0]));
-                return;
+                break;
             }
         }
-        System.out.println(String.format("%s status %s", name, interpreter.getStatus()));
+        System.out.println(String
+            .format("%s status %s in %d instructions\n%s", name, interpreter.getStatus(),
+                instructionCount[0], fbhal.renderFramebuffer()));
     }
 
     private static void assertTicks(byte[] program, int ticks) {
