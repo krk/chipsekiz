@@ -24,18 +24,22 @@ import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
 import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
+import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -508,6 +512,68 @@ class ExecutorTest {
                 String.format("vx: %X, imm: %X", vm.getRegister(5), imm));
 
             Mockito.reset(hal);
+        }
+    }
+
+    @Test void execute_DXYN() {
+        final byte[] bitmap =
+            {(byte) 0xA5, 0x20, (byte) 0xFE, 0x41, (byte) 0x96, 0x57, 0x10, 0x00, (byte) 0xFF, 0x56,
+                (byte) 0x90, 0x04, 0x06, 0x25, 0x5A};
+
+        final byte[] memory = new byte[0x300];
+        System.arraycopy(bitmap, 0, memory, 0x242, bitmap.length);
+
+        VM vm = new VM(0x200, memory);
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        vm.setI((short) 0x242);
+
+        byte coordX = 0x10;
+        byte coordY = 0x15;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int vy = 0; vy <= 0xF; vy++) {
+                for (byte n = 0; n <= 0xF; n++) {
+                    vm.setRegister(vx, coordX);
+                    vm.setRegister(vy, coordY);
+
+                    Mockito.reset(hal);
+
+                    executor.execute(vm, hal, new OpDXYN(vx, vy, n));
+
+                    if (n == 0) {
+                        Mockito.verifyNoInteractions(hal);
+                        continue;
+                    }
+
+                    ArgumentCaptor<Byte> drawXCaptor = ArgumentCaptor.forClass(Byte.class);
+                    ArgumentCaptor<Byte> drawYCaptor = ArgumentCaptor.forClass(Byte.class);
+                    ArgumentCaptor<Boolean> drawNCaptor = ArgumentCaptor.forClass(Boolean.class);
+
+                    verify(hal, times(n * 8))
+                        .draw(drawXCaptor.capture(), drawYCaptor.capture(), drawNCaptor.capture());
+
+                    List<Byte> xs = drawXCaptor.getAllValues();
+                    List<Byte> ys = drawYCaptor.getAllValues();
+                    List<Boolean> ns = drawNCaptor.getAllValues();
+
+                    int i = 0;
+                    for (byte dy = 0; dy < n; dy++) {
+                        for (byte dx = 0; dx < 8; dx++) {
+                            byte row = (byte) (coordY + dy);
+                            byte col = vx == vy ? (byte) (coordY + dx) : (byte) (coordX + dx);
+
+                            String message =
+                                String.format("vx: %d vy: %d dy: %d dx: %d", vx, vy, dy, dx);
+
+                            assertEquals(col, xs.get(i), message);
+                            assertEquals(row, ys.get(i), message);
+                            assertEquals((bitmap[dy] & (1 << dx)) == 1 << dx, ns.get(i), message);
+                            i++;
+                        }
+                    }
+                }
+            }
         }
     }
 

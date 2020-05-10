@@ -5,7 +5,7 @@ public interface IHal {
 
     void clearScreen();
 
-    void draw(byte x, byte y, boolean value);
+    boolean draw(byte x, byte y, boolean value);
 
     void sound(boolean active);
 }
