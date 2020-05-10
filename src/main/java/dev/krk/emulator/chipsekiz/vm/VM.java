@@ -128,6 +128,12 @@ public class VM {
         timerSound = value;
     }
 
+    public void setByte(int address, byte value) {
+        checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
+
+        memory[address] = value;
+    }
+
     public byte getByte(int address) {
         checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
 

@@ -33,6 +33,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX33;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.google.common.base.Strings.padStart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -754,5 +756,28 @@ class ExecutorTest {
                 assertEquals(addresses[imm], vm.getI(), String.format("vx: %X, imm: %X", vx, imm));
             }
         }
+    }
+
+    @Test void execute_FX33() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                short I = vm.getI();
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, new OpFX33(vx));
+
+                String num = padStart(Integer.toString(Byte.toUnsignedInt((byte) imm)), 3, '0');
+
+                String message = String.format("vx: %X, imm: %X", vx, (byte) imm);
+                assertEquals(num.charAt(0) - '0', vm.getByte(I), message);
+                assertEquals(num.charAt(1) - '0', vm.getByte(I + 1), message);
+                assertEquals(num.charAt(2) - '0', vm.getByte(I + 2), message);
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
     }
 }
