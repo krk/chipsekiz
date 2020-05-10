@@ -48,8 +48,8 @@ public class Executor implements IExecutor {
         } else if (opcode instanceof Op00EE) {
             vm.setPC(vm.pop());
         } else if (opcode instanceof Op0NNN o) {
-            vm.push(vm.getPC());
-            vm.setPC(o.address());
+            // NOP.
+            return;
         } else if (opcode instanceof Op1NNN o) {
             vm.setPC(o.address());
         } else if (opcode instanceof Op2NNN o) {

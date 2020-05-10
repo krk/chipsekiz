@@ -92,8 +92,7 @@ class ExecutorTest {
             executor.execute(vm, hal, new Op0NNN(address));
             int pc = vm.getPC();
 
-            assertEquals(address, pc, String.format("address: %X", address));
-            assertEquals(ret, vm.pop(), String.format("address: %X", address));
+            assertEquals(ret, pc, String.format("address: %X", address));
         }
 
         Mockito.verifyNoInteractions(hal);
