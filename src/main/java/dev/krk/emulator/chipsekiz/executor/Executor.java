@@ -28,6 +28,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
 import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX07;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX0A;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
@@ -134,6 +135,14 @@ public class Executor implements IExecutor {
             }
         } else if (opcode instanceof OpFX07 o) {
             vm.setRegister(o.vx(), vm.getDelayTimer());
+        } else if (opcode instanceof OpFX0A o) {
+            Optional<Byte> key = hal.getKey();
+            if (key.isEmpty()) {
+                // Block until a key is pressed.
+                vm.setPC(vm.getPC() - 2);
+                return;
+            }
+            vm.setRegister(o.vx(), key.get());
         } else if (opcode instanceof OpFX15 o) {
             vm.setDelayTimer(vm.getRegister(o.vx()));
         } else if (opcode instanceof OpFX18 o) {

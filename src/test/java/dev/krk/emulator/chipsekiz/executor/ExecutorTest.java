@@ -28,6 +28,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
 import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX07;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX0A;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -647,6 +648,31 @@ class ExecutorTest {
         }
 
         Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_FX0A() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+        int pc = vm.getOrigin();
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            vm.setPC(pc);
+            when(hal.getKey()).thenReturn(Optional.empty());
+
+            executor.execute(vm, hal, new OpFX0A(vx));
+
+            assertEquals(pc - 2, vm.getPC(), String.format("vx: %X", vx));
+
+            for (byte key = 0; key <= 0xF; key++) {
+                vm.setPC(pc);
+                when(hal.getKey()).thenReturn(Optional.of(key));
+
+                executor.execute(vm, hal, new OpFX0A(vx));
+                assertEquals(pc, vm.getPC(), String.format("vx: %X, key: %X", vx, key));
+                assertEquals(key, vm.getRegister(vx), String.format("vx: %X, key: %X", vx, key));
+            }
+        }
     }
 
     @Test void execute_FX18() {
