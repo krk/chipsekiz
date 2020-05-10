@@ -675,24 +675,6 @@ class ExecutorTest {
         }
     }
 
-    @Test void execute_FX18() {
-        VM vm = new VM();
-        IExecutor executor = new Executor();
-        IHal hal = mock(IHal.class);
-
-        for (int vx = 0; vx <= 0xF; vx++) {
-            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX18(vx));
-
-                assertEquals(vm.hasSound(), imm != 0,
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
-            }
-        }
-
-        Mockito.verifyNoInteractions(hal);
-    }
-
     @Test void execute_FX15() {
         VM vm = new VM();
         IExecutor executor = new Executor();
@@ -704,6 +686,24 @@ class ExecutorTest {
                 executor.execute(vm, hal, new OpFX15(vx));
 
                 assertEquals(vm.getDelayTimer(), (byte) imm,
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+            }
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_FX18() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, new OpFX18(vx));
+
+                assertEquals(vm.hasSound(), imm != 0,
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
