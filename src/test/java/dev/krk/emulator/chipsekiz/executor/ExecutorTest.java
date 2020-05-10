@@ -35,6 +35,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX33;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX55;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX65;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -800,6 +801,38 @@ class ExecutorTest {
                 }
             }
             vm.setRegister(vx, (byte) (0xC0 | (vx * 2 + 1)));
+        }
+
+        Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_FX65() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+        vm.setI((short) 0x526);
+
+        for (int vx = 0; vx <= 0xF; vx++) {
+            for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, new OpFX55(vx));
+                for (byte x = 0; x <= vx; x++) {
+                    vm.setRegister(x, (byte) 0x00);
+                }
+
+                executor.execute(vm, hal, new OpFX65(vx));
+                for (byte x = 0; x <= vx; x++) {
+                    assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
+                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                }
+
+                executor.execute(vm, hal, new OpFX65(vx));
+                for (byte x = 0; x <= vx; x++) {
+                    assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
+                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                }
+            }
+            vm.setRegister(vx, (byte) (0xB0 | (vx * 2 + 1)));
         }
 
         Mockito.verifyNoInteractions(hal);

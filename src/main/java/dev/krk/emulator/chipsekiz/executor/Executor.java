@@ -35,6 +35,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpFX1E;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX29;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX33;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX55;
+import dev.krk.emulator.chipsekiz.opcodes.OpFX65;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import dev.krk.emulator.chipsekiz.vm.VM;
 
@@ -165,6 +166,11 @@ public class Executor implements IExecutor {
             int I = vm.getI();
             for (int x = 0; x <= o.vx(); x++) {
                 vm.setByte(I + x, vm.getRegister(x));
+            }
+        } else if (opcode instanceof OpFX65 o) {
+            int I = vm.getI();
+            for (int x = 0; x <= o.vx(); x++) {
+                vm.setRegister(x, vm.getByte(I + x));
             }
         } else {
             throw new IllegalArgumentException("unsupported opcode.");
