@@ -1,8 +1,6 @@
 package dev.krk.emulator.chipsekiz.interpreter;
 
 import dev.krk.emulator.chipsekiz.Decoder;
-import dev.krk.emulator.chipsekiz.executor.Executor;
-import dev.krk.emulator.chipsekiz.executor.IExecutor;
 import dev.krk.emulator.chipsekiz.hal.FramebufferHal;
 import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Loader;

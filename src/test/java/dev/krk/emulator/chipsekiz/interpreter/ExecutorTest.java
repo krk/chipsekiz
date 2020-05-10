@@ -1,6 +1,5 @@
-package dev.krk.emulator.chipsekiz.executor;
+package dev.krk.emulator.chipsekiz.interpreter;
 
-import dev.krk.emulator.chipsekiz.interpreter.IHal;
 import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op00EE;
 import dev.krk.emulator.chipsekiz.opcodes.Op0NNN;
