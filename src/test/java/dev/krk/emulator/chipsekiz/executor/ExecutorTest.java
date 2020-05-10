@@ -23,17 +23,21 @@ import dev.krk.emulator.chipsekiz.opcodes.Op8XYE;
 import dev.krk.emulator.chipsekiz.opcodes.Op9XY0;
 import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
+import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class ExecutorTest {
     @Test void execute_00E0() {
@@ -484,6 +488,27 @@ class ExecutorTest {
         }
 
         Mockito.verifyNoInteractions(hal);
+    }
+
+    @Test void execute_CXNN() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+        Random rand = new Random();
+
+        for (int imm = 0; imm <= 0xFF; imm++) {
+            vm.setRegister(5, (byte) imm);
+
+            when(hal.getRand()).thenReturn((byte) rand.nextInt(256));
+
+            executor.execute(vm, hal, new OpCXNN(5, (byte) imm));
+
+            verify(hal).getRand();
+            assertTrue(vm.getRegister(5) <= imm,
+                String.format("vx: %X, imm: %X", vm.getRegister(5), imm));
+
+            Mockito.reset(hal);
+        }
     }
 
     @Test void execute_FX18() {
