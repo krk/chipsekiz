@@ -26,6 +26,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
+import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
@@ -123,6 +124,11 @@ public class Executor implements IExecutor {
         } else if (opcode instanceof OpEX9E o) {
             Optional<Byte> key = hal.getKey();
             if (key.isPresent() && key.get() == vm.getRegister(o.vx())) {
+                vm.setPC(vm.getPC() + 2);
+            }
+        } else if (opcode instanceof OpEXA1 o) {
+            Optional<Byte> key = hal.getKey();
+            if (key.isEmpty() || key.get() != vm.getRegister(o.vx())) {
                 vm.setPC(vm.getPC() + 2);
             }
         } else if (opcode instanceof OpFX15 o) {

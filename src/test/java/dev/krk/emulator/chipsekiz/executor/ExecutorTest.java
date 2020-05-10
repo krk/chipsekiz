@@ -26,6 +26,7 @@ import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
 import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
+import dev.krk.emulator.chipsekiz.opcodes.OpEXA1;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.vm.VM;
@@ -599,6 +600,31 @@ class ExecutorTest {
 
                 executor.execute(vm, hal, new OpEX9E(vx));
                 assertEquals(key == magic ? pc + 2 : pc, vm.getPC(),
+                    String.format("vx: %X key :%X", vx, key));
+            }
+        }
+    }
+
+    @Test void execute_EXA1() {
+        VM vm = new VM();
+        IExecutor executor = new Executor();
+        IHal hal = mock(IHal.class);
+
+        int pc = vm.getOrigin();
+        byte magic = 0xA;
+        for (int vx = 0; vx <= 0xF; vx++) {
+            vm.setRegister(vx, magic);
+            vm.setPC(pc);
+
+            executor.execute(vm, hal, new OpEXA1(vx));
+            assertEquals(pc + 2, vm.getPC(), String.format("vx: %X", vx));
+
+            for (byte key = 0; key <= 0xF; key++) {
+                vm.setPC(pc);
+                when(hal.getKey()).thenReturn(Optional.of(key));
+
+                executor.execute(vm, hal, new OpEXA1(vx));
+                assertEquals(key != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X key :%X", vx, key));
             }
         }
