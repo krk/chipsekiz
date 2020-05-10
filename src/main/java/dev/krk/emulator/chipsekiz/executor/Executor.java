@@ -25,10 +25,13 @@ import dev.krk.emulator.chipsekiz.opcodes.OpANNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpBNNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpCXNN;
 import dev.krk.emulator.chipsekiz.opcodes.OpDXYN;
+import dev.krk.emulator.chipsekiz.opcodes.OpEX9E;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX15;
 import dev.krk.emulator.chipsekiz.opcodes.OpFX18;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import dev.krk.emulator.chipsekiz.vm.VM;
+
+import java.util.Optional;
 
 public class Executor implements IExecutor {
     @Override public void execute(VM vm, IHal hal, Opcode opcode) {
@@ -117,6 +120,11 @@ public class Executor implements IExecutor {
                 }
             }
             vm.setCarry(flipped);
+        } else if (opcode instanceof OpEX9E o) {
+            Optional<Byte> key = hal.getKey();
+            if (key.isPresent() && key.get() == vm.getRegister(o.vx())) {
+                vm.setPC(vm.getPC() + 2);
+            }
         } else if (opcode instanceof OpFX15 o) {
             vm.setDelayTimer(vm.getRegister(o.vx()));
         } else if (opcode instanceof OpFX18 o) {

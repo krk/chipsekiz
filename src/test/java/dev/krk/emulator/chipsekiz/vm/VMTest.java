@@ -4,8 +4,6 @@ import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Loader;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -104,22 +102,6 @@ class VMTest {
 
         assertEquals(100, vm.getDelayTimer());
         assertEquals((byte) 0xFF, vm.getSoundTimer());
-    }
-
-    @Test void Key() {
-        VM vm = new VM();
-
-        assertTrue(vm.getKey().isEmpty());
-        vm.keyUp();
-        assertTrue(vm.getKey().isEmpty());
-        vm.keyDown((byte) 0);
-        assertEquals(Optional.of((byte) 0), vm.getKey());
-        vm.keyDown((byte) 5);
-        assertEquals(Optional.of((byte) 5), vm.getKey());
-        vm.keyUp();
-        assertTrue(vm.getKey().isEmpty());
-
-        assertThrows(IllegalArgumentException.class, () -> vm.keyDown((byte) 16));
     }
 
     @Test void readMemory() {
