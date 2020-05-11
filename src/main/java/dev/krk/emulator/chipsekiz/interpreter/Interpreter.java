@@ -9,21 +9,21 @@ import dev.krk.emulator.chipsekiz.opcodes.OpcodeOrData;
 import dev.krk.emulator.chipsekiz.tracer.ITracer;
 import dev.krk.emulator.chipsekiz.vm.VM;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
 
 public class Interpreter {
     private final VM vm;
     private final IDecoder decoder;
     private final IExecutor executor;
     private final IHal hal;
-    private final Optional<ITracer> tracer;
+    private final ITracer tracer;
 
     private int lastExecutedAddress;
     private Opcode lastExecutedOpcode;
     private InterpreterStatus status;
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        Optional<ITracer> tracer, int origin, byte[] program, int memorySize, Layout layout) {
+        @Nullable ITracer tracer, int origin, byte[] program, int memorySize, Layout layout) {
         this.hal = hal;
 
         byte[] memory = loader.load(origin, program, memorySize, layout);
@@ -68,8 +68,8 @@ public class Interpreter {
             hal.sound(vm.hasSound());
         }
 
-        if (tracer.isPresent()) {
-            tracer.get().trace(pc, od.opcode());
+        if (tracer != null) {
+            tracer.trace(pc, od.opcode());
         }
 
         if (lastExecutedAddress == pc && lastExecutedOpcode != null && lastExecutedOpcode

@@ -2,15 +2,13 @@ package dev.krk.emulator.chipsekiz.opcodes;
 
 import com.google.common.primitives.UnsignedBytes;
 
-import java.util.Optional;
-
 import static com.google.common.base.Preconditions.checkArgument;
 
 public abstract class OpPXNN extends Opcode {
     private final byte p;
 
     public OpPXNN(int p, int vx, byte imm) {
-        super(Optional.of(vx), Optional.empty(), Optional.of(UnsignedBytes.toInt(imm)));
+        super(vx, null, UnsignedBytes.toInt(imm));
         checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
         checkArgument(imm >= Byte.MIN_VALUE && imm <= Byte.MAX_VALUE, "immediate out of bounds");

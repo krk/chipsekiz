@@ -9,9 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LoaderTest {
     @Test void loadDefaultVM() {
-        Layout layout = new Layout(Arrays.asList(
-            new Section[] {new Section(0, new byte[] {(byte) 0xE0}),
-                new Section(0x300, new byte[] {(byte) 1, 2, 3, 4})}));
+        Layout layout = new Layout(Arrays.asList(new Section(0, new byte[] {(byte) 0xE0}),
+            new Section(0x300, new byte[] {(byte) 1, 2, 3, 4})));
         byte[] memory = new Loader().load(new byte[] {(byte) 0xC0}, layout);
         VM vm = new VM(Loader.DefaultOrigin, memory);
 
@@ -27,9 +26,8 @@ class LoaderTest {
     }
 
     @Test void load() {
-        Layout layout = new Layout(Arrays.asList(
-            new Section[] {new Section(0, new byte[] {(byte) 0xE0}),
-                new Section(0x300, new byte[] {(byte) 1, 2, 3, 4})}));
+        Layout layout = new Layout(Arrays.asList(new Section(0, new byte[] {(byte) 0xE0}),
+            new Section(0x300, new byte[] {(byte) 1, 2, 3, 4})));
 
         Loader loader = new Loader();
         byte[] memory = loader.load(0x100, new byte[304], 0x1000, layout);

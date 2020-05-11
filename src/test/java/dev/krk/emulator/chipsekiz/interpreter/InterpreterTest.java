@@ -4,12 +4,10 @@ import dev.krk.emulator.chipsekiz.Decoder;
 import dev.krk.emulator.chipsekiz.hal.FramebufferHal;
 import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Loader;
-import dev.krk.emulator.chipsekiz.loader.Section;
 import dev.krk.emulator.chipsekiz.opcodes.Op00E0;
 import dev.krk.emulator.chipsekiz.opcodes.Op8XY4;
 import dev.krk.emulator.chipsekiz.opcodes.Opcode;
 import dev.krk.emulator.chipsekiz.sprites.CharacterSprites;
-import dev.krk.emulator.chipsekiz.tracer.ITracer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -43,16 +40,16 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0, new byte[1],
-                1, Layout.empty()).tick());
+            () -> new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 1,
+                Layout.empty()).tick());
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, Optional.empty(), 1, new byte[1],
-                2, Layout.empty()).tick());
+            () -> new Interpreter(loader, decoder, executor, hal, null, 1, new byte[1], 2,
+                Layout.empty()).tick());
 
         assertDoesNotThrow(
-            () -> new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0, new byte[1],
-                2, Layout.empty()).tick());
+            () -> new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 2,
+                Layout.empty()).tick());
         Mockito.verifyNoInteractions(hal);
     }
 
@@ -63,11 +60,11 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0, new byte[1], 2,
+            new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 2,
                 Layout.empty());
         interpreter.tick();
 
-        assertThrows(IllegalArgumentException.class, () -> interpreter.tick());
+        assertThrows(IllegalArgumentException.class, interpreter::tick);
         Mockito.verifyNoInteractions(hal);
     }
 
@@ -79,9 +76,8 @@ class InterpreterTest {
         IExecutor executor = mock(IExecutor.class);
         IHal hal = mock(IHal.class);
 
-        Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0,
-                new byte[] {(byte) 0x00, (byte) 0xE0, (byte) 0x80, 0x24}, 4, Layout.empty());
+        Interpreter interpreter = new Interpreter(loader, decoder, executor, hal, null, 0,
+            new byte[] {(byte) 0x00, (byte) 0xE0, (byte) 0x80, 0x24}, 4, Layout.empty());
 
         interpreter.tick();
         verify(executor).execute(any(), any(), opcodeCaptor.capture());
@@ -118,8 +114,8 @@ class InterpreterTest {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
             Interpreter interpreter =
-                new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0, program,
-                    program.length, Layout.empty());
+                new Interpreter(loader, decoder, executor, hal, null, 0, program, program.length,
+                    Layout.empty());
 
             interpreter.tick();
             Mockito.verifyNoInteractions(hal);
@@ -153,10 +149,10 @@ class InterpreterTest {
         IHal fbhal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, fbhal, Optional.empty(), 0x200, program,
-                0x1000, CharacterSprites.DefaultLayout());
+            new Interpreter(loader, decoder, executor, fbhal, null, 0x200, program, 0x1000,
+                CharacterSprites.DefaultLayout());
 
-        assertThrows(IllegalStateException.class, () -> interpreter.tick());
+        assertThrows(IllegalStateException.class, interpreter::tick);
     }
 
     @ParameterizedTest @MethodSource("dev.krk.emulator.chipsekiz.Rom#Names")
@@ -169,11 +165,9 @@ class InterpreterTest {
         FramebufferHal fbhal = new FramebufferHal(64, 32, character -> (short) 0);
 
         final int[] instructionCount = {0};
-        Optional<ITracer> tracer = Optional.of((address, opcode) -> instructionCount[0]++);
-
-        Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, fbhal, tracer, 0x200, program, 0x1000,
-                CharacterSprites.DefaultLayout());
+        Interpreter interpreter = new Interpreter(loader, decoder, executor, fbhal,
+            (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,
+            CharacterSprites.DefaultLayout());
 
         // Run roms for 600 cycles.
         for (int i = 0; i < 600; i++) {
@@ -195,11 +189,11 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, Optional.empty(), 0, program,
-                program.length, Layout.empty());
+            new Interpreter(loader, decoder, executor, hal, null, 0, program, program.length,
+                Layout.empty());
 
         for (int i = 0; i < ticks; i++) {
-            assertDoesNotThrow(() -> interpreter.tick());
+            assertDoesNotThrow(interpreter::tick);
         }
 
         Mockito.verifyNoInteractions(hal);

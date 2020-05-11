@@ -3,30 +3,32 @@ package dev.krk.emulator.chipsekiz.opcodes;
 
 import com.google.common.base.Objects;
 
+import javax.annotation.Nullable;
+
 import java.util.Optional;
 
 public abstract class Opcode {
-    private final Optional<Integer> vx;
-    private final Optional<Integer> vy;
-    private final Optional<Integer> address;
+    private final Integer vx;
+    private final Integer vy;
+    private final Integer address;
 
-    public Optional<Integer> getVx() {return vx;}
+    public Optional<Integer> getVx() {return Optional.ofNullable(vx);}
 
-    public Optional<Integer> getVy() {return vy;}
+    public Optional<Integer> getVy() {return Optional.ofNullable(vy);}
 
-    public Optional<Integer> getAddress() {return address;}
+    public Optional<Integer> getAddress() {return Optional.ofNullable(address);}
 
     public Opcode() {
-        this.address = Optional.empty();
-        this.vx = Optional.empty();
-        this.vy = Optional.empty();
+        this.address = null;
+        this.vx = null;
+        this.vy = null;
     }
 
     public Opcode(int address) {
-        this(Optional.empty(), Optional.empty(), Optional.of(address));
+        this(null, null, address);
     }
 
-    public Opcode(Optional<Integer> vx, Optional<Integer> vy, Optional<Integer> address) {
+    public Opcode(@Nullable Integer vx, @Nullable Integer vy, @Nullable Integer address) {
         this.address = address;
         this.vx = vx;
         this.vy = vy;

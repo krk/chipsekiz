@@ -331,7 +331,7 @@ class ExecutorTest {
                         String.format("vx: %X, imm: %X", vx, imm));
                 }
 
-                assertTrue(vm.hasCarry() == ((expectedSum & 0x1FF) != (expectedSum & 0xFF)),
+                assertEquals(vm.hasCarry(), ((expectedSum & 0x1FF) != (expectedSum & 0xFF)),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
@@ -357,7 +357,7 @@ class ExecutorTest {
                         String.format("vx: %X, imm: %X", vx, imm));
                 }
 
-                assertTrue(vm.hasCarry() == ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
+                assertEquals(vm.hasCarry(), ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
@@ -381,7 +381,7 @@ class ExecutorTest {
                         String.format("vx: %X, imm: %X", vx, imm));
                 }
 
-                assertTrue(vm.hasCarry() == ((imm & 0x1) == 0x1),
+                assertEquals(vm.hasCarry(), ((imm & 0x1) == 0x1),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
@@ -407,7 +407,7 @@ class ExecutorTest {
                         String.format("vx: %X, imm: %X", vx, imm));
                 }
 
-                assertTrue(vm.hasCarry() == ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
+                assertEquals(vm.hasCarry(), ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
@@ -431,7 +431,7 @@ class ExecutorTest {
                         String.format("vx: %X, imm: %X", vx, imm));
                 }
 
-                assertTrue(vm.hasCarry() == ((imm & 0x100) == 0x100),
+                assertEquals(vm.hasCarry(), ((imm & 0x100) == 0x100),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }

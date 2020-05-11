@@ -4,12 +4,12 @@ import dev.krk.emulator.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.emulator.chipsekiz.loader.Layout;
 import dev.krk.emulator.chipsekiz.loader.Section;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class CharacterSprites {
-    private static ICharacterAddressLocator locator = character -> {
+    private static final ICharacterAddressLocator locator = character -> {
         checkArgument(character >= 0 && character <= 0xF, "character out of bounds.");
         return (short) (character * 5);
     };
@@ -45,6 +45,6 @@ public class CharacterSprites {
     }
 
     public static Layout DefaultLayout() {
-        return new Layout(Arrays.asList(new Section[] {new Section(0, get())}));
+        return new Layout(Collections.singletonList(new Section(0, get())));
     }
 }

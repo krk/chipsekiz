@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Layout {
-    private ImmutableList<Section> sections;
+    private final ImmutableList<Section> sections;
 
     public static Layout empty() {
         return new Layout(Collections.emptyList());
@@ -25,7 +25,7 @@ public class Layout {
         this.sections = ImmutableList.copyOf(sections);
     }
 
-    private class SectionSize {
+    private static class SectionSize {
         private final int origin;
         private final int size;
 

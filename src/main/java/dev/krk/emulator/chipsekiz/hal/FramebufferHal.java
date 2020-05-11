@@ -13,14 +13,14 @@ public class FramebufferHal implements IHal {
     private final Framebuffer fb;
     private final ICharacterAddressLocator characterAddressLocator;
     private boolean sound;
-    private Optional<Byte> key;
+    private Byte key;
     private boolean dirty;
 
     public FramebufferHal(int width, int height, ICharacterAddressLocator characterAddressLocator) {
         this.random = new Random();
         this.characterAddressLocator = characterAddressLocator;
         this.fb = new Framebuffer(width, height);
-        this.key = Optional.empty();
+        this.key = null;
     }
 
     @Override public byte getRand() {
@@ -41,7 +41,7 @@ public class FramebufferHal implements IHal {
     }
 
     @Override public Optional<Byte> getKey() {
-        return key;
+        return Optional.ofNullable(key);
     }
 
     @Override public short getCharacterAddress(byte character) {
@@ -53,11 +53,11 @@ public class FramebufferHal implements IHal {
     }
 
     public void keyDown(byte key) {
-        this.key = Optional.of(key);
+        this.key = key;
     }
 
     public void keyUp() {
-        this.key = Optional.empty();
+        this.key = null;
     }
 
     public String renderFramebuffer() {

@@ -43,6 +43,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Strings.padStart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DecoderTest {
@@ -416,7 +417,7 @@ public class DecoderTest {
         assertTrue(opcode.getAddress().isEmpty());
 
         assertTrue(opcode.getVx().isPresent());
-        assertTrue(opcode.getVx().get() == vx);
+        assertEquals((int) opcode.getVx().get(), vx);
 
         assertTrue(opcode.getVy().isEmpty());
 
@@ -436,7 +437,7 @@ public class DecoderTest {
         assertEquals(opcode.getAddress(), Optional.of(address));
 
         assertTrue(opcode.getVx().isPresent());
-        assertTrue(opcode.getVx().get() == vx);
+        assertEquals((int) opcode.getVx().get(), vx);
 
         assertTrue(opcode.getVy().isEmpty());
 
@@ -455,10 +456,10 @@ public class DecoderTest {
         assertEquals(opcode.getAddress(), address);
 
         assertTrue(opcode.getVx().isPresent());
-        assertTrue(opcode.getVx().get() == vx);
+        assertEquals((int) opcode.getVx().get(), vx);
 
         assertTrue(opcode.getVy().isPresent());
-        assertTrue(opcode.getVy().get() == vy);
+        assertEquals((int) opcode.getVy().get(), vy);
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
@@ -467,7 +468,7 @@ public class DecoderTest {
     }
 
     private static void assertIsData(OpcodeOrData od, String s) {
-        assertTrue(od.getKind() == OpcodeOrData.Kind.DATA);
+        assertSame(od.getKind(), OpcodeOrData.Kind.DATA);
 
         assertEquals(s, od.data().encode());
         assertEquals(s, od.encode());
@@ -476,7 +477,7 @@ public class DecoderTest {
     }
 
     private static void assertIsOpcode(OpcodeOrData od) {
-        assertTrue(od.getKind() == OpcodeOrData.Kind.OPCODE);
+        assertSame(od.getKind(), OpcodeOrData.Kind.OPCODE);
     }
 
     private static String shortToHex(short s) {

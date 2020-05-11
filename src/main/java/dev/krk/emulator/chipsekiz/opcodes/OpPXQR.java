@@ -1,7 +1,5 @@
 package dev.krk.emulator.chipsekiz.opcodes;
 
-import java.util.Optional;
-
 import static com.google.common.base.Preconditions.checkArgument;
 
 public abstract class OpPXQR extends Opcode {
@@ -10,7 +8,7 @@ public abstract class OpPXQR extends Opcode {
     private final byte r;
 
     public OpPXQR(int p, int vx, int q, int r) {
-        super(Optional.of(vx), Optional.empty(), Optional.empty());
+        super(vx, null, null);
         checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
         checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
         checkArgument(q >= 0 && q <= 0xF, "q out of bounds");

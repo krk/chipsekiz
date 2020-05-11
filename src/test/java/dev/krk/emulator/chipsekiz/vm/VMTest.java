@@ -31,7 +31,7 @@ class VMTest {
 
         assertEquals(0, vm.getRegister(0xF));
         vm.setCarry();
-        assertEquals(true, vm.hasCarry());
+        assertTrue(vm.hasCarry());
         assertEquals(1, vm.getRegister(0xF));
         vm.setCarry(false);
         assertEquals(0, vm.getRegister(0xF));
@@ -53,12 +53,12 @@ class VMTest {
     @Test void stack() {
         VM vm = new VM();
 
-        assertThrows(IllegalStateException.class, () -> vm.pop());
+        assertThrows(IllegalStateException.class, vm::pop);
 
         vm.push((short) 0x4142);
         assertEquals(0x4142, vm.pop());
 
-        assertThrows(IllegalStateException.class, () -> vm.pop());
+        assertThrows(IllegalStateException.class, vm::pop);
 
         for (short i = 0; i < 16; i++) {
             vm.push(i);

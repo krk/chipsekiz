@@ -44,6 +44,6 @@ public class ParserTest {
 
     private void assertProgram(List<OpcodeOrData> program, String expected) {
         assertEquals(expected,
-            Joiner.on("").join(program.stream().map(od -> od.encode()).iterator()));
+            Joiner.on("").join(program.stream().map(OpcodeOrData::encode).iterator()));
     }
 }

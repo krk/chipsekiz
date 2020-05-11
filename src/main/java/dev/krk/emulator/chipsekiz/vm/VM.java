@@ -23,13 +23,13 @@ public class VM {
     }
 
     public VM(int origin, byte[] memory) {
-        checkArgument(origin >= 0 && origin < memory.length, "origin must be inside the memory");
         checkArgument(memory.length > 0, "memory cannot be of zero length");
+        checkArgument(origin >= 0 && origin < memory.length, "origin must be inside the memory");
 
         this.origin = origin;
         this.memory = memory;
         this.registers = new byte[16];
-        this.stack = new Stack();
+        this.stack = new Stack<>();
         setPC(origin);
     }
 
