@@ -17,6 +17,7 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     private int scaleY;
     private final Color emptyColor;
     private final Color occupiedColor;
+    private boolean repaint;
 
 
     EmulatorCanvas(int emulatorWidth, int emulatorHeight, int scaleX, int scaleY, Color emptyColor,
@@ -40,10 +41,18 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
         setSize(emulatorWidth * scaleX, emulatorHeight * scaleY);
     }
 
+    public void requestRepaint() {
+        repaint = true;
+        repaint();
+    }
+
     @Override protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        framebuffer.paint(g, scaleX, scaleY, emptyColor, occupiedColor);
+        if (repaint) {
+            framebuffer.paint(g, scaleX, scaleY, emptyColor, occupiedColor);
+            repaint = false;
+        }
     }
 
     public void clearScreen() {
@@ -52,8 +61,6 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     }
 
     public boolean draw(byte x, byte y, boolean value) {
-        boolean flipped = framebuffer.draw(x, y, value);
-        repaint();
-        return flipped;
+        return framebuffer.draw(x, y, value);
     }
 }
