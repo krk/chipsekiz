@@ -4,11 +4,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>dev.krk.emulator.chipsekiz</groupId>
-  <artifactId>chipsekiz</artifactId>
+  <groupId>dev.krk.chipsekiz</groupId>
+  <artifactId>chipsekiz-root</artifactId>
+  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>chipsekiz</module>
+    <module>emulator-awt</module>
+  </modules>
 
-  <name>chipsekiz</name>
+  <name>chipsekiz-root</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 

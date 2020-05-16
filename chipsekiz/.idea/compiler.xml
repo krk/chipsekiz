@@ -30,14 +30,12 @@
           <entry name="$MAVEN_REPOSITORY$/org/mockito/mockito-core/3.1.0/mockito-core-3.1.0.jar" />
           <entry name="$MAVEN_REPOSITORY$/com/google/auto/service/auto-service-annotations/1.0-rc6/auto-service-annotations-1.0-rc6.jar" />
         </processorPath>
-        <module name="emulator-awt" />
         <module name="chipsekiz" />
+        <module name="emulator-awt" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="chipsekiz" target="14" />
-      <module name="chipsekiz-root" target="14" />
-      <module name="emulator-awt" target="14" />
+      <module name="chipsekiz-emulator" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
