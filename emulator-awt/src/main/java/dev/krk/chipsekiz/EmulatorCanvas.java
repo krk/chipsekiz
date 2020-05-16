@@ -53,9 +53,7 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
 
     public boolean draw(byte x, byte y, boolean value) {
         boolean flipped = framebuffer.draw(x, y, value);
-        if (flipped) {
-            repaint();
-        }
+        repaint();
         return flipped;
     }
 }

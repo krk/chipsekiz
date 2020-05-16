@@ -7,13 +7,14 @@ import java.util.Optional;
 import java.util.Random;
 
 public class Hal implements IHal {
-
     private final Random random;
     private final IScreenHal screen;
+    private Tone tone;
 
-    Hal(IScreenHal screen) {
+    Hal(IScreenHal screen, Tone tone) {
         random = new Random();
         this.screen = screen;
+        this.tone = tone;
     }
 
     @Override public byte getRand() {
@@ -29,7 +30,15 @@ public class Hal implements IHal {
     }
 
     @Override public void sound(boolean active) {
+        if (tone == null) {
+            return;
+        }
 
+        if (active) {
+            tone.start();
+        } else {
+            tone.stop();
+        }
     }
 
     @Override public Optional<Byte> getKey() {
