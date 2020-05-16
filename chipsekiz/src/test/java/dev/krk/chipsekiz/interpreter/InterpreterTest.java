@@ -40,17 +40,16 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 1,
+            () -> new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 1,
                 Layout.empty()).tick());
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, null, 1, new byte[1], 2,
+            () -> new Interpreter(loader, decoder, executor, hal, null, null, 1, new byte[1], 2,
                 Layout.empty()).tick());
 
         assertDoesNotThrow(
-            () -> new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 2,
+            () -> new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 2,
                 Layout.empty()).tick());
-        Mockito.verifyNoInteractions(hal);
     }
 
     @Test void endOfMemory_NoExecutor_NoHal() {
@@ -60,8 +59,10 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, null, 0, new byte[1], 2,
+            new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 2,
                 Layout.empty());
+        Mockito.reset(hal);
+
         interpreter.tick();
 
         assertThrows(IllegalArgumentException.class, interpreter::tick);
@@ -76,16 +77,17 @@ class InterpreterTest {
         IExecutor executor = mock(IExecutor.class);
         IHal hal = mock(IHal.class);
 
-        Interpreter interpreter = new Interpreter(loader, decoder, executor, hal, null, 0,
+        Interpreter interpreter = new Interpreter(loader, decoder, executor, hal, null, null, 0,
             new byte[] {(byte) 0x00, (byte) 0xE0, (byte) 0x80, 0x24}, 4, Layout.empty());
+        Mockito.reset(hal);
 
         interpreter.tick();
-        verify(executor).execute(any(), any(), opcodeCaptor.capture());
+        verify(executor).execute(any(), any(), any(), opcodeCaptor.capture());
         assertTrue(opcodeCaptor.getValue() instanceof Op00E0);
 
         Mockito.reset(executor);
         interpreter.tick();
-        verify(executor).execute(any(), any(), opcodeCaptor.capture());
+        verify(executor).execute(any(), any(), any(), opcodeCaptor.capture());
         assertTrue(opcodeCaptor.getValue() instanceof Op8XY4);
         assertEquals(Optional.of(0), opcodeCaptor.getValue().getVx());
         assertEquals(Optional.of(2), opcodeCaptor.getValue().getVy());
@@ -114,8 +116,9 @@ class InterpreterTest {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
             Interpreter interpreter =
-                new Interpreter(loader, decoder, executor, hal, null, 0, program, program.length,
-                    Layout.empty());
+                new Interpreter(loader, decoder, executor, hal, null, null, 0, program,
+                    program.length, Layout.empty());
+            Mockito.reset(hal);
 
             interpreter.tick();
             Mockito.verifyNoInteractions(hal);
@@ -149,7 +152,7 @@ class InterpreterTest {
         IHal fbhal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, fbhal, null, 0x200, program, 0x1000,
+            new Interpreter(loader, decoder, executor, fbhal, null, null, 0x200, program, 0x1000,
                 CharacterSprites.DefaultLayout());
 
         assertThrows(IllegalStateException.class, interpreter::tick);
@@ -162,12 +165,13 @@ class InterpreterTest {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
         IExecutor executor = new Executor();
-        FramebufferHal fbhal = new FramebufferHal(64, 32, character -> (short) 0);
+        FramebufferHal fbhal = new FramebufferHal(64, 32);
 
         final int[] instructionCount = {0};
-        Interpreter interpreter = new Interpreter(loader, decoder, executor, fbhal,
-            (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,
-            CharacterSprites.DefaultLayout());
+        Interpreter interpreter =
+            new Interpreter(loader, decoder, executor, fbhal, CharacterSprites.getAddressLocator(),
+                (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,
+                CharacterSprites.DefaultLayout());
 
         // Run roms for 600 cycles.
         for (int i = 0; i < 600; i++) {
@@ -189,8 +193,9 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, null, 0, program, program.length,
+            new Interpreter(loader, decoder, executor, hal, null, null, 0, program, program.length,
                 Layout.empty());
+        Mockito.reset(hal);
 
         for (int i = 0; i < ticks; i++) {
             assertDoesNotThrow(interpreter::tick);

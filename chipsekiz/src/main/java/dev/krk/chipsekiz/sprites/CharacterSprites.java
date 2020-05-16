@@ -9,12 +9,8 @@ import java.util.Collections;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class CharacterSprites {
-    private static final ICharacterAddressLocator locator = character -> {
-        checkArgument(character >= 0 && character <= 0xF, "character out of bounds.");
-        return (short) (character * 5);
-    };
-
-
+    private static final ICharacterAddressLocator locator =
+        character -> (short) ((character & 0xF) * 5);
 
     // http://www.cs.columbia.edu/~sedwards/classes/2016/4840-spring/designs/Chip8.pdf
     private static final byte[] buffer =

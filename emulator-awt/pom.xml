@@ -14,4 +14,12 @@
     <name>emulator-awt</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
+    <dependencies>
+        <dependency>
+            <groupId>dev.krk.emulator.chipsekiz</groupId>
+            <artifactId>chipsekiz</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

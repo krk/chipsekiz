@@ -6,6 +6,7 @@ import dev.krk.chipsekiz.interpreter.IExecutor;
 import dev.krk.chipsekiz.interpreter.Interpreter;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.loader.Loader;
+import dev.krk.chipsekiz.sprites.CharacterSprites;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -19,14 +20,14 @@ class FramebufferHalTest {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
         IExecutor executor = new Executor();
-        FramebufferHal hal = new FramebufferHal(1, 1, character -> (short) 0);
+        FramebufferHal hal = new FramebufferHal(1, 1);
 
         for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
-            Interpreter interpreter =
-                new Interpreter(loader, decoder, executor, hal, null, 0, program, program.length,
-                    Layout.empty());
+            Interpreter interpreter = new Interpreter(loader, decoder, executor, hal,
+                CharacterSprites.getAddressLocator(), null, 0, program, program.length,
+                Layout.empty());
 
             interpreter.tick();
             assertFalse(hal.isSoundActive());
@@ -49,7 +50,7 @@ class FramebufferHalTest {
     }
 
     @Test void framebufferDirty() {
-        FramebufferHal hal = new FramebufferHal(1, 1, character -> (short) 0);
+        FramebufferHal hal = new FramebufferHal(1, 1);
         assertFalse(hal.framebufferDirty());
 
         hal.draw((byte) 0, (byte) 0, false);
@@ -72,7 +73,7 @@ class FramebufferHalTest {
     }
 
     @Test void key() {
-        FramebufferHal hal = new FramebufferHal(1, 1, character -> (short) 0);
+        FramebufferHal hal = new FramebufferHal(1, 1);
         assertTrue(hal.getKey().isEmpty());
 
         hal.keyDown((byte) 6);

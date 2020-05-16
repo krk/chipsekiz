@@ -1,5 +1,6 @@
 package dev.krk.chipsekiz.interpreter;
 
+import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.opcodes.OpcodeOrData;
@@ -12,25 +13,39 @@ import dev.krk.chipsekiz.vm.VM;
 import javax.annotation.Nullable;
 
 public class Interpreter {
-    private final VM vm;
+    private VM vm;
     private final IDecoder decoder;
     private final IExecutor executor;
+    private final ILoader loader;
     private final IHal hal;
+    private final ICharacterAddressLocator characterAddressLocator;
     private final ITracer tracer;
+    private final int memorySize;
+    private final Layout layout;
 
     private int lastExecutedAddress;
     private Opcode lastExecutedOpcode;
     private InterpreterStatus status;
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        @Nullable ITracer tracer, int origin, byte[] program, int memorySize, Layout layout) {
-        this.hal = hal;
+        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
+        byte[] program, int memorySize, Layout layout) {
+        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout);
 
-        byte[] memory = loader.load(origin, program, memorySize, layout);
-        this.vm = new VM(origin, memory);
+        load(origin, program);
+    }
+
+    public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
+        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int memorySize,
+        Layout layout) {
+        this.loader = loader;
         this.decoder = decoder;
         this.executor = executor;
+        this.hal = hal;
+        this.characterAddressLocator = characterAddressLocator;
         this.tracer = tracer;
+        this.memorySize = memorySize;
+        this.layout = layout;
         this.status = InterpreterStatus.READY;
     }
 
@@ -46,7 +61,18 @@ public class Interpreter {
     }
 
     private void execute(Opcode opcode) {
-        executor.execute(vm, hal, opcode);
+        executor.execute(vm, hal, characterAddressLocator, opcode);
+    }
+
+    public void load(int origin, byte[] program) {
+        hal.clearScreen();
+        hal.sound(false);
+        status = InterpreterStatus.READY;
+        lastExecutedAddress = 0;
+        lastExecutedOpcode = null;
+
+        byte[] memory = loader.load(origin, program, memorySize, layout);
+        this.vm = new VM(origin, memory);
     }
 
     public void tick() {

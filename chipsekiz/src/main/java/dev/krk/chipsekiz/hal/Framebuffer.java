@@ -3,7 +3,7 @@ package dev.krk.chipsekiz.hal;
 import javax.imageio.ImageIO;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -56,30 +56,25 @@ public class Framebuffer {
         return buffer[y][x];
     }
 
+    public void paint(Graphics g, int pixelWidth, int pixelHeight, Color empty, Color occupied) {
+        checkArgument(pixelWidth > 0, "pixel width cannot be zero or negative.");
+        checkArgument(pixelHeight > 0, "pixel height cannot be zero or negative.");
+
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                g.setColor(getPixel((byte) x, (byte) y) ? occupied : empty);
+                g.fillRect(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight);
+            }
+        }
+    }
+
     public void writeImage(int pixelWidth, int pixelHeight, OutputStream output)
         throws IOException {
         checkArgument(pixelWidth > 0, "pixel width cannot be zero or negative.");
         checkArgument(pixelHeight > 0, "pixel height cannot be zero or negative.");
 
-        int width = pixelWidth * getWidth();
-        int height = pixelHeight * getHeight();
-
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
-        Graphics2D g = image.createGraphics();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                byte color = (byte) (getPixel((byte) (x / pixelWidth), (byte) (y / pixelHeight)) ?
-                    0x00 :
-                    0xFF);
-                if (color == 0x00) {
-                    g.setColor(Color.BLACK);
-                } else {
-                    g.setColor(Color.WHITE);
-                }
-                g.drawLine(x, y, x, y);
-            }
-        }
-
+        paint(image.getGraphics(), pixelWidth, pixelHeight, Color.WHITE, Color.BLACK);
         ImageIO.write(image, "png", output);
     }
 

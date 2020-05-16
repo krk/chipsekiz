@@ -1,5 +1,6 @@
 package dev.krk.chipsekiz.interpreter;
 
+import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.chipsekiz.opcodes.Op7XNN;
 import dev.krk.chipsekiz.opcodes.Op8XY1;
 import dev.krk.chipsekiz.opcodes.Op8XY2;
@@ -53,6 +54,7 @@ import static org.mockito.ArgumentMatchers.anyByte;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class ExecutorTest {
@@ -60,80 +62,91 @@ class ExecutorTest {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
-        executor.execute(vm, hal, new Op00E0());
+        executor.execute(vm, hal, cal, new Op00E0());
 
         verify(hal).clearScreen();
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_00EE() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int address = 0; address <= 0xFFF; address++) {
             vm.push(address);
-            executor.execute(vm, hal, new Op00EE());
+            executor.execute(vm, hal, cal, new Op00EE());
             int pc = vm.getPC();
 
             assertEquals(address, pc, String.format("address: %X", address));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_0NNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (short address = 0; address <= 0xFFF; address++) {
             int ret = vm.getPC();
-            executor.execute(vm, hal, new Op0NNN(address));
+            executor.execute(vm, hal, cal, new Op0NNN(address));
             int pc = vm.getPC();
 
             assertEquals(ret, pc, String.format("address: %X", address));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_1NNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (short address = 0; address <= 0xFFF; address++) {
-            executor.execute(vm, hal, new Op1NNN(address));
+            executor.execute(vm, hal, cal, new Op1NNN(address));
             int pc = vm.getPC();
 
             assertEquals(address, pc);
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_2NNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (short address = 0; address <= 0xFFF; address++) {
             int ret = vm.getPC();
-            executor.execute(vm, hal, new Op2NNN(address));
+            executor.execute(vm, hal, cal, new Op2NNN(address));
             int pc = vm.getPC();
 
             assertEquals(address, pc, String.format("address: %X", address));
             assertEquals(ret, vm.pop(), String.format("address: %X", address));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_3XNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0xA;
@@ -141,20 +154,22 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setPC(pc);
-                executor.execute(vm, hal, new Op3XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new Op3XNN(vx, (byte) imm));
 
                 assertEquals(imm == magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_4XNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0x8;
@@ -162,20 +177,22 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setPC(pc);
-                executor.execute(vm, hal, new Op4XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new Op4XNN(vx, (byte) imm));
 
                 assertEquals(imm != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_5XY0() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0x8;
@@ -185,48 +202,52 @@ class ExecutorTest {
             for (int vy = 0; vy <= 0xF; vy++) {
                 vm.setPC(pc);
                 vm.setRegister(vy, magic);
-                executor.execute(vm, hal, new Op5XY0(vx, vy));
+                executor.execute(vm, hal, cal, new Op5XY0(vx, vy));
                 assertEquals(pc + 2, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
 
                 if (vx != vy) {
                     vm.setPC(pc);
                     vm.setRegister(vy, notMagic);
-                    executor.execute(vm, hal, new Op5XY0(vx, vy));
+                    executor.execute(vm, hal, cal, new Op5XY0(vx, vy));
                     assertEquals(pc, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
                 }
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_6XNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
                 byte value = vm.getRegister(vx);
 
                 assertEquals(imm, value, String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_7XNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = 99;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setRegister(vx, magic);
-                executor.execute(vm, hal, new Op7XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new Op7XNN(vx, (byte) imm));
                 byte value = vm.getRegister(vx);
 
                 assertEquals((byte) (magic + imm), value,
@@ -234,13 +255,15 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY0() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = 0x8;
         byte notMagic = 0x6;
@@ -248,82 +271,90 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             for (int vy = 0; vy <= 0xF; vy++) {
                 vm.setRegister(vy, notMagic);
-                executor.execute(vm, hal, new Op8XY0(vx, vy));
+                executor.execute(vm, hal, cal, new Op8XY0(vx, vy));
                 assertEquals(vm.getRegister(vy), notMagic, String.format("vx: %X, vy: %X", vx, vy));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY1() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY1(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY1(vx, 8));
                 assertEquals(vx == 8 ? (byte) imm : (byte) (magic | imm), vm.getRegister(vx),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY2() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY2(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY2(vx, 8));
                 assertEquals(vx == 8 ? (byte) imm : (byte) (magic & imm), vm.getRegister(vx),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY3() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY3(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY3(vx, 8));
                 assertEquals(vx == 8 ? 0 : (byte) (magic ^ imm), vm.getRegister(vx),
                     String.format("vx: %X, imm: %X", vx, imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY4() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY4(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY4(vx, 8));
                 int expectedSum = vx == 8 ? (imm + imm) : (magic + imm);
 
                 if (vx != 0xF) {
@@ -336,20 +367,22 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY5() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY5(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY5(vx, 8));
                 int expectedDiff = vx == 8 ? 0 : (magic - imm);
 
                 if (vx != 0xF) {
@@ -362,18 +395,20 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY6() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY6(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY6(vx, 8));
                 int expected = ((imm & 0xFF) >> 1);
 
                 if (vx != 0xF) {
@@ -386,20 +421,22 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XY7() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         byte magic = (byte) 0x7;
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(vx, magic);
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XY7(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XY7(vx, 8));
                 int expectedDiff = vx == 8 ? 0 : (-magic + imm);
 
                 if (vx != 0xF) {
@@ -412,18 +449,20 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_8XYE() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
                 vm.setRegister(8, (byte) imm);
-                executor.execute(vm, hal, new Op8XYE(vx, 8));
+                executor.execute(vm, hal, cal, new Op8XYE(vx, 8));
                 int expected = ((imm & 0xFF) << 1);
 
                 if (vx != 0xF) {
@@ -436,13 +475,15 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_9XY0() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0x8;
@@ -452,39 +493,43 @@ class ExecutorTest {
             for (int vy = 0; vy <= 0xF; vy++) {
                 vm.setPC(pc);
                 vm.setRegister(vy, magic);
-                executor.execute(vm, hal, new Op9XY0(vx, vy));
+                executor.execute(vm, hal, cal, new Op9XY0(vx, vy));
                 assertEquals(pc, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
 
                 if (vx != vy) {
                     vm.setPC(pc);
                     vm.setRegister(vy, notMagic);
-                    executor.execute(vm, hal, new Op9XY0(vx, vy));
+                    executor.execute(vm, hal, cal, new Op9XY0(vx, vy));
                     assertEquals(pc + 2, vm.getPC(), String.format("vx: %X, vy: %X", vx, vy));
                 }
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_ANNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (short address = 0; address <= 0xFFF; address++) {
-            executor.execute(vm, hal, new OpANNN(address));
+            executor.execute(vm, hal, cal, new OpANNN(address));
 
             assertEquals(address, vm.getI(), String.format("address: %X", address));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_BNNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int imm = 0; imm <= 0xFF; imm++) {
             vm.setRegister(0, (byte) imm);
@@ -492,23 +537,25 @@ class ExecutorTest {
                 if (((address + imm) & 0xFFFF) > vm.getMemorySize() + 2) {
                     short finalAddress = address;
                     assertThrows(IllegalArgumentException.class,
-                        () -> executor.execute(vm, hal, new OpBNNN(finalAddress)),
+                        () -> executor.execute(vm, hal, cal, new OpBNNN(finalAddress)),
                         String.format("imm: %X, address: %X", imm, address));
                 } else {
-                    executor.execute(vm, hal, new OpBNNN(address));
+                    executor.execute(vm, hal, cal, new OpBNNN(address));
                     assertEquals(address + imm, vm.getPC(),
                         String.format("imm: %X, address: %X", imm, address));
                 }
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_CXNN() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
         Random rand = new Random();
 
         for (int imm = 0; imm <= 0xFF; imm++) {
@@ -516,7 +563,7 @@ class ExecutorTest {
 
             when(hal.getRand()).thenReturn((byte) rand.nextInt(256));
 
-            executor.execute(vm, hal, new OpCXNN(5, (byte) imm));
+            executor.execute(vm, hal, cal, new OpCXNN(5, (byte) imm));
 
             verify(hal).getRand();
             assertTrue(vm.getRegister(5) <= imm,
@@ -524,6 +571,8 @@ class ExecutorTest {
 
             Mockito.reset(hal);
         }
+
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_DXYN() {
@@ -537,6 +586,7 @@ class ExecutorTest {
         VM vm = new VM(0x200, memory);
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         vm.setI((short) 0x242);
 
@@ -550,10 +600,10 @@ class ExecutorTest {
 
                     Mockito.reset(hal);
 
-                    executor.execute(vm, hal, new OpDXYN(vx, vy, n));
+                    executor.execute(vm, hal, cal, new OpDXYN(vx, vy, n));
 
                     if (n == 0) {
-                        Mockito.verifyNoInteractions(hal);
+                        verifyNoInteractions(hal);
                         continue;
                     }
 
@@ -587,12 +637,15 @@ class ExecutorTest {
                 }
             }
         }
+
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_EX9E() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0xA;
@@ -600,24 +653,27 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             vm.setPC(pc);
 
-            executor.execute(vm, hal, new OpEX9E(vx));
+            executor.execute(vm, hal, cal, new OpEX9E(vx));
             assertEquals(pc, vm.getPC(), String.format("vx: %X", vx));
 
             for (byte key = 0; key <= 0xF; key++) {
                 vm.setPC(pc);
                 when(hal.getKey()).thenReturn(Optional.of(key));
 
-                executor.execute(vm, hal, new OpEX9E(vx));
+                executor.execute(vm, hal, cal, new OpEX9E(vx));
                 assertEquals(key == magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X key :%X", vx, key));
             }
         }
+
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_EXA1() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         int pc = vm.getOrigin();
         byte magic = 0xA;
@@ -625,49 +681,54 @@ class ExecutorTest {
             vm.setRegister(vx, magic);
             vm.setPC(pc);
 
-            executor.execute(vm, hal, new OpEXA1(vx));
+            executor.execute(vm, hal, cal, new OpEXA1(vx));
             assertEquals(pc + 2, vm.getPC(), String.format("vx: %X", vx));
 
             for (byte key = 0; key <= 0xF; key++) {
                 vm.setPC(pc);
                 when(hal.getKey()).thenReturn(Optional.of(key));
 
-                executor.execute(vm, hal, new OpEXA1(vx));
+                executor.execute(vm, hal, cal, new OpEXA1(vx));
                 assertEquals(key != magic ? pc + 2 : pc, vm.getPC(),
                     String.format("vx: %X key :%X", vx, key));
             }
         }
+
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX07() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 vm.setDelayTimer((byte) imm);
-                executor.execute(vm, hal, new OpFX07(vx));
+                executor.execute(vm, hal, cal, new OpFX07(vx));
 
                 assertEquals(imm, vm.getRegister(vx),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX0A() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
         int pc = vm.getOrigin();
 
         for (int vx = 0; vx <= 0xF; vx++) {
             vm.setPC(pc);
             when(hal.getKey()).thenReturn(Optional.empty());
 
-            executor.execute(vm, hal, new OpFX0A(vx));
+            executor.execute(vm, hal, cal, new OpFX0A(vx));
 
             assertEquals(pc - 2, vm.getPC(), String.format("vx: %X", vx));
 
@@ -675,98 +736,110 @@ class ExecutorTest {
                 vm.setPC(pc);
                 when(hal.getKey()).thenReturn(Optional.of(key));
 
-                executor.execute(vm, hal, new OpFX0A(vx));
+                executor.execute(vm, hal, cal, new OpFX0A(vx));
                 assertEquals(pc, vm.getPC(), String.format("vx: %X, key: %X", vx, key));
                 assertEquals(key, vm.getRegister(vx), String.format("vx: %X, key: %X", vx, key));
             }
         }
+
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX15() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX15(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX15(vx));
 
                 assertEquals(vm.getDelayTimer(), (byte) imm,
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX18() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX18(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX18(vx));
 
                 assertEquals(vm.hasSound(), imm != 0,
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX1E() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 short I = vm.getI();
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX1E(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX1E(vx));
 
                 assertEquals((short) (I + imm), vm.getI(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX29() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (byte imm = 0; imm <= 0xF; imm++) {
-                when(hal.getCharacterAddress(anyByte())).then(
+                when(cal.getCharacterAddress(anyByte())).then(
                     invocationOnMock -> CharacterSprites.getAddressLocator()
                         .getCharacterAddress(invocationOnMock.getArgument(0)));
 
-                executor.execute(vm, hal, new Op6XNN(vx, imm));
-                executor.execute(vm, hal, new OpFX29(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, imm));
+                executor.execute(vm, hal, cal, new OpFX29(vx));
 
                 assertEquals(CharacterSprites.getAddressLocator().getCharacterAddress(imm),
                     vm.getI(), String.format("vx: %X, imm: %X", vx, imm));
             }
         }
+
+        verifyNoInteractions(hal);
     }
 
     @Test void execute_FX33() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
                 short I = vm.getI();
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX33(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX33(vx));
 
                 String num = padStart(Integer.toString(Byte.toUnsignedInt((byte) imm)), 3, '0');
 
@@ -777,19 +850,21 @@ class ExecutorTest {
             }
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX55() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
         vm.setI((short) 0x526);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX55(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX55(vx));
 
                 short I = vm.getI();
                 for (byte x = 0; x <= vx; x++) {
@@ -800,30 +875,32 @@ class ExecutorTest {
             vm.setRegister(vx, (byte) (0xC0 | (vx * 2 + 1)));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
+        verifyNoInteractions(cal);
     }
 
     @Test void execute_FX65() {
         VM vm = new VM();
         IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
         vm.setI((short) 0x526);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
-                executor.execute(vm, hal, new Op6XNN(vx, (byte) imm));
-                executor.execute(vm, hal, new OpFX55(vx));
+                executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX55(vx));
                 for (byte x = 0; x <= vx; x++) {
                     vm.setRegister(x, (byte) 0x00);
                 }
 
-                executor.execute(vm, hal, new OpFX65(vx));
+                executor.execute(vm, hal, cal, new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
                         String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
                 }
 
-                executor.execute(vm, hal, new OpFX65(vx));
+                executor.execute(vm, hal, cal, new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
                         String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
@@ -832,6 +909,6 @@ class ExecutorTest {
             vm.setRegister(vx, (byte) (0xB0 | (vx * 2 + 1)));
         }
 
-        Mockito.verifyNoInteractions(hal);
+        verifyNoInteractions(hal);
     }
 }

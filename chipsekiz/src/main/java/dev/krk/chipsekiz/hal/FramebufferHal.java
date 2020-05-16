@@ -11,14 +11,12 @@ import java.util.Random;
 public class FramebufferHal implements IHal {
     private final Random random;
     private final Framebuffer fb;
-    private final ICharacterAddressLocator characterAddressLocator;
     private boolean sound;
     private Byte key;
     private boolean dirty;
 
-    public FramebufferHal(int width, int height, ICharacterAddressLocator characterAddressLocator) {
+    public FramebufferHal(int width, int height) {
         this.random = new Random();
-        this.characterAddressLocator = characterAddressLocator;
         this.fb = new Framebuffer(width, height);
         this.key = null;
     }
@@ -42,10 +40,6 @@ public class FramebufferHal implements IHal {
 
     @Override public Optional<Byte> getKey() {
         return Optional.ofNullable(key);
-    }
-
-    @Override public short getCharacterAddress(byte character) {
-        return characterAddressLocator.getCharacterAddress(character);
     }
 
     public boolean isSoundActive() {

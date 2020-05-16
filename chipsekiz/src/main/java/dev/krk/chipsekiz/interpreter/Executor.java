@@ -1,5 +1,6 @@
 package dev.krk.chipsekiz.interpreter;
 
+import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.chipsekiz.opcodes.Op7XNN;
 import dev.krk.chipsekiz.opcodes.Op8XY1;
 import dev.krk.chipsekiz.opcodes.Op8XY2;
@@ -41,7 +42,8 @@ import dev.krk.chipsekiz.vm.VM;
 import java.util.Optional;
 
 public class Executor implements IExecutor {
-    @Override public void execute(VM vm, IHal hal, Opcode opcode) {
+    @Override public void execute(VM vm, IHal hal, ICharacterAddressLocator characterAddressLocator,
+        Opcode opcode) {
         if (opcode instanceof Op00E0) {
             hal.clearScreen();
         } else if (opcode instanceof Op00EE) {
@@ -154,7 +156,7 @@ public class Executor implements IExecutor {
         } else if (opcode instanceof OpFX1E o) {
             vm.setI((short) (vm.getI() + vm.getRegister(o.vx())));
         } else if (opcode instanceof OpFX29 o) {
-            vm.setI(hal.getCharacterAddress(vm.getRegister(o.vx())));
+            vm.setI(characterAddressLocator.getCharacterAddress(vm.getRegister(o.vx())));
         } else if (opcode instanceof OpFX33 o) {
             int I = vm.getI();
             int bcd = vm.getRegister(o.vx()) & 0xFF;
