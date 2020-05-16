@@ -22,22 +22,35 @@ public class Interpreter {
     private final ITracer tracer;
     private final int memorySize;
     private final Layout layout;
+    private final boolean timersSixtyHertz;
+    private final float sixtyHertzPeriod = 1000 / 60;
 
     private int lastExecutedAddress;
     private Opcode lastExecutedOpcode;
     private InterpreterStatus status;
+    private long prevTimersTick;
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
         ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
         byte[] program, int memorySize, Layout layout) {
-        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout);
+        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout,
+            false);
+
+        load(origin, program);
+    }
+
+    public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
+        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
+        byte[] program, int memorySize, Layout layout, boolean timersSixtyHertz) {
+        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout,
+            timersSixtyHertz);
 
         load(origin, program);
     }
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
         ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int memorySize,
-        Layout layout) {
+        Layout layout, boolean timersSixtyHertz) {
         this.loader = loader;
         this.decoder = decoder;
         this.executor = executor;
@@ -46,7 +59,9 @@ public class Interpreter {
         this.tracer = tracer;
         this.memorySize = memorySize;
         this.layout = layout;
+        this.timersSixtyHertz = timersSixtyHertz;
         this.status = InterpreterStatus.READY;
+        this.prevTimersTick = System.currentTimeMillis();
     }
 
     private short fetch() {
@@ -77,7 +92,11 @@ public class Interpreter {
 
     public void tick() {
         boolean hasSound = vm.hasSound();
-        vm.tickTimers();
+
+        if (!timersSixtyHertz || (System.currentTimeMillis() - prevTimersTick > sixtyHertzPeriod)) {
+            vm.tickTimers();
+            prevTimersTick = System.currentTimeMillis();
+        }
 
         int pc = vm.getPC();
         short instruction = fetch();

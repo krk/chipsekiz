@@ -16,6 +16,6 @@ public class InterpreterFactory {
         IExecutor executor = new Executor();
 
         return new Interpreter(loader, decoder, executor, hal, characterAddressLocator, tracer,
-            0x1000, CharacterSprites.DefaultLayout());
+            0x1000, CharacterSprites.DefaultLayout(), true);
     }
 }

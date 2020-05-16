@@ -27,7 +27,7 @@ class FramebufferHalTest {
 
             Interpreter interpreter = new Interpreter(loader, decoder, executor, hal,
                 CharacterSprites.getAddressLocator(), null, 0, program, program.length,
-                Layout.empty());
+                Layout.empty(), false);
 
             interpreter.tick();
             assertFalse(hal.isSoundActive());

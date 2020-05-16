@@ -59,12 +59,12 @@ public class Window extends JFrame {
             @Override public void run() {
                 int c = cycles[0];
                 cycles[0] = 0;
-                setTitle(String.format("chipsekiz emulator - %d fps", c));
+                setTitle(String.format("chipsekiz emulator - %d Hz", c));
             }
         }, 0, 1000);
 
-        // ~60 ticks per second
-        final int BudgetMs = 1000 / 60;
+        // ~500Hz CPU speed.
+        final int BudgetMs = 1000 / 500;
 
         while (!isClosing) {
             double before = System.currentTimeMillis();
