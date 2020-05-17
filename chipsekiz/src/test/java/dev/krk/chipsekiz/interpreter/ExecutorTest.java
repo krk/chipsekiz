@@ -39,6 +39,8 @@ import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
 import dev.krk.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -399,25 +401,34 @@ class ExecutorTest {
         verifyNoInteractions(cal);
     }
 
-    @Test void execute_8XY6() {
+    @ParameterizedTest @ValueSource(booleans = {false, true}) void execute_8XY6(
+        boolean bitShiftsIgnoreVY) {
         VM vm = new VM();
-        IExecutor executor = new Executor();
+        IExecutor executor = new Executor(bitShiftsIgnoreVY);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, (byte) (~imm & 0xFF));
                 vm.setRegister(8, (byte) imm);
                 executor.execute(vm, hal, cal, new Op8XY6(vx, 8));
-                int expected = ((imm & 0xFF) >> 1);
 
                 if (vx != 0xF) {
-                    assertEquals((byte) (expected), vm.getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                    if (bitShiftsIgnoreVY) {
+                        int expectedNoVY = ((vx == 8 ? imm : ~imm) & 0xFF) >> 1;
+                        assertEquals((byte) expectedNoVY, vm.getRegister(vx),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                        assertEquals(vm.hasCarry(), ((vx == 8 ? imm : ~imm) & 0x1) == 0x1,
+                            String.format("vx: %X, imm: %X", vx, imm));
+                    } else {
+                        int expected = (imm & 0xFF) >> 1;
+                        assertEquals((byte) expected, vm.getRegister(vx),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                        assertEquals(vm.hasCarry(), (imm & 0x1) == 0x1,
+                            String.format("vx: %X, imm: %X", vx, imm));
+                    }
                 }
-
-                assertEquals(vm.hasCarry(), ((imm & 0x1) == 0x1),
-                    String.format("vx: %X, imm: %X", vx, imm));
             }
         }
 
@@ -453,25 +464,37 @@ class ExecutorTest {
         verifyNoInteractions(cal);
     }
 
-    @Test void execute_8XYE() {
+    @ParameterizedTest @ValueSource(booleans = {false, true}) void execute_8XYE(
+        boolean bitShiftsIgnoreVY) {
         VM vm = new VM();
-        IExecutor executor = new Executor();
+        IExecutor executor = new Executor(bitShiftsIgnoreVY);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = 0; imm <= 0xFF; imm++) {
+                vm.setRegister(vx, (byte) (~imm & 0xFF));
                 vm.setRegister(8, (byte) imm);
                 executor.execute(vm, hal, cal, new Op8XYE(vx, 8));
-                int expected = ((imm & 0xFF) << 1);
+
 
                 if (vx != 0xF) {
-                    assertEquals((byte) (expected), vm.getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
-                }
+                    if (bitShiftsIgnoreVY) {
+                        int expected = ((vx == 8 ? imm : ~imm) & 0xFF) << 1;
 
-                assertEquals(vm.hasCarry(), ((imm & 0x100) == 0x100),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                        assertEquals((byte) (expected), vm.getRegister(vx),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                        assertEquals(vm.hasCarry(), ((expected & 0x100) == 0x100),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                    } else {
+                        int expected = ((imm & 0xFF) << 1);
+
+                        assertEquals((byte) (expected), vm.getRegister(vx),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                        assertEquals(vm.hasCarry(), ((expected & 0x100) == 0x100),
+                            String.format("vx: %X, imm: %X", vx, imm));
+                    }
+                }
             }
         }
 

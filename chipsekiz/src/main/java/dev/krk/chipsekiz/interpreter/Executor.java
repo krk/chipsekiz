@@ -42,8 +42,22 @@ import dev.krk.chipsekiz.vm.IVirtualMachine;
 import java.util.Optional;
 
 public class Executor implements IExecutor {
-    @Override public void execute(IVirtualMachine vm, IHal hal, ICharacterAddressLocator characterAddressLocator,
-        Opcode opcode) {
+    private final boolean bitShiftsIgnoreVY;
+
+    public Executor() {
+        this(false);
+    }
+
+    /**
+     * @param bitShiftsIgnoreVY Ignore vy in 8XY6 and 8XYE bit-shift operations.
+     * https://en.wikipedia.org/wiki/CHIP-8#cite_note-rcaops-13
+     */
+    public Executor(boolean bitShiftsIgnoreVY) {
+        this.bitShiftsIgnoreVY = bitShiftsIgnoreVY;
+    }
+
+    @Override public void execute(IVirtualMachine vm, IHal hal,
+        ICharacterAddressLocator characterAddressLocator, Opcode opcode) {
         if (opcode instanceof Op00E0) {
             hal.clearScreen();
         } else if (opcode instanceof Op00EE) {
@@ -93,9 +107,9 @@ public class Executor implements IExecutor {
             vm.setRegister(o.vx(), (byte) (diff & 0xFF));
             vm.setCarry((diff & 0x1FF) == (diff & 0xFF));
         } else if (opcode instanceof Op8XY6 o) {
-            int y = vm.getRegister(o.vy()) & 0xFF;
-            vm.setRegister(o.vx(), (byte) (y >> 1));
-            vm.setCarry((y & 0x1) == 0x1);
+            int x = vm.getRegister(bitShiftsIgnoreVY ? o.vx() : o.vy()) & 0xFF;
+            vm.setRegister(o.vx(), (byte) (x >> 1));
+            vm.setCarry((x & 0x1) == 0x1);
         } else if (opcode instanceof Op8XY7 o) {
             int x = vm.getRegister(o.vx()) & 0xFF;
             int y = vm.getRegister(o.vy()) & 0xFF;
@@ -103,9 +117,9 @@ public class Executor implements IExecutor {
             vm.setRegister(o.vx(), (byte) (diff & 0xFF));
             vm.setCarry((diff & 0x1FF) == (diff & 0xFF));
         } else if (opcode instanceof Op8XYE o) {
-            int y = vm.getRegister(o.vy()) & 0xFF;
-            vm.setRegister(o.vx(), (byte) (y << 1));
-            vm.setCarry((y & 0x100) == 0x100);
+            int x = vm.getRegister(bitShiftsIgnoreVY ? o.vx() : o.vy()) << 1;
+            vm.setRegister(o.vx(), (byte) (x & 0xFF));
+            vm.setCarry((x & 0x100) == 0x100);
         } else if (opcode instanceof Op9XY0 o) {
             if (vm.getRegister(o.vx()) != vm.getRegister(o.vy())) {
                 vm.setPC(vm.getPC() + 2);

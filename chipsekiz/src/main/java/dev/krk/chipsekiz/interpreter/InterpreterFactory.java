@@ -14,7 +14,7 @@ public class InterpreterFactory {
         @Nullable IDebugger debugger) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
+        IExecutor executor = new Executor(true);
 
         return new Interpreter(loader, decoder, executor, hal, characterAddressLocator, tracer,
             debugger, 0x1000, CharacterSprites.DefaultLayout(), true);
