@@ -10,12 +10,13 @@ import javax.annotation.Nullable;
 
 public class InterpreterFactory {
     public static Interpreter create(IHal hal,
-        @Nullable ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer) {
+        @Nullable ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
+        @Nullable IDebugger debugger) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
         IExecutor executor = new Executor();
 
         return new Interpreter(loader, decoder, executor, hal, characterAddressLocator, tracer,
-            0x1000, CharacterSprites.DefaultLayout(), true);
+            debugger, 0x1000, CharacterSprites.DefaultLayout(), true);
     }
 }

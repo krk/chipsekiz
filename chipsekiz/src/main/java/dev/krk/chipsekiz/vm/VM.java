@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 
-public class VM {
+public class VM implements IVirtualMachine {
     private final int origin;
     private final byte[] memory;
     private final byte[] registers;
@@ -33,49 +33,49 @@ public class VM {
         setPC(origin);
     }
 
-    public int getPC() {
+    @Override public int getPC() {
         return regPC;
     }
 
-    public void setPC(int pc) {
+    @Override public void setPC(int pc) {
         checkArgument(pc >= 0 && pc <= getMemorySize() + 2, "PC out of bounds.");
 
         regPC = pc;
     }
 
-    public short getI() {
+    @Override public short getI() {
         return regI;
     }
 
-    public void setI(short i) {
+    @Override public void setI(short i) {
         regI = i;
     }
 
-    public int getOrigin() {
+    @Override public int getOrigin() {
         return origin;
     }
 
-    public int getMemorySize() {
+    @Override public int getMemorySize() {
         return memory.length;
     }
 
-    public byte getRegister(int i) {
+    @Override public byte getRegister(int i) {
         checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
 
         return registers[i];
     }
 
-    public void setRegister(int i, byte value) {
+    @Override public void setRegister(int i, byte value) {
         checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
 
         registers[i] = value;
     }
 
-    public boolean hasCarry() {
+    @Override public boolean hasCarry() {
         return registers[0xF] == 1;
     }
 
-    public void setCarry(boolean carry) {
+    @Override public void setCarry(boolean carry) {
         registers[0xF] = (byte) (carry ? 1 : 0);
     }
 
@@ -83,19 +83,19 @@ public class VM {
         setCarry(true);
     }
 
-    public void push(int value) {
+    @Override public void push(int value) {
         checkState(stack.size() < StackLimit, "VM stack overflow.");
 
         stack.push(value);
     }
 
-    public int pop() {
+    @Override public int pop() {
         checkState(stack.size() > 0, "VM stack underflow.");
 
         return stack.pop();
     }
 
-    public void tickTimers() {
+    @Override public void tickTimers() {
         if (timerDelay != 0) {
             timerDelay--;
         }
@@ -112,29 +112,29 @@ public class VM {
         return timerSound != 0;
     }
 
-    public byte getDelayTimer() {
+    @Override public byte getDelayTimer() {
         return timerDelay;
     }
 
-    public void setDelayTimer(byte value) {
+    @Override public void setDelayTimer(byte value) {
         timerDelay = value;
     }
 
-    public byte getSoundTimer() {
+    @Override public byte getSoundTimer() {
         return timerSound;
     }
 
-    public void setSoundTimer(byte value) {
+    @Override public void setSoundTimer(byte value) {
         timerSound = value;
     }
 
-    public void setByte(int address, byte value) {
+    @Override public void setByte(int address, byte value) {
         checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
 
         memory[address] = value;
     }
 
-    public byte getByte(int address) {
+    @Override public byte getByte(int address) {
         checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
 
         return memory[address];

@@ -26,7 +26,7 @@ class FramebufferHalTest {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
             Interpreter interpreter = new Interpreter(loader, decoder, executor, hal,
-                CharacterSprites.getAddressLocator(), null, 0, program, program.length,
+                CharacterSprites.getAddressLocator(), null, null, 0, program, program.length,
                 Layout.empty(), false);
 
             interpreter.tick();

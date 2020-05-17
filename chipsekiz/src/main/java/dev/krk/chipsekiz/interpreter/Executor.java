@@ -1,18 +1,6 @@
 package dev.krk.chipsekiz.interpreter;
 
 import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
-import dev.krk.chipsekiz.opcodes.Op7XNN;
-import dev.krk.chipsekiz.opcodes.Op8XY1;
-import dev.krk.chipsekiz.opcodes.Op8XY2;
-import dev.krk.chipsekiz.opcodes.Op8XY3;
-import dev.krk.chipsekiz.opcodes.Op8XY4;
-import dev.krk.chipsekiz.opcodes.Op8XY5;
-import dev.krk.chipsekiz.opcodes.Op8XY6;
-import dev.krk.chipsekiz.opcodes.Op8XY7;
-import dev.krk.chipsekiz.opcodes.Op8XYE;
-import dev.krk.chipsekiz.opcodes.OpEXA1;
-import dev.krk.chipsekiz.opcodes.OpFX07;
-import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.Op00E0;
 import dev.krk.chipsekiz.opcodes.Op00EE;
 import dev.krk.chipsekiz.opcodes.Op0NNN;
@@ -22,13 +10,25 @@ import dev.krk.chipsekiz.opcodes.Op3XNN;
 import dev.krk.chipsekiz.opcodes.Op4XNN;
 import dev.krk.chipsekiz.opcodes.Op5XY0;
 import dev.krk.chipsekiz.opcodes.Op6XNN;
+import dev.krk.chipsekiz.opcodes.Op7XNN;
 import dev.krk.chipsekiz.opcodes.Op8XY0;
+import dev.krk.chipsekiz.opcodes.Op8XY1;
+import dev.krk.chipsekiz.opcodes.Op8XY2;
+import dev.krk.chipsekiz.opcodes.Op8XY3;
+import dev.krk.chipsekiz.opcodes.Op8XY4;
+import dev.krk.chipsekiz.opcodes.Op8XY5;
+import dev.krk.chipsekiz.opcodes.Op8XY6;
+import dev.krk.chipsekiz.opcodes.Op8XY7;
+import dev.krk.chipsekiz.opcodes.Op8XYE;
 import dev.krk.chipsekiz.opcodes.Op9XY0;
 import dev.krk.chipsekiz.opcodes.OpANNN;
 import dev.krk.chipsekiz.opcodes.OpBNNN;
 import dev.krk.chipsekiz.opcodes.OpCXNN;
 import dev.krk.chipsekiz.opcodes.OpDXYN;
 import dev.krk.chipsekiz.opcodes.OpEX9E;
+import dev.krk.chipsekiz.opcodes.OpEXA1;
+import dev.krk.chipsekiz.opcodes.OpFX07;
+import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.OpFX15;
 import dev.krk.chipsekiz.opcodes.OpFX18;
 import dev.krk.chipsekiz.opcodes.OpFX1E;
@@ -37,12 +37,12 @@ import dev.krk.chipsekiz.opcodes.OpFX33;
 import dev.krk.chipsekiz.opcodes.OpFX55;
 import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
-import dev.krk.chipsekiz.vm.VM;
+import dev.krk.chipsekiz.vm.IVirtualMachine;
 
 import java.util.Optional;
 
 public class Executor implements IExecutor {
-    @Override public void execute(VM vm, IHal hal, ICharacterAddressLocator characterAddressLocator,
+    @Override public void execute(IVirtualMachine vm, IHal hal, ICharacterAddressLocator characterAddressLocator,
         Opcode opcode) {
         if (opcode instanceof Op00E0) {
             hal.clearScreen();

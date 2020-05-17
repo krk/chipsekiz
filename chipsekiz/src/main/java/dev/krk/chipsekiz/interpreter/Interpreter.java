@@ -19,7 +19,8 @@ public class Interpreter {
     private final ILoader loader;
     private final IHal hal;
     private final ICharacterAddressLocator characterAddressLocator;
-    private final ITracer tracer;
+    @Nullable private final ITracer tracer;
+    @Nullable private final IDebugger debugger;
     private final int memorySize;
     private final Layout layout;
     private final boolean timersSixtyHertz;
@@ -33,30 +34,32 @@ public class Interpreter {
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
         ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
         byte[] program, int memorySize, Layout layout) {
-        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout,
-            false);
+        this(loader, decoder, executor, hal, characterAddressLocator, tracer, null, memorySize,
+            layout, false);
 
         load(origin, program);
     }
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
-        byte[] program, int memorySize, Layout layout, boolean timersSixtyHertz) {
-        this(loader, decoder, executor, hal, characterAddressLocator, tracer, memorySize, layout,
-            timersSixtyHertz);
+        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
+        @Nullable IDebugger debugger, int origin, byte[] program, int memorySize, Layout layout,
+        boolean timersSixtyHertz) {
+        this(loader, decoder, executor, hal, characterAddressLocator, tracer, debugger, memorySize,
+            layout, timersSixtyHertz);
 
         load(origin, program);
     }
 
     public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int memorySize,
-        Layout layout, boolean timersSixtyHertz) {
+        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
+        @Nullable IDebugger debugger, int memorySize, Layout layout, boolean timersSixtyHertz) {
         this.loader = loader;
         this.decoder = decoder;
         this.executor = executor;
         this.hal = hal;
         this.characterAddressLocator = characterAddressLocator;
         this.tracer = tracer;
+        this.debugger = debugger;
         this.memorySize = memorySize;
         this.layout = layout;
         this.timersSixtyHertz = timersSixtyHertz;
@@ -88,6 +91,9 @@ public class Interpreter {
 
         byte[] memory = loader.load(origin, program, memorySize, layout);
         this.vm = new VM(origin, memory);
+        if (debugger != null) {
+            debugger.setVM(vm);
+        }
     }
 
     public void tick() {

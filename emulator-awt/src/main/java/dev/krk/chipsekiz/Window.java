@@ -1,5 +1,6 @@
 package dev.krk.chipsekiz;
 
+import dev.krk.chipsekiz.interpreter.IDebugger;
 import dev.krk.chipsekiz.interpreter.Interpreter;
 import dev.krk.chipsekiz.interpreter.InterpreterFactory;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
@@ -10,7 +11,6 @@ import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,8 +47,11 @@ public class Window extends JFrame {
         byte[] program =
             getClass().getClassLoader().getResourceAsStream("roms/BC_test.ch8").readAllBytes();
 
+        final DebuggerWindow[] debuggerWindow = new DebuggerWindow[1];
+        IDebugger debugger = vm -> debuggerWindow[0] = new DebuggerWindow(vm);
+
         Interpreter chipsekiz =
-            InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null);
+            InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null, debugger);
 
         chipsekiz.load(0x200, program);
 
@@ -74,6 +77,7 @@ public class Window extends JFrame {
         while (!isClosing) {
             double before = System.currentTimeMillis();
             chipsekiz.tick();
+            debuggerWindow[0].requestRepaint();
             double duration = System.currentTimeMillis() - before;
 
             long timeLeft = (long) (BudgetMs - duration);
