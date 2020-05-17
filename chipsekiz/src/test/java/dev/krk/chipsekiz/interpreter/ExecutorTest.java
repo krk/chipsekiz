@@ -404,7 +404,7 @@ class ExecutorTest {
     @ParameterizedTest @ValueSource(booleans = {false, true}) void execute_8XY6(
         boolean bitShiftsIgnoreVY) {
         VM vm = new VM();
-        IExecutor executor = new Executor(bitShiftsIgnoreVY);
+        IExecutor executor = new Executor(bitShiftsIgnoreVY, false);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
@@ -467,7 +467,7 @@ class ExecutorTest {
     @ParameterizedTest @ValueSource(booleans = {false, true}) void execute_8XYE(
         boolean bitShiftsIgnoreVY) {
         VM vm = new VM();
-        IExecutor executor = new Executor(bitShiftsIgnoreVY);
+        IExecutor executor = new Executor(bitShiftsIgnoreVY, false);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
 
@@ -877,23 +877,29 @@ class ExecutorTest {
         verifyNoInteractions(cal);
     }
 
-    @Test void execute_FX55() {
+    @ParameterizedTest @ValueSource(booleans = {true, false}) void execute_FX55(
+        boolean loadDumpIncreasesI) {
         VM vm = new VM();
-        IExecutor executor = new Executor();
+        IExecutor executor = new Executor(false, loadDumpIncreasesI);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
-        vm.setI((short) 0x526);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                vm.setI((short) 0x526);
+                short I = vm.getI();
+
                 executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
                 executor.execute(vm, hal, cal, new OpFX55(vx));
 
-                short I = vm.getI();
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xC0 | x * 2 + 1), vm.getByte(I + x),
                         String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
                 }
+
+                assertEquals(loadDumpIncreasesI ? I + vx + 1 : I, vm.getI(),
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+
             }
             vm.setRegister(vx, (byte) (0xC0 | (vx * 2 + 1)));
         }
@@ -902,32 +908,41 @@ class ExecutorTest {
         verifyNoInteractions(cal);
     }
 
-    @Test void execute_FX65() {
+    @ParameterizedTest @ValueSource(booleans = {true, false}) void execute_FX65(
+        boolean loadDumpIncreasesI) {
         VM vm = new VM();
-        IExecutor executor = new Executor();
+        IExecutor executor = new Executor(false, loadDumpIncreasesI);
         IHal hal = mock(IHal.class);
         ICharacterAddressLocator cal = mock(ICharacterAddressLocator.class);
-        vm.setI((short) 0x526);
 
         for (int vx = 0; vx <= 0xF; vx++) {
             for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
+                vm.setI((short) 0x526);
+
                 executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
+                executor.execute(vm, hal, cal, new OpFX55(vx));
                 executor.execute(vm, hal, cal, new OpFX55(vx));
                 for (byte x = 0; x <= vx; x++) {
                     vm.setRegister(x, (byte) 0x00);
                 }
 
+                vm.setI((short) 0x526);
+                short I = vm.getI();
                 executor.execute(vm, hal, cal, new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
                         String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
                 }
+                assertEquals(loadDumpIncreasesI ? I + vx + 1 : I, vm.getI(),
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
 
                 executor.execute(vm, hal, cal, new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), vm.getRegister(x),
                         String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
                 }
+                assertEquals(loadDumpIncreasesI ? I + 2 * (vx + 1) : I, vm.getI(),
+                    String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
             vm.setRegister(vx, (byte) (0xB0 | (vx * 2 + 1)));
         }

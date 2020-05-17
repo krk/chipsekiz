@@ -43,17 +43,21 @@ import java.util.Optional;
 
 public class Executor implements IExecutor {
     private final boolean bitShiftsIgnoreVY;
+    private final boolean saveDumpIncreasesI;
 
     public Executor() {
-        this(false);
+        this(false, false);
     }
 
     /**
      * @param bitShiftsIgnoreVY Ignore vy in 8XY6 and 8XYE bit-shift operations.
      * https://en.wikipedia.org/wiki/CHIP-8#cite_note-rcaops-13
+     * @param loadDumpIncreasesI FX55 and FX65 register load-dump operations increase I.
+     * https://en.wikipedia.org/wiki/CHIP-8#cite_note-increment-16
      */
-    public Executor(boolean bitShiftsIgnoreVY) {
+    public Executor(boolean bitShiftsIgnoreVY, boolean loadDumpIncreasesI) {
         this.bitShiftsIgnoreVY = bitShiftsIgnoreVY;
+        this.saveDumpIncreasesI = loadDumpIncreasesI;
     }
 
     @Override public void execute(IVirtualMachine vm, IHal hal,
@@ -182,10 +186,16 @@ public class Executor implements IExecutor {
             for (int x = 0; x <= o.vx(); x++) {
                 vm.setByte(I + x, vm.getRegister(x));
             }
+            if (saveDumpIncreasesI) {
+                vm.setI((short) (0xFFFF & (I + o.vx() + 1)));
+            }
         } else if (opcode instanceof OpFX65 o) {
             int I = vm.getI();
             for (int x = 0; x <= o.vx(); x++) {
                 vm.setRegister(x, vm.getByte(I + x));
+            }
+            if (saveDumpIncreasesI) {
+                vm.setI((short) (0xFFFF & (I + o.vx() + 1)));
             }
         } else {
             throw new IllegalArgumentException("unsupported opcode.");
