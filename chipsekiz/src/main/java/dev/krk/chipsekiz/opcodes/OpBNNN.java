@@ -7,4 +7,8 @@ public class OpBNNN extends OpPNNN {
     public OpBNNN(short address) {
         super(0xB, address);
     }
+
+    @Override public String toString() {
+        return String.format("JP V0, 0x%03X", address());
+    }
 }

@@ -9,4 +9,8 @@ public class Op0NNN extends OpPNNN {
     public Op0NNN(short address) {
         super(0, address);
     }
+
+    @Override public String toString() {
+        return String.format("SYS 0x%03X = nop", address());
+    }
 }

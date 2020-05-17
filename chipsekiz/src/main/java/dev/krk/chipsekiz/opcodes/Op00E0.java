@@ -15,4 +15,8 @@ public class Op00E0 extends Opcode {
     @Override public String encode() {
         return "00E0";
     }
+
+    @Override public String toString() {
+        return "CLS";
+    }
 }

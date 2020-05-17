@@ -8,4 +8,8 @@ public class Op8XYE extends OpPXYQ {
     public Op8XYE(int vx, int vy) {
         super(8, vx, vy, 0xE);
     }
+
+    @Override public String toString() {
+        return String.format("SHL V%X, V%X", vx(), vy());
+    }
 }

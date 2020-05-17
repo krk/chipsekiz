@@ -8,4 +8,8 @@ public class OpCXNN extends OpPXNN {
     public OpCXNN(int vx, byte imm) {
         super(0xC, vx, imm);
     }
+
+    @Override public String toString() {
+        return String.format("RND V%X, 0x%02X", vx(), imm());
+    }
 }

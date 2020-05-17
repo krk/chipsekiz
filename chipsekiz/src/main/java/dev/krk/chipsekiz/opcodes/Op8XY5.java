@@ -7,4 +7,8 @@ public class Op8XY5 extends OpPXYQ {
     public Op8XY5(int vx, int vy) {
         super(8, vx, vy, 5);
     }
+
+    @Override public String toString() {
+        return String.format("SUB V%X, V%X", vx(), vy());
+    }
 }

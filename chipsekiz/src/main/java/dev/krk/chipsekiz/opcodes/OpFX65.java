@@ -8,4 +8,8 @@ public class OpFX65 extends OpPXQR {
     public OpFX65(int vx) {
         super(0xF, vx, 6, 5);
     }
+
+    @Override public String toString() {
+        return String.format("LD V%X, [I]", vx());
+    }
 }

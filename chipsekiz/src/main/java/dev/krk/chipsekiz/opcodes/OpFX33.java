@@ -10,4 +10,8 @@ public class OpFX33 extends OpPXQR {
     public OpFX33(int vx) {
         super(0xF, vx, 3, 3);
     }
+
+    @Override public String toString() {
+        return String.format("LD B, V%X", vx());
+    }
 }
