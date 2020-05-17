@@ -820,7 +820,7 @@ class ExecutorTest {
                 executor.execute(vm, hal, cal, new Op6XNN(vx, (byte) imm));
                 executor.execute(vm, hal, cal, new OpFX1E(vx));
 
-                assertEquals((short) (I + imm), vm.getI(),
+                assertEquals((short) (I + (0xFF & imm)), vm.getI(),
                     String.format("vx: %X, imm: %X", vx, (byte) imm));
             }
         }

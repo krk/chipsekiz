@@ -172,7 +172,7 @@ public class Executor implements IExecutor {
         } else if (opcode instanceof OpFX18 o) {
             vm.setSoundTimer(vm.getRegister(o.vx()));
         } else if (opcode instanceof OpFX1E o) {
-            vm.setI((short) (vm.getI() + vm.getRegister(o.vx())));
+            vm.setI((short) (0xFFFF & vm.getI() + (0xFF & vm.getRegister(o.vx()))));
         } else if (opcode instanceof OpFX29 o) {
             vm.setI(characterAddressLocator.getCharacterAddress(vm.getRegister(o.vx())));
         } else if (opcode instanceof OpFX33 o) {
