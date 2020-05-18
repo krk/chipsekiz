@@ -40,10 +40,22 @@ import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.opcodes.OpcodeOrData;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class Decoder implements IDecoder {
+    private final HashMap<Short, OpcodeOrData> cache;
+
+    public Decoder() {
+        cache = new HashMap<>();
+    }
+
     @Override public OpcodeOrData decode(short value) {
+        OpcodeOrData cached = cache.get(value);
+        if (cached != null) {
+            return cached;
+        }
+
         int b0 = (value & 0xF000) >> 12;
         Optional<Opcode> opcode = switch (b0) {
             case 0 -> switch (value) {
@@ -106,8 +118,10 @@ public class Decoder implements IDecoder {
             default -> Optional.empty();
         };
 
-        return opcode.isEmpty() ?
+        OpcodeOrData opcodeOrData = opcode.isEmpty() ?
             OpcodeOrData.ofData(new DataWord(value)) :
             OpcodeOrData.ofOpcode(opcode.get());
+        cache.put(value, opcodeOrData);
+        return opcodeOrData;
     }
 }
