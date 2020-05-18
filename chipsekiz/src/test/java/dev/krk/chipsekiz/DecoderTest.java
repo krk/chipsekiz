@@ -39,10 +39,10 @@ import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.opcodes.OpcodeOrData;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static com.google.common.base.Strings.padStart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -119,12 +119,9 @@ public class DecoderTest {
     @Test public void testDecode5XY0() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x5000), Op5XY0.class, 0, 0, Optional.empty(),
-            "5000");
-        assertOpcodeValid(decoder.decode((short) 0x54A0), Op5XY0.class, 4, 0xA, Optional.empty(),
-            "54A0");
-        assertOpcodeValid(decoder.decode((short) 0x5FF0), Op5XY0.class, 0xF, 0xF, Optional.empty(),
-            "5FF0");
+        assertOpcodeValid(decoder.decode((short) 0x5000), Op5XY0.class, 0, 0, null, "5000");
+        assertOpcodeValid(decoder.decode((short) 0x54A0), Op5XY0.class, 4, 0xA, null, "54A0");
+        assertOpcodeValid(decoder.decode((short) 0x5FF0), Op5XY0.class, 0xF, 0xF, null, "5FF0");
     }
 
     @Test public void testDecode6XNN() {
@@ -146,111 +143,81 @@ public class DecoderTest {
     @Test public void testDecode8XY0() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8000), Op8XY0.class, 0, 0, Optional.empty(),
-            "8000");
-        assertOpcodeValid(decoder.decode((short) 0x84A0), Op8XY0.class, 4, 0xA, Optional.empty(),
-            "84A0");
-        assertOpcodeValid(decoder.decode((short) 0x8FF0), Op8XY0.class, 0xF, 0xF, Optional.empty(),
-            "8FF0");
+        assertOpcodeValid(decoder.decode((short) 0x8000), Op8XY0.class, 0, 0, null, "8000");
+        assertOpcodeValid(decoder.decode((short) 0x84A0), Op8XY0.class, 4, 0xA, null, "84A0");
+        assertOpcodeValid(decoder.decode((short) 0x8FF0), Op8XY0.class, 0xF, 0xF, null, "8FF0");
     }
 
     @Test public void testDecode8XY1() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8001), Op8XY1.class, 0, 0, Optional.empty(),
-            "8001");
-        assertOpcodeValid(decoder.decode((short) 0x84A1), Op8XY1.class, 4, 0xA, Optional.empty(),
-            "84A1");
-        assertOpcodeValid(decoder.decode((short) 0x8FF1), Op8XY1.class, 0xF, 0xF, Optional.empty(),
-            "8FF1");
+        assertOpcodeValid(decoder.decode((short) 0x8001), Op8XY1.class, 0, 0, null, "8001");
+        assertOpcodeValid(decoder.decode((short) 0x84A1), Op8XY1.class, 4, 0xA, null, "84A1");
+        assertOpcodeValid(decoder.decode((short) 0x8FF1), Op8XY1.class, 0xF, 0xF, null, "8FF1");
     }
 
     @Test public void testDecode8XY2() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8002), Op8XY2.class, 0, 0, Optional.empty(),
-            "8002");
-        assertOpcodeValid(decoder.decode((short) 0x84A2), Op8XY2.class, 4, 0xA, Optional.empty(),
-            "84A2");
-        assertOpcodeValid(decoder.decode((short) 0x8FF2), Op8XY2.class, 0xF, 0xF, Optional.empty(),
-            "8FF2");
+        assertOpcodeValid(decoder.decode((short) 0x8002), Op8XY2.class, 0, 0, null, "8002");
+        assertOpcodeValid(decoder.decode((short) 0x84A2), Op8XY2.class, 4, 0xA, null, "84A2");
+        assertOpcodeValid(decoder.decode((short) 0x8FF2), Op8XY2.class, 0xF, 0xF, null, "8FF2");
     }
 
     @Test public void testDecode8XY3() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8003), Op8XY3.class, 0, 0, Optional.empty(),
-            "8003");
-        assertOpcodeValid(decoder.decode((short) 0x84A3), Op8XY3.class, 4, 0xA, Optional.empty(),
-            "84A3");
-        assertOpcodeValid(decoder.decode((short) 0x8FF3), Op8XY3.class, 0xF, 0xF, Optional.empty(),
-            "8FF3");
+        assertOpcodeValid(decoder.decode((short) 0x8003), Op8XY3.class, 0, 0, null, "8003");
+        assertOpcodeValid(decoder.decode((short) 0x84A3), Op8XY3.class, 4, 0xA, null, "84A3");
+        assertOpcodeValid(decoder.decode((short) 0x8FF3), Op8XY3.class, 0xF, 0xF, null, "8FF3");
     }
 
     @Test public void testDecode8XY4() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8004), Op8XY4.class, 0, 0, Optional.empty(),
-            "8004");
-        assertOpcodeValid(decoder.decode((short) 0x84A4), Op8XY4.class, 4, 0xA, Optional.empty(),
-            "84A4");
-        assertOpcodeValid(decoder.decode((short) 0x8FF4), Op8XY4.class, 0xF, 0xF, Optional.empty(),
-            "8FF4");
+        assertOpcodeValid(decoder.decode((short) 0x8004), Op8XY4.class, 0, 0, null, "8004");
+        assertOpcodeValid(decoder.decode((short) 0x84A4), Op8XY4.class, 4, 0xA, null, "84A4");
+        assertOpcodeValid(decoder.decode((short) 0x8FF4), Op8XY4.class, 0xF, 0xF, null, "8FF4");
     }
 
     @Test public void testDecode8XY5() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8005), Op8XY5.class, 0, 0, Optional.empty(),
-            "8005");
-        assertOpcodeValid(decoder.decode((short) 0x84A5), Op8XY5.class, 4, 0xA, Optional.empty(),
-            "84A5");
-        assertOpcodeValid(decoder.decode((short) 0x8FF5), Op8XY5.class, 0xF, 0xF, Optional.empty(),
-            "8FF5");
+        assertOpcodeValid(decoder.decode((short) 0x8005), Op8XY5.class, 0, 0, null, "8005");
+        assertOpcodeValid(decoder.decode((short) 0x84A5), Op8XY5.class, 4, 0xA, null, "84A5");
+        assertOpcodeValid(decoder.decode((short) 0x8FF5), Op8XY5.class, 0xF, 0xF, null, "8FF5");
     }
 
     @Test public void testDecode8XY6() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8006), Op8XY6.class, 0, 0, Optional.empty(),
-            "8006");
-        assertOpcodeValid(decoder.decode((short) 0x84A6), Op8XY6.class, 4, 0xA, Optional.empty(),
-            "84A6");
-        assertOpcodeValid(decoder.decode((short) 0x8FF6), Op8XY6.class, 0xF, 0xF, Optional.empty(),
-            "8FF6");
+        assertOpcodeValid(decoder.decode((short) 0x8006), Op8XY6.class, 0, 0, null, "8006");
+        assertOpcodeValid(decoder.decode((short) 0x84A6), Op8XY6.class, 4, 0xA, null, "84A6");
+        assertOpcodeValid(decoder.decode((short) 0x8FF6), Op8XY6.class, 0xF, 0xF, null, "8FF6");
     }
 
     @Test public void testDecode8XY7() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x8007), Op8XY7.class, 0, 0, Optional.empty(),
-            "8007");
-        assertOpcodeValid(decoder.decode((short) 0x84A7), Op8XY7.class, 4, 0xA, Optional.empty(),
-            "84A7");
-        assertOpcodeValid(decoder.decode((short) 0x8FF7), Op8XY7.class, 0xF, 0xF, Optional.empty(),
-            "8FF7");
+        assertOpcodeValid(decoder.decode((short) 0x8007), Op8XY7.class, 0, 0, null, "8007");
+        assertOpcodeValid(decoder.decode((short) 0x84A7), Op8XY7.class, 4, 0xA, null, "84A7");
+        assertOpcodeValid(decoder.decode((short) 0x8FF7), Op8XY7.class, 0xF, 0xF, null, "8FF7");
     }
 
     @Test public void testDecode8XYE() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x800E), Op8XYE.class, 0, 0, Optional.empty(),
-            "800E");
-        assertOpcodeValid(decoder.decode((short) 0x84AE), Op8XYE.class, 4, 0xA, Optional.empty(),
-            "84AE");
-        assertOpcodeValid(decoder.decode((short) 0x8FFE), Op8XYE.class, 0xF, 0xF, Optional.empty(),
-            "8FFE");
+        assertOpcodeValid(decoder.decode((short) 0x800E), Op8XYE.class, 0, 0, null, "800E");
+        assertOpcodeValid(decoder.decode((short) 0x84AE), Op8XYE.class, 4, 0xA, null, "84AE");
+        assertOpcodeValid(decoder.decode((short) 0x8FFE), Op8XYE.class, 0xF, 0xF, null, "8FFE");
     }
 
     @Test public void testDecode9XY0() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0x9000), Op9XY0.class, 0, 0, Optional.empty(),
-            "9000");
-        assertOpcodeValid(decoder.decode((short) 0x94A0), Op9XY0.class, 4, 0xA, Optional.empty(),
-            "94A0");
-        assertOpcodeValid(decoder.decode((short) 0x9FF0), Op9XY0.class, 0xF, 0xF, Optional.empty(),
-            "9FF0");
+        assertOpcodeValid(decoder.decode((short) 0x9000), Op9XY0.class, 0, 0, null, "9000");
+        assertOpcodeValid(decoder.decode((short) 0x94A0), Op9XY0.class, 4, 0xA, null, "94A0");
+        assertOpcodeValid(decoder.decode((short) 0x9FF0), Op9XY0.class, 0xF, 0xF, null, "9FF0");
     }
 
     @Test public void testDecodeANNN() {
@@ -280,12 +247,9 @@ public class DecoderTest {
     @Test public void testDecodeDXYN() {
         Decoder decoder = new Decoder();
 
-        assertOpcodeValid(decoder.decode((short) 0xD000), OpDXYN.class, 0, 0, Optional.of(0),
-            "D000");
-        assertOpcodeValid(decoder.decode((short) 0xD4A5), OpDXYN.class, 4, 0xA, Optional.of(5),
-            "D4A5");
-        assertOpcodeValid(decoder.decode((short) 0xDFFF), OpDXYN.class, 0xF, 0xF, Optional.of(0xF),
-            "DFFF");
+        assertOpcodeValid(decoder.decode((short) 0xD000), OpDXYN.class, 0, 0, 0, "D000");
+        assertOpcodeValid(decoder.decode((short) 0xD4A5), OpDXYN.class, 4, 0xA, 5, "D4A5");
+        assertOpcodeValid(decoder.decode((short) 0xDFFF), OpDXYN.class, 0xF, 0xF, 0xF, "DFFF");
     }
 
     @Test public void testDecodeEX9E() {
@@ -381,10 +345,10 @@ public class DecoderTest {
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
 
-        assertTrue(opcode.getAddress().isEmpty());
+        assertNull(opcode.getAddress());
 
-        assertTrue(opcode.getVx().isEmpty());
-        assertTrue(opcode.getVy().isEmpty());
+        assertNull(opcode.getVx());
+        assertNull(opcode.getVy());
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
@@ -397,11 +361,11 @@ public class DecoderTest {
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
 
-        assertTrue(opcode.getAddress().isPresent());
-        assertEquals(opcode.getAddress(), Optional.of(address));
+        assertNotNull(opcode.getAddress());
+        assertEquals(opcode.getAddress(), address);
 
-        assertTrue(opcode.getVx().isEmpty());
-        assertTrue(opcode.getVy().isEmpty());
+        assertNull(opcode.getVx());
+        assertNull(opcode.getVy());
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
@@ -414,12 +378,12 @@ public class DecoderTest {
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
 
-        assertTrue(opcode.getAddress().isEmpty());
+        assertNull(opcode.getAddress());
 
-        assertTrue(opcode.getVx().isPresent());
-        assertEquals((int) opcode.getVx().get(), vx);
+        assertNotNull(opcode.getVx());
+        assertEquals((int) opcode.getVx(), vx);
 
-        assertTrue(opcode.getVy().isEmpty());
+        assertNull(opcode.getVy());
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
@@ -433,13 +397,13 @@ public class DecoderTest {
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
 
-        assertTrue(opcode.getAddress().isPresent());
-        assertEquals(opcode.getAddress(), Optional.of(address));
+        assertNotNull(opcode.getAddress());
+        assertEquals(opcode.getAddress(), address);
 
-        assertTrue(opcode.getVx().isPresent());
-        assertEquals((int) opcode.getVx().get(), vx);
+        assertNotNull(opcode.getVx());
+        assertEquals((int) opcode.getVx(), vx);
 
-        assertTrue(opcode.getVy().isEmpty());
+        assertNull(opcode.getVy());
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
@@ -448,18 +412,18 @@ public class DecoderTest {
     }
 
     private static void assertOpcodeValid(OpcodeOrData od, Class type, int vx, int vy,
-        Optional<Integer> address, String s) {
+        Integer address, String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
 
         assertEquals(opcode.getAddress(), address);
 
-        assertTrue(opcode.getVx().isPresent());
-        assertEquals((int) opcode.getVx().get(), vx);
+        assertNotNull(opcode.getVx());
+        assertEquals((int) opcode.getVx(), vx);
 
-        assertTrue(opcode.getVy().isPresent());
-        assertEquals((int) opcode.getVy().get(), vy);
+        assertNotNull(opcode.getVy());
+        assertEquals((int) opcode.getVy(), vy);
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());

@@ -17,15 +17,15 @@ public class OpDXYN extends Opcode {
     }
 
     public int vx() {
-        return super.getVx().get();
+        return super.getVx();
     }
 
     public int vy() {
-        return super.getVy().get();
+        return super.getVy();
     }
 
     public int imm() {
-        return super.getAddress().get();
+        return super.getAddress();
     }
 
     @Override public short getValue() {

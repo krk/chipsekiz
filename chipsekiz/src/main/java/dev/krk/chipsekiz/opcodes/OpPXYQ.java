@@ -18,11 +18,11 @@ public abstract class OpPXYQ extends Opcode {
     }
 
     public int vx() {
-        return super.getVx().get();
+        return super.getVx();
     }
 
     public int vy() {
-        return super.getVy().get();
+        return super.getVy();
     }
 
     @Override public short getValue() {

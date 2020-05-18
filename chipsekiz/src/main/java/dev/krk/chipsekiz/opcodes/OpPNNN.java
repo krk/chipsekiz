@@ -14,7 +14,7 @@ public abstract class OpPNNN extends Opcode {
     }
 
     public short address() {
-        return super.getAddress().get().shortValue();
+        return super.getAddress().shortValue();
     }
 
     @Override public short getValue() {

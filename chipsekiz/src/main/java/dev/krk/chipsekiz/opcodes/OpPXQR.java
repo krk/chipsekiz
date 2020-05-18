@@ -20,7 +20,7 @@ public abstract class OpPXQR extends Opcode {
     }
 
     public int vx() {
-        return super.getVx().get();
+        return super.getVx();
     }
 
     @Override public short getValue() {

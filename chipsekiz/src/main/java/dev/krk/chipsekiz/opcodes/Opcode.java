@@ -5,8 +5,6 @@ import com.google.common.base.Objects;
 
 import javax.annotation.Nullable;
 
-import java.util.Optional;
-
 
 public abstract class Opcode {
     private final Integer vx;
@@ -14,11 +12,11 @@ public abstract class Opcode {
     private final Integer address;
     private final OpcodeKind kind;
 
-    public Optional<Integer> getVx() {return Optional.ofNullable(vx);}
+    public Integer getVx() {return vx;}
 
-    public Optional<Integer> getVy() {return Optional.ofNullable(vy);}
+    public Integer getVy() {return vy;}
 
-    public Optional<Integer> getAddress() {return Optional.ofNullable(address);}
+    public Integer getAddress() {return address;}
 
     public Opcode() { this(null, null, null); }
 

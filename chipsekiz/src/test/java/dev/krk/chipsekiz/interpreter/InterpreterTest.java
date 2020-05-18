@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -89,8 +88,8 @@ class InterpreterTest {
         interpreter.tick();
         verify(executor).execute(any(), any(), any(), opcodeCaptor.capture());
         assertTrue(opcodeCaptor.getValue() instanceof Op8XY4);
-        assertEquals(Optional.of(0), opcodeCaptor.getValue().getVx());
-        assertEquals(Optional.of(2), opcodeCaptor.getValue().getVy());
+        assertEquals(0, opcodeCaptor.getValue().getVx());
+        assertEquals(2, opcodeCaptor.getValue().getVy());
 
         Op8XY4 op = (Op8XY4) opcodeCaptor.getValue();
         assertEquals(0, op.vx());
