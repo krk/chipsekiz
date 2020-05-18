@@ -24,7 +24,6 @@ public class Interpreter {
     private final int memorySize;
     private final Layout layout;
     private final boolean timersSixtyHertz;
-    private final float sixtyHertzPeriod = 1000 / 60.0f;
 
     private int lastExecutedAddress;
     private Opcode lastExecutedOpcode;
@@ -64,7 +63,7 @@ public class Interpreter {
         this.layout = layout;
         this.timersSixtyHertz = timersSixtyHertz;
         this.status = InterpreterStatus.READY;
-        this.prevTimersTick = System.currentTimeMillis();
+        this.prevTimersTick = System.nanoTime();
     }
 
     private short fetch() {
@@ -98,10 +97,10 @@ public class Interpreter {
 
     public void tick() {
         boolean hasSound = vm.hasSound();
-
-        if (!timersSixtyHertz || (System.currentTimeMillis() - prevTimersTick > sixtyHertzPeriod)) {
+        final long sixtyHertzPeriodNano = 1000000000 / 60;
+        if (!timersSixtyHertz || (System.nanoTime() - prevTimersTick > sixtyHertzPeriodNano)) {
             vm.tickTimers();
-            prevTimersTick = System.currentTimeMillis();
+            prevTimersTick = System.nanoTime();
         }
 
         int pc = vm.getPC();
