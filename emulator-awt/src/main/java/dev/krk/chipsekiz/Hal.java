@@ -9,7 +9,7 @@ import java.util.Random;
 public class Hal implements IHal {
     private final Random random;
     private final IScreenHal screen;
-    private Tone tone;
+    private final Tone tone;
 
     Hal(IScreenHal screen, Tone tone) {
         random = new Random();

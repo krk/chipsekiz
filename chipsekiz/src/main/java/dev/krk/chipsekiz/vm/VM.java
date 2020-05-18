@@ -84,7 +84,7 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public void push(int value) {
-        checkState(stack.size() < StackLimit, "VM stack overflow.");
+        checkState(stack.size() < StackLimit, "VM stack overflow: %s.", Integer.toHexString(value));
 
         stack.push(value);
     }

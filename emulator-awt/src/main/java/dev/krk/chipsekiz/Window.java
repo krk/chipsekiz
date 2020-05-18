@@ -44,8 +44,8 @@ public class Window extends JFrame {
 
         Hal hal = new Hal(canvas, tone);
 
-        byte[] program =
-            getClass().getClassLoader().getResourceAsStream("roms/BC_test.ch8").readAllBytes();
+        byte[] program = getClass().getClassLoader().getResourceAsStream("demo/chipsekiz-demo.ch8")
+            .readAllBytes();
 
         final DebuggerWindow[] debuggerWindow = new DebuggerWindow[1];
         IDebugger debugger = vm -> debuggerWindow[0] = new DebuggerWindow(vm);
@@ -56,24 +56,19 @@ public class Window extends JFrame {
         chipsekiz.load(0x200, program);
 
         final int[] cycles = {0};
-        final int[] fps = {0};
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override public void run() {
                 int c = cycles[0];
                 cycles[0] = 0;
-                int f = fps[0];
-                fps[0] = 0;
-                setTitle(String.format("chipsekiz emulator - %d fps, %d Hz", f, c));
+                setTitle(String.format("chipsekiz emulator - %d Hz", c));
             }
         }, 0, 1000);
 
         // ~500Hz CPU speed.
-        final int BudgetMs = 1000 / 500;
-        final int FpsBudgetMs = 1000 / 30; // arbitrary, ~60 fps.
+        final double BudgetMs = 1000 / 500.0;
 
-        long lastRepaint = 0;
         while (!isClosing) {
             double before = System.currentTimeMillis();
             chipsekiz.tick();
@@ -87,13 +82,6 @@ public class Window extends JFrame {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-
-            long now = System.currentTimeMillis();
-            if (now - lastRepaint > FpsBudgetMs) {
-                canvas.requestRepaint();
-                lastRepaint = now;
-                fps[0]++;
             }
 
             cycles[0]++;

@@ -1,7 +1,7 @@
 package dev.krk.chipsekiz;
 
 public class Rom {
-    private static final String[] Names = {"roms/BC_test.ch8",
+    private static final String[] Names = {"roms/BC_test.ch8", "roms/chipsekiz-demo.ch8",
 
         "roms/15 Puzzle [Roger Ivie] (alt).ch8", "roms/Addition Problems [Paul C. Moews].ch8",
         "roms/Airplane.ch8", "roms/Animal Race [Brian Astle].ch8",

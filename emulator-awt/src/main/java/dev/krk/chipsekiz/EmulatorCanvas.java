@@ -1,6 +1,6 @@
 package dev.krk.chipsekiz;
 
-import dev.krk.chipsekiz.hal.Framebuffer;
+import dev.krk.chipsekiz.hal.FramebufferRenderer;
 import dev.krk.chipsekiz.interpreter.IScreenHal;
 
 import javax.swing.JPanel;
@@ -11,18 +11,15 @@ import java.awt.Graphics;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class EmulatorCanvas extends JPanel implements IScreenHal {
-    private final Framebuffer framebuffer;
-
-    private int scaleX;
-    private int scaleY;
-    private final Color emptyColor;
-    private final Color occupiedColor;
-    private boolean repaint;
-
+    private final FramebufferRenderer renderer;
+    private final int scaleX;
+    private final int scaleY;
 
     EmulatorCanvas(int emulatorWidth, int emulatorHeight, int scaleX, int scaleY, Color emptyColor,
         Color occupiedColor) {
         super();
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
         checkArgument(emulatorWidth > 0, "emulatorWidth must be greater than zero.");
         checkArgument(emulatorHeight > 0, "emulatorHeight must be greater than zero.");
         checkArgument(scaleX > 0, "scaleX must be greater than zero.");
@@ -30,37 +27,28 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
         checkArgument(!emptyColor.equals(occupiedColor),
             "emptyColor color cannot be equal to occupiedColor color.");
 
-        this.framebuffer = new Framebuffer(emulatorWidth, emulatorHeight);
-
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.emptyColor = emptyColor;
-        this.occupiedColor = occupiedColor;
+        this.renderer =
+            new FramebufferRenderer(emulatorWidth, emulatorHeight, scaleX, scaleY, emptyColor,
+                occupiedColor);
 
         setBackground(emptyColor);
         setSize(emulatorWidth * scaleX, emulatorHeight * scaleY);
     }
 
-    public void requestRepaint() {
-        repaint = true;
-        repaint();
-    }
-
     @Override protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (repaint) {
-            framebuffer.paint(g, scaleX, scaleY, emptyColor, occupiedColor);
-            repaint = false;
-        }
+        renderer.render(g);
     }
 
     public void clearScreen() {
-        framebuffer.clearScreen();
+        renderer.clearScreen();
         repaint();
     }
 
     public boolean draw(byte x, byte y, boolean value) {
-        return framebuffer.draw(x, y, value);
+        boolean flipped = renderer.draw(x, y, value);
+        repaint(50, x * scaleX, y * scaleY, scaleX, scaleY);
+        return flipped;
     }
 }

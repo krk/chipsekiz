@@ -2,11 +2,11 @@ package dev.krk.chipsekiz.interpreter;
 
 import dev.krk.chipsekiz.Decoder;
 import dev.krk.chipsekiz.hal.FramebufferHal;
-import dev.krk.chipsekiz.opcodes.Op8XY4;
-import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.loader.Loader;
 import dev.krk.chipsekiz.opcodes.Op00E0;
+import dev.krk.chipsekiz.opcodes.Op8XY4;
+import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -168,6 +168,7 @@ class InterpreterTest {
         FramebufferHal fbhal = new FramebufferHal(64, 32);
 
         final int[] instructionCount = {0};
+
         Interpreter interpreter =
             new Interpreter(loader, decoder, executor, fbhal, CharacterSprites.getAddressLocator(),
                 (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,

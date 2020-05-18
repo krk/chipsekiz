@@ -65,7 +65,8 @@ class FramebufferTest {
             """, fb.toString());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        fb.writeImage(1, 1, outputStream);
+        FramebufferFileRenderer renderer = new FramebufferFileRenderer();
+        renderer.writeImage(fb, 1, 1, outputStream);
         assertEquals(
             "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQAAAABQ6pD4AAAAEklEQVR4XmOoZ/jPsJ/hH8N1ABMGBBNtSDdyAAAAAElFTkSuQmCC",
             Base64.getEncoder().encodeToString(outputStream.toByteArray()));
