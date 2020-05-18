@@ -89,7 +89,7 @@ public class Interpreter {
         lastExecutedOpcode = null;
 
         byte[] memory = loader.load(origin, program, memorySize, layout);
-        this.vm = new VM(origin, memory);
+        this.vm = new VM(origin, memory, debugger);
         if (debugger != null) {
             debugger.setVM(vm);
         }

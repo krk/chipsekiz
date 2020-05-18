@@ -64,7 +64,6 @@ public class Executor implements IExecutor {
             case Op00EE -> vm.setPC(vm.pop());
             case Op0NNN -> {
                 // NOP
-                return;
             }
             case Op1NNN -> vm.setPC(((Op1NNN) opcode).address());
             case Op2NNN -> {

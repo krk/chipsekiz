@@ -19,9 +19,11 @@ public class DebuggerWindow extends JFrame {
 
         memory = new VMMemoryPanel(vm, 64, 256 * 2, 2, 2, Color.WHITE, Color.BLACK);
         add(memory);
+
+        requestRepaint(VMUpdateKind.All, 0);
     }
 
-    public void requestRepaint() {
-        memory.requestRepaint();
+    public void requestRepaint(VMUpdateKind updateKind, int address) {
+        memory.requestRepaint(updateKind, address);
     }
 }

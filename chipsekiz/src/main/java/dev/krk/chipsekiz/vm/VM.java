@@ -12,6 +12,7 @@ public class VM implements IVirtualMachine {
     private final byte[] registers;
     private final Stack<Integer> stack;
     private static final int StackLimit = 16;
+    private final IVMDebugger debugger;
     private short regI;
     private int regPC;
 
@@ -19,13 +20,18 @@ public class VM implements IVirtualMachine {
     private byte timerSound;
 
     public VM() {
-        this(0x200, new byte[0x1000]);
+        this(0x200, new byte[0x1000], null);
     }
 
     public VM(int origin, byte[] memory) {
+        this(origin, memory, null);
+    }
+
+    public VM(int origin, byte[] memory, IVMDebugger debugger) {
         checkArgument(memory.length > 0, "memory cannot be of zero length");
         checkArgument(origin >= 0 && origin < memory.length, "origin must be inside the memory");
 
+        this.debugger = debugger;
         this.origin = origin;
         this.memory = memory;
         this.registers = new byte[16];
@@ -41,6 +47,10 @@ public class VM implements IVirtualMachine {
         checkArgument(pc >= 0 && pc <= getMemorySize() + 2, "PC out of bounds.");
 
         regPC = pc;
+
+        if (debugger != null) {
+            debugger.updatePC(pc);
+        }
     }
 
     @Override public short getI() {
@@ -49,6 +59,10 @@ public class VM implements IVirtualMachine {
 
     @Override public void setI(short i) {
         regI = i;
+
+        if (debugger != null) {
+            debugger.updateI(i);
+        }
     }
 
     @Override public int getOrigin() {
@@ -132,6 +146,10 @@ public class VM implements IVirtualMachine {
         checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
 
         memory[address] = value;
+
+        if (debugger != null) {
+            debugger.updatedByte(address);
+        }
     }
 
     @Override public byte getByte(int address) {
