@@ -16,9 +16,8 @@ public class VMMemoryPanel extends JPanel implements MouseMotionListener {
     private final BufferedImage buffer;
     private final IVirtualMachine vm;
     private final int bitWidth;
-    private final int bitHeight;
-    private int scaleX;
-    private int scaleY;
+    private final int scaleX;
+    private final int scaleY;
     private final Color emptyColor;
     private final Color occupiedColor;
 
@@ -35,7 +34,6 @@ public class VMMemoryPanel extends JPanel implements MouseMotionListener {
 
         this.vm = vm;
         this.bitWidth = bitWidth;
-        this.bitHeight = bitHeight;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
         this.emptyColor = emptyColor;

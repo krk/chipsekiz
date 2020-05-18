@@ -1,13 +1,13 @@
 package dev.krk.chipsekiz.interpreter;
 
+import dev.krk.chipsekiz.IDecoder;
 import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
+import dev.krk.chipsekiz.loader.ILoader;
+import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.opcodes.OpcodeOrData;
 import dev.krk.chipsekiz.tracer.ITracer;
-import dev.krk.chipsekiz.IDecoder;
-import dev.krk.chipsekiz.loader.ILoader;
-import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.vm.VM;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ public class Interpreter {
     private final int memorySize;
     private final Layout layout;
     private final boolean timersSixtyHertz;
-    private final float sixtyHertzPeriod = 1000 / 60;
+    private final float sixtyHertzPeriod = 1000 / 60.0f;
 
     private int lastExecutedAddress;
     private Opcode lastExecutedOpcode;

@@ -6,8 +6,6 @@ import dev.krk.chipsekiz.loader.Section;
 
 import java.util.Collections;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public class CharacterSprites {
     private static final ICharacterAddressLocator locator =
         character -> (short) ((character & 0xF) * 5);
