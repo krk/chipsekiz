@@ -20,10 +20,51 @@ public class EmulatorWindow extends JFrame {
         add(canvas);
 
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Speed");
-        menu.setMnemonic('e');
+        JMenu menu = new JMenu("Sound");
+        menu.setMnemonic('u');
+
+        // Sound menu
+        ActionListener soundSetter =
+            e -> controller.setToneFrequency(Integer.parseInt(e.getActionCommand()));
+
+        ButtonGroup soundGroup = new ButtonGroup();
+
+        JRadioButtonMenuItem sound = new JRadioButtonMenuItem("Off", false);
+        sound.setMnemonic(KeyEvent.VK_0);
+        sound.setActionCommand("0");
+        menu.add(sound);
+        sound.addActionListener(soundSetter);
+        soundGroup.add(sound);
+
+        sound = new JRadioButtonMenuItem("440 Hz", false);
+        sound.setActionCommand("440");
+        menu.add(sound);
+        sound.addActionListener(soundSetter);
+        soundGroup.add(sound);
+
+        sound = new JRadioButtonMenuItem("1600 Hz", true);
+        sound.setActionCommand("1600");
+        menu.add(sound);
+        sound.addActionListener(soundSetter);
+        soundGroup.add(sound);
+
+        sound = new JRadioButtonMenuItem("2600 Hz", false);
+        sound.setActionCommand("2600");
+        menu.add(sound);
+        sound.addActionListener(soundSetter);
+        soundGroup.add(sound);
+
+        sound = new JRadioButtonMenuItem("5000 Hz", false);
+        sound.setActionCommand("5000");
+        menu.add(sound);
+        sound.addActionListener(soundSetter);
+        soundGroup.add(sound);
+
+        menuBar.add(menu);
 
         // Speed menu
+        menu = new JMenu("Speed");
+        menu.setMnemonic('e');
         ActionListener speedSetter =
             e -> controller.setFrequency(Integer.parseInt(e.getActionCommand()));
 
@@ -71,7 +112,7 @@ public class EmulatorWindow extends JFrame {
         speed.addActionListener(speedSetter);
         speedGroup.add(speed);
 
-        speed = new JRadioButtonMenuItem("Unlock speed", false);
+        speed = new JRadioButtonMenuItem("Unlock sound", false);
         speed.setActionCommand(Integer.toString(Integer.MAX_VALUE));
         menu.add(speed);
         speed.addActionListener(speedSetter);

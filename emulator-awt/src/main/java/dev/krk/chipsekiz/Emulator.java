@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Emulator implements IEmulatorController {
+public class Emulator {
     private final Interpreter interpreter;
     private volatile boolean isStopping;
     private volatile int actualFrequency;

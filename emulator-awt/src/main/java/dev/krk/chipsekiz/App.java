@@ -13,22 +13,19 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 /**
  * Hello world!
  */
 public class App {
-    public static void main(String[] args) {
-        Tone tone = null;
-        try {
-            tone = new Tone(1600);
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws LineUnavailableException {
+        final Tone tone = new Tone(1600);
 
         EmulatorCanvas canvas = new EmulatorCanvas(64, 32, 12, 12, Color.WHITE, Color.BLACK);
         Hal hal = new Hal(canvas, tone);
         Emulator emulator = createEmulator(hal, new EmulatorOptions(true));
-        EmulatorWindow win = new EmulatorWindow(canvas, emulator);
+        IEmulatorController emulatorController = new EmulatorController(emulator, tone);
+        EmulatorWindow win = new EmulatorWindow(canvas, emulatorController);
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
