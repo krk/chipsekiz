@@ -71,4 +71,12 @@ public class EmulatorController implements IEmulatorController {
             hal.keyDown((byte) (key - '0'));
         }
     }
+
+    @Override public void pause() {
+        emulator.pause();
+    }
+
+    @Override public void resume() {
+        emulator.resume();
+    }
 }

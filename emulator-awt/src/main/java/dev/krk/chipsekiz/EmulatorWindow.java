@@ -50,6 +50,25 @@ public class EmulatorWindow extends JFrame implements KeyListener {
             }
         });
 
+        item = new JMenuItem("Pause");
+        item.setMnemonic(KeyEvent.VK_P);
+        item.setActionCommand("pause");
+        menu.add(item);
+        JMenuItem pauseItem = item;
+        item.addActionListener(e -> {
+            if (e.getActionCommand().equals("pause")) {
+                controller.pause();
+                pauseItem.setActionCommand("resume");
+                pauseItem.setText("Resume");
+                pauseItem.setMnemonic(KeyEvent.VK_M);
+            } else {
+                controller.resume();
+                pauseItem.setActionCommand("pause");
+                pauseItem.setText("Pause");
+                pauseItem.setMnemonic(KeyEvent.VK_P);
+            }
+        });
+
         menuBar.add(menu);
 
         // Sound menu

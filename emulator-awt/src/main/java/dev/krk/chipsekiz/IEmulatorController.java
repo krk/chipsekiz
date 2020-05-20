@@ -14,4 +14,8 @@ public interface IEmulatorController {
     void keyUp();
 
     void keyDown(char keyChar);
+
+    void pause();
+
+    void resume();
 }
