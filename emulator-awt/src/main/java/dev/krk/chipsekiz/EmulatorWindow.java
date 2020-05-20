@@ -113,6 +113,68 @@ public class EmulatorWindow extends JFrame implements KeyListener {
 
         menuBar.add(menu);
 
+        // Scale menu
+        menu = new JMenu("Scale");
+        menu.setMnemonic('c');
+
+        ActionListener scaleSetter = e -> {
+            int scale = Integer.parseInt(e.getActionCommand());
+            canvas.rescale(scale, scale);
+            setSize(canvas.getWidth(), canvas.getHeight() + 88);
+        };
+
+        ButtonGroup scaleGroup = new ButtonGroup();
+
+        JRadioButtonMenuItem scale = new JRadioButtonMenuItem("1x1", false);
+        scale.setMnemonic(KeyEvent.VK_1);
+        scale.setActionCommand("1");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("2x2", false);
+        scale.setMnemonic(KeyEvent.VK_2);
+        scale.setActionCommand("2");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("3x3", true);
+        scale.setMnemonic(KeyEvent.VK_3);
+        scale.setActionCommand("3");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("4x4", false);
+        scale.setMnemonic(KeyEvent.VK_4);
+        scale.setActionCommand("4");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("8x8", false);
+        scale.setMnemonic(KeyEvent.VK_8);
+        scale.setActionCommand("8");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("12x12", true);
+        scale.setActionCommand("12");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        scale = new JRadioButtonMenuItem("16x16", false);
+        scale.setMnemonic(KeyEvent.VK_5);
+        scale.setActionCommand("16");
+        menu.add(scale);
+        scale.addActionListener(scaleSetter);
+        scaleGroup.add(scale);
+
+        menuBar.add(menu);
+
         // Speed menu
         menu = new JMenu("Speed");
         menu.setMnemonic('e');
