@@ -1,5 +1,8 @@
 package dev.krk.chipsekiz;
 
+import dev.krk.chipsekiz.interpreter.IDebugger;
+import dev.krk.chipsekiz.interpreter.IInterpreter;
+
 public interface IEmulatorController {
     void load(int origin, byte[] program);
 
@@ -18,4 +21,6 @@ public interface IEmulatorController {
     void pause();
 
     void resume();
+
+    void setInterpreter(IInterpreter interpreter, IDebugger debugger);
 }

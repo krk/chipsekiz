@@ -12,7 +12,7 @@ import dev.krk.chipsekiz.vm.VM;
 
 import javax.annotation.Nullable;
 
-public class Interpreter {
+public class Interpreter implements IInterpreter {
     private VM vm;
     private final IDecoder decoder;
     private final IExecutor executor;
@@ -20,7 +20,7 @@ public class Interpreter {
     private final IHal hal;
     private final ICharacterAddressLocator characterAddressLocator;
     @Nullable private final ITracer tracer;
-    @Nullable private final IDebugger debugger;
+    @Nullable private IDebugger debugger;
     private final int memorySize;
     private final Layout layout;
     private final boolean timersSixtyHertz;
@@ -93,6 +93,10 @@ public class Interpreter {
         if (debugger != null) {
             debugger.setVM(vm);
         }
+    }
+
+    @Override public void setDebugger(IDebugger debugger) {
+        this.debugger = debugger;
     }
 
     public void tick() {

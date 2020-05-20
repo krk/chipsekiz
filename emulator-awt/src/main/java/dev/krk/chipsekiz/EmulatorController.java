@@ -1,20 +1,20 @@
 package dev.krk.chipsekiz;
 
 import dev.krk.chipsekiz.interpreter.IDebugger;
-import dev.krk.chipsekiz.interpreter.Interpreter;
+import dev.krk.chipsekiz.interpreter.IInterpreter;
 
 import javax.sound.sampled.LineUnavailableException;
 
 public class EmulatorController implements IEmulatorController {
     private final Emulator emulator;
-    private final Interpreter interpreter;
+    private IInterpreter interpreter;
     private final IDebugger debugger;
     private final Hal hal;
     private final Tone tone;
     private int lastLoadedOrigin;
     private byte[] lastLoadedProgram;
 
-    public EmulatorController(Emulator emulator, Interpreter interpreter, IDebugger debugger,
+    public EmulatorController(Emulator emulator, IInterpreter interpreter, IDebugger debugger,
         Hal hal, Tone tone) {
         this.emulator = emulator;
         this.interpreter = interpreter;
@@ -77,6 +77,14 @@ public class EmulatorController implements IEmulatorController {
     }
 
     @Override public void resume() {
+        emulator.resume();
+    }
+
+    @Override public void setInterpreter(IInterpreter interpreter, IDebugger debugger) {
+        emulator.pause();
+        interpreter.setDebugger(debugger);
+        emulator.setInterpreter(interpreter);
+        this.interpreter = interpreter;
         emulator.resume();
     }
 }

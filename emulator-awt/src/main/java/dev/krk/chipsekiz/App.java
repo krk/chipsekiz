@@ -1,14 +1,11 @@
 package dev.krk.chipsekiz;
 
 import dev.krk.chipsekiz.interpreter.IDebugger;
-import dev.krk.chipsekiz.interpreter.Interpreter;
-import dev.krk.chipsekiz.interpreter.InterpreterFactory;
-import dev.krk.chipsekiz.sprites.CharacterSprites;
+import dev.krk.chipsekiz.interpreter.IInterpreter;
 
 import javax.sound.sampled.LineUnavailableException;
 
 import java.awt.Color;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,25 +29,21 @@ public class App {
             debugger = new Debugger();
         }
 
-        byte[] program;
-        try {
-            // Load demo ROM at start.
-            program = App.class.getClassLoader().getResourceAsStream("demo/chipsekiz-demo.ch8")
-                .readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        IChipVariation variation = ChipVariationFactory.createChip8(hal);
 
-        Interpreter interpreter =
-            InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null, debugger);
-        final int origin = 0x200;
-        interpreter.load(origin, program);
+        IInterpreter interpreter = variation.getInterpreter();
+        interpreter.setDebugger(debugger);
 
         Emulator emulator = new Emulator(interpreter);
         IEmulatorController emulatorController =
             new EmulatorController(emulator, interpreter, debugger, hal, tone);
-        emulatorController.setLoadedProgram(origin, program);
+
+        if (variation.hasDemoProgram()) {
+            interpreter.load(variation.getDemoOrigin(), variation.getDemoProgram());
+            emulatorController
+                .setLoadedProgram(variation.getDemoOrigin(), variation.getDemoProgram());
+        }
+
         EmulatorWindow win = new EmulatorWindow(canvas, emulatorController);
 
         Timer timer = new Timer();
@@ -61,6 +54,9 @@ public class App {
             }
         }, 0, 100);
 
+        if (!variation.hasDemoProgram()) {
+            emulator.pause();
+        }
         emulator.run();
 
         if (tone != null) {

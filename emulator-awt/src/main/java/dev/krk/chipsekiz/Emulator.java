@@ -1,19 +1,19 @@
 package dev.krk.chipsekiz;
 
-import dev.krk.chipsekiz.interpreter.Interpreter;
+import dev.krk.chipsekiz.interpreter.IInterpreter;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class Emulator {
-    private final Interpreter interpreter;
+    private IInterpreter interpreter;
     private volatile boolean isStopping;
     private volatile int actualFrequency;
     private double tickBudgetNs;
     private boolean paused;
 
-    public Emulator(Interpreter interpreter) {
+    public Emulator(IInterpreter interpreter) {
         this.interpreter = interpreter;
         this.isStopping = false;
         this.actualFrequency = 0;
@@ -74,5 +74,9 @@ public class Emulator {
 
     public void resume() {
         paused = false;
+    }
+
+    public void setInterpreter(IInterpreter interpreter) {
+        this.interpreter = interpreter;
     }
 }
