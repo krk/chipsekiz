@@ -49,7 +49,7 @@ public class App {
 
         Emulator emulator = new Emulator(interpreter);
         IEmulatorController emulatorController =
-            new EmulatorController(emulator, interpreter, debugger, tone);
+            new EmulatorController(emulator, interpreter, debugger, hal, tone);
         emulatorController.setLoadedProgram(origin, program);
         EmulatorWindow win = new EmulatorWindow(canvas, emulatorController);
 

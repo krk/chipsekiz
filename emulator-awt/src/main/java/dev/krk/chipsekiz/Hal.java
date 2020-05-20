@@ -10,6 +10,7 @@ public class Hal implements IHal {
     private final Random random;
     private final IScreenHal screen;
     private final Tone tone;
+    private Byte key;
 
     Hal(IScreenHal screen, Tone tone) {
         random = new Random();
@@ -42,6 +43,14 @@ public class Hal implements IHal {
     }
 
     @Override public Optional<Byte> getKey() {
-        return Optional.empty();
+        return Optional.ofNullable(key);
+    }
+
+    public void keyUp() {
+        key = null;
+    }
+
+    public void keyDown(Byte key) {
+        this.key = key;
     }
 }

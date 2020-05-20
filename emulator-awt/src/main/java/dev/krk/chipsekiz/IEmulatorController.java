@@ -10,4 +10,8 @@ public interface IEmulatorController {
     void setToneFrequency(int frequency);
 
     void reset();
+
+    void keyUp();
+
+    void keyDown(char keyChar);
 }

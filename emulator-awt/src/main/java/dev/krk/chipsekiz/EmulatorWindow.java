@@ -12,9 +12,10 @@ import javax.swing.JRadioButtonMenuItem;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
-public class EmulatorWindow extends JFrame {
+public class EmulatorWindow extends JFrame implements KeyListener {
     private final IEmulatorController controller;
 
     EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller) {
@@ -25,6 +26,8 @@ public class EmulatorWindow extends JFrame {
         setSize(64 * 12, 32 * 12 + 88);
 
         add(canvas);
+
+        addKeyListener(this);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("ROM");
@@ -162,5 +165,17 @@ public class EmulatorWindow extends JFrame {
             byte[] program = Files.toByteArray(fc.getSelectedFile());
             controller.load(0x200, program);
         }
+    }
+
+    @Override public void keyTyped(KeyEvent e) {
+        // NOOP.
+    }
+
+    @Override public void keyPressed(KeyEvent e) {
+        controller.keyDown(e.getKeyChar());
+    }
+
+    @Override public void keyReleased(KeyEvent e) {
+        controller.keyUp();
     }
 }

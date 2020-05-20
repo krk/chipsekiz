@@ -9,15 +9,17 @@ public class EmulatorController implements IEmulatorController {
     private final Emulator emulator;
     private final Interpreter interpreter;
     private final IDebugger debugger;
+    private final Hal hal;
     private final Tone tone;
     private int lastLoadedOrigin;
     private byte[] lastLoadedProgram;
 
     public EmulatorController(Emulator emulator, Interpreter interpreter, IDebugger debugger,
-        Tone tone) {
+        Hal hal, Tone tone) {
         this.emulator = emulator;
         this.interpreter = interpreter;
         this.debugger = debugger;
+        this.hal = hal;
         this.tone = tone;
     }
 
@@ -55,5 +57,18 @@ public class EmulatorController implements IEmulatorController {
         }
         interpreter.load(lastLoadedOrigin, lastLoadedProgram);
         emulator.resume();
+    }
+
+    @Override public void keyUp() {
+        hal.keyUp();
+    }
+
+    @Override public void keyDown(char keyChar) {
+        char key = Character.toLowerCase(keyChar);
+        if (key >= 'a' && key <= 'f') {
+            hal.keyDown((byte) (key - 'a' + 0xA));
+        } else if (key >= '0' && key <= '9') {
+            hal.keyDown((byte) (key - '0'));
+        }
     }
 }
