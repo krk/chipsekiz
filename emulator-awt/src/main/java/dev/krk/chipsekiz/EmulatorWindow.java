@@ -1,6 +1,9 @@
 package dev.krk.chipsekiz;
 
+import com.google.common.io.Files;
+
 import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -9,11 +12,14 @@ import javax.swing.JRadioButtonMenuItem;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class EmulatorWindow extends JFrame {
+    private final IEmulatorController controller;
 
     EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller) {
         super("chipsekiz emulator");
+        this.controller = controller;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(64 * 12, 32 * 12 + 88);
@@ -29,6 +35,17 @@ public class EmulatorWindow extends JFrame {
         item.setMnemonic(KeyEvent.VK_R);
         menu.add(item);
         item.addActionListener(e -> controller.reset());
+
+        item = new JMenuItem("Load");
+        item.setMnemonic(KeyEvent.VK_L);
+        menu.add(item);
+        item.addActionListener(e -> {
+            try {
+                loadROM();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
         menuBar.add(menu);
 
@@ -134,5 +151,16 @@ public class EmulatorWindow extends JFrame {
         setJMenuBar(menuBar);
 
         setVisible(true);
+    }
+
+    private void loadROM() throws IOException {
+        final JFileChooser fc = new JFileChooser();
+
+        fc.setDialogTitle("Select CHIP-8 ROM");
+        fc.setDialogType(JFileChooser.OPEN_DIALOG);
+        if (JFileChooser.APPROVE_OPTION == fc.showOpenDialog(this)) {
+            byte[] program = Files.toByteArray(fc.getSelectedFile());
+            controller.load(0x200, program);
+        }
     }
 }

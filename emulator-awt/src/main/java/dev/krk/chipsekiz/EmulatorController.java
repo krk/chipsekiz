@@ -43,6 +43,11 @@ public class EmulatorController implements IEmulatorController {
         }
     }
 
+    @Override public void load(int origin, byte[] program) {
+        setLoadedProgram(origin, program);
+        reset();
+    }
+
     @Override public void reset() {
         emulator.pause();
         if (debugger != null) {

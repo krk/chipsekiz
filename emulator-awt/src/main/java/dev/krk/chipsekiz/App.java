@@ -1,7 +1,6 @@
 package dev.krk.chipsekiz;
 
 import dev.krk.chipsekiz.interpreter.IDebugger;
-import dev.krk.chipsekiz.interpreter.IHal;
 import dev.krk.chipsekiz.interpreter.Interpreter;
 import dev.krk.chipsekiz.interpreter.InterpreterFactory;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
