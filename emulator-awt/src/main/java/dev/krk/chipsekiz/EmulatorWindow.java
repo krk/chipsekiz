@@ -4,6 +4,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 import java.awt.event.ActionListener;
@@ -20,10 +21,21 @@ public class EmulatorWindow extends JFrame {
         add(canvas);
 
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Sound");
-        menu.setMnemonic('u');
+        JMenu menu = new JMenu("ROM");
+        menu.setMnemonic('r');
+
+        // ROM menu
+        JMenuItem item = new JMenuItem("Reset");
+        item.setMnemonic(KeyEvent.VK_R);
+        menu.add(item);
+        item.addActionListener(e -> controller.reset());
+
+        menuBar.add(menu);
 
         // Sound menu
+        menu = new JMenu("Sound");
+        menu.setMnemonic('u');
+
         ActionListener soundSetter =
             e -> controller.setToneFrequency(Integer.parseInt(e.getActionCommand()));
 
@@ -112,7 +124,7 @@ public class EmulatorWindow extends JFrame {
         speed.addActionListener(speedSetter);
         speedGroup.add(speed);
 
-        speed = new JRadioButtonMenuItem("Unlock sound", false);
+        speed = new JRadioButtonMenuItem("Unlock item", false);
         speed.setActionCommand(Integer.toString(Integer.MAX_VALUE));
         menu.add(speed);
         speed.addActionListener(speedSetter);

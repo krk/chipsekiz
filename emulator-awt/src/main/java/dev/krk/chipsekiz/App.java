@@ -19,12 +19,39 @@ import java.util.TimerTask;
  */
 public class App {
     public static void main(String[] args) throws LineUnavailableException {
+        EmulatorOptions options = new EmulatorOptions(true);
+        runEmulator(options);
+    }
+
+    private static void runEmulator(EmulatorOptions options) throws LineUnavailableException {
         final Tone tone = new Tone(1600);
 
         EmulatorCanvas canvas = new EmulatorCanvas(64, 32, 12, 12, Color.WHITE, Color.BLACK);
         Hal hal = new Hal(canvas, tone);
-        Emulator emulator = createEmulator(hal, new EmulatorOptions(true));
-        IEmulatorController emulatorController = new EmulatorController(emulator, tone);
+        IDebugger debugger = null;
+        if (options.isDebuggerEnabled()) {
+            debugger = new Debugger();
+        }
+
+        byte[] program;
+        try {
+            // Load demo ROM at start.
+            program = App.class.getClassLoader().getResourceAsStream("demo/chipsekiz-demo.ch8")
+                .readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Interpreter interpreter =
+            InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null, debugger);
+        final int origin = 0x200;
+        interpreter.load(origin, program);
+
+        Emulator emulator = new Emulator(interpreter);
+        IEmulatorController emulatorController =
+            new EmulatorController(emulator, interpreter, debugger, tone);
+        emulatorController.setLoadedProgram(origin, program);
         EmulatorWindow win = new EmulatorWindow(canvas, emulatorController);
 
         Timer timer = new Timer();
@@ -40,32 +67,5 @@ public class App {
         if (tone != null) {
             tone.close();
         }
-    }
-
-    private static Emulator createEmulator(IHal hal, EmulatorOptions options) {
-        IDebugger debugger = null;
-        if (options.isDebuggerEnabled()) {
-            debugger = new Debugger();
-        }
-
-        Interpreter interpreter = createInterpreter(hal, debugger);
-        return new Emulator(interpreter);
-    }
-
-    private static Interpreter createInterpreter(IHal hal, IDebugger debugger) {
-        byte[] program;
-        try {
-            // Load demo ROM at start.
-            program = App.class.getClassLoader().getResourceAsStream("demo/chipsekiz-demo.ch8")
-                .readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        Interpreter chipsekiz =
-            InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null, debugger);
-        chipsekiz.load(0x200, program);
-        return chipsekiz;
     }
 }

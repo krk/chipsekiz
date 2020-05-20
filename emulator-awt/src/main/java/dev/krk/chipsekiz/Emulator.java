@@ -11,6 +11,7 @@ public class Emulator {
     private volatile boolean isStopping;
     private volatile int actualFrequency;
     private double tickBudgetNs;
+    private boolean paused;
 
     public Emulator(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -45,6 +46,15 @@ public class Emulator {
         double done = 0;
         long prev = System.nanoTime();
         while (!isStopping) {
+            if (paused) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+
             long now = System.nanoTime();
             long diff = now - prev;
             done += diff / tickBudgetNs;
@@ -56,5 +66,13 @@ public class Emulator {
                 done = 0;
             }
         }
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void resume() {
+        paused = false;
     }
 }

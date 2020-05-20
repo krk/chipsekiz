@@ -10,6 +10,14 @@ public class Debugger implements IDebugger {
         window = new DebuggerWindow(vm);
     }
 
+    @Override public void closeDebuggerWindow() {
+        if (window == null) {
+            return;
+        }
+        window.dispose();
+        window = null;
+    }
+
     @Override public void updatedByte(int address) {
         if (window == null) {
             return;

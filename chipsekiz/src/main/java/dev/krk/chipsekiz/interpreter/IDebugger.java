@@ -6,4 +6,6 @@ import dev.krk.chipsekiz.vm.IVirtualMachine;
 
 public interface IDebugger extends IVMDebugger {
     void setVM(IVirtualMachine vm);
+
+    void closeDebuggerWindow();
 }
