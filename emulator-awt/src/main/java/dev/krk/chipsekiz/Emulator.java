@@ -5,7 +5,8 @@ import dev.krk.chipsekiz.interpreter.Interpreter;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Emulator {
+
+public class Emulator implements IEmulatorController {
     private final Interpreter interpreter;
     private volatile boolean isStopping;
     private volatile int actualFrequency;

@@ -8,6 +8,7 @@ import dev.krk.chipsekiz.sprites.CharacterSprites;
 
 import javax.sound.sampled.LineUnavailableException;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,8 +18,6 @@ import java.util.TimerTask;
  */
 public class App {
     public static void main(String[] args) {
-        EmulatorWindow win = new EmulatorWindow();
-
         Tone tone = null;
         try {
             tone = new Tone(1600);
@@ -26,10 +25,10 @@ public class App {
             e.printStackTrace();
         }
 
-        Hal hal = new Hal(win.getScreenHal(), tone);
+        EmulatorCanvas canvas = new EmulatorCanvas(64, 32, 12, 12, Color.WHITE, Color.BLACK);
+        Hal hal = new Hal(canvas, tone);
         Emulator emulator = createEmulator(hal, new EmulatorOptions(true));
-
-        emulator.run();
+        EmulatorWindow win = new EmulatorWindow(canvas, emulator);
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -38,6 +37,8 @@ public class App {
                     String.format("chipsekiz emulator - %d Hz", emulator.getActualFrequency()));
             }
         }, 0, 100);
+
+        emulator.run();
 
         if (tone != null) {
             tone.close();

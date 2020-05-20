@@ -1,28 +1,85 @@
 package dev.krk.chipsekiz;
 
-import dev.krk.chipsekiz.interpreter.IScreenHal;
-
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
 
-import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class EmulatorWindow extends JFrame {
 
-    private final EmulatorCanvas canvas;
-
-    EmulatorWindow() {
+    EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller) {
         super("chipsekiz emulator");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(64 * 12, 32 * 12 + 68);
-        setResizable(false);
-        setVisible(true);
+        setSize(64 * 12, 32 * 12 + 88);
 
-        canvas = new EmulatorCanvas(64, 32, 12, 12, Color.WHITE, Color.BLACK);
         add(canvas);
-    }
 
-    public IScreenHal getScreenHal() {
-        return canvas;
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Speed");
+        menu.setMnemonic('e');
+
+        // Speed menu
+        ActionListener speedSetter =
+            e -> controller.setFrequency(Integer.parseInt(e.getActionCommand()));
+
+        ButtonGroup speedGroup = new ButtonGroup();
+
+        JRadioButtonMenuItem speed = new JRadioButtonMenuItem("10 Hz", false);
+        speed.setActionCommand("10");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("50 Hz", false);
+        speed.setActionCommand("50");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("100 Hz", false);
+        speed.setActionCommand("100");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("200 Hz", false);
+        speed.setActionCommand("200");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("500 Hz", false);
+        speed.setActionCommand("500");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("1000 Hz", false);
+        speed.setActionCommand("1000");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("5000 Hz", true);
+        speed.setActionCommand("5000");
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        speed = new JRadioButtonMenuItem("Unlock speed", false);
+        speed.setActionCommand(Integer.toString(Integer.MAX_VALUE));
+        menu.add(speed);
+        speed.addActionListener(speedSetter);
+        speedGroup.add(speed);
+
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
+
+        setVisible(true);
     }
 }
