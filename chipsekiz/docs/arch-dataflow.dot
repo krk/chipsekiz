@@ -1,0 +1,48 @@
+digraph dataflow {
+    ROM -> loader
+    loader -> interpreter
+    interpreter -> loader
+    interpreter -> decoder
+    decoder -> interpreter
+    interpreter -> executor
+    executor -> HAL
+    interpreter -> HAL
+    HAL -> interpreter
+
+    subgraph hardware {
+        node [style=filled, fillcolor="grey"]
+        screen
+        sound
+        keyboard
+    }
+
+    HAL -> screen
+    HAL -> sound
+    HAL -> keyboard
+
+    ROM [shape=Mcircle, color="blue"];
+    interpreter [shape=octagon, color="blue"]
+
+    subgraph emulator {
+        node [style=filled, fillcolor="cyan"]
+
+        emuHal [label="HAL\nimplementation"]
+        emuScreen [label="screen\nJFrame"]
+        emuSound [label="sound\nAudioSystem"]
+        emuKeyboard [label="keyboard\nkeys [0-9A-F]"]
+
+        emuHal -> emuScreen
+        emuHal -> emuSound
+        emuHal -> emuKeyboard
+        emulator -> emuHal
+        emulator -> interpreter
+        executor -> emuHal
+        interpreter -> emuHal
+    }
+
+    subgraph subs {
+        rank="same"
+        HAL
+        emuHal
+    }
+}

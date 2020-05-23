@@ -1,6 +1,7 @@
 package dev.krk.chipsekiz.interpreter;
 
 import dev.krk.chipsekiz.Decoder;
+import dev.krk.chipsekiz.hal.Framebuffer;
 import dev.krk.chipsekiz.hal.FramebufferHal;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.loader.Loader;
@@ -164,7 +165,8 @@ class InterpreterTest {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
         IExecutor executor = new Executor();
-        FramebufferHal fbhal = new FramebufferHal(64, 32);
+        Framebuffer fb = new Framebuffer(64, 32);
+        FramebufferHal fbhal = new FramebufferHal(fb);
 
         final int[] instructionCount = {0};
 

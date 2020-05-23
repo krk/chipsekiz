@@ -3,6 +3,10 @@ package dev.krk.chipsekiz;
 public class Rom {
     private static final String[] Names = {"roms/BC_test.ch8", "roms/chipsekiz-demo.ch8",
 
+        "roms/1dcell.ch8", "roms/chipwar.ch8", "roms/danm8ku.ch8", "roms/glitchGhost.ch8",
+        "roms/horseWorldOnline.ch8", "roms/octojam6title.ch8", "roms/piper.ch8", "roms/RPS.ch8",
+        "roms/snake.ch8", "roms/spacejam.ch8",
+
         "roms/15 Puzzle [Roger Ivie] (alt).ch8", "roms/Addition Problems [Paul C. Moews].ch8",
         "roms/Airplane.ch8", "roms/Animal Race [Brian Astle].ch8",
         "roms/Astro Dodge [Revival Studios, 2008].ch8", "roms/Biorhythm [Jef Winsor].ch8",

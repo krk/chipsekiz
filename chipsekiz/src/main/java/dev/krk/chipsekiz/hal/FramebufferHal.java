@@ -14,8 +14,12 @@ public class FramebufferHal implements IHal {
     private boolean dirty;
 
     public FramebufferHal(int width, int height) {
+        this(new Framebuffer(width, height));
+    }
+
+    public FramebufferHal(Framebuffer framebuffer) {
         this.random = new Random();
-        this.fb = new Framebuffer(width, height);
+        this.fb = framebuffer;
         this.key = null;
     }
 
