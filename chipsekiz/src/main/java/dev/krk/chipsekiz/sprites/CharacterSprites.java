@@ -34,6 +34,10 @@ public class CharacterSprites {
         return buffer.clone();
     }
 
+    public static int length() {
+        return buffer.length;
+    }
+
     public static ICharacterAddressLocator getAddressLocator() {
         return locator;
     }

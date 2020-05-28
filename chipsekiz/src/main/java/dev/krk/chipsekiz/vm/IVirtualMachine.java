@@ -38,4 +38,8 @@ public interface IVirtualMachine {
     void setByte(int address, byte value);
 
     byte getByte(int address);
+
+    boolean hasSound();
+
+    short getShort(int address);
 }

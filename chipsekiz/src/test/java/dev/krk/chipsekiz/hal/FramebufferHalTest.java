@@ -7,6 +7,7 @@ import dev.krk.chipsekiz.interpreter.Interpreter;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.loader.Loader;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
+import dev.krk.chipsekiz.vm.VM;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -19,15 +20,15 @@ class FramebufferHalTest {
     @Test void sound() {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
         FramebufferHal hal = new FramebufferHal(1, 1);
+        IExecutor executor = new Executor(hal, CharacterSprites.getAddressLocator());
 
         for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
-            Interpreter interpreter = new Interpreter(loader, decoder, executor, hal,
-                CharacterSprites.getAddressLocator(), null, null, 0, program, program.length,
-                Layout.empty(), false);
+            Interpreter interpreter =
+                new Interpreter(VM::new, loader, decoder, executor, hal, null, null, 0, program,
+                    program.length, Layout.empty(), false);
 
             interpreter.tick();
             assertFalse(hal.isSoundActive());

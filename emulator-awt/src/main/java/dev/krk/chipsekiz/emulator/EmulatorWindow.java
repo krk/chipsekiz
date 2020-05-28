@@ -1,6 +1,7 @@
 package dev.krk.chipsekiz.emulator;
 
 import com.google.common.io.Files;
+import dev.krk.chipsekiz.superchip.interpreter.Resolution;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
@@ -18,12 +19,13 @@ import java.io.IOException;
 public class EmulatorWindow extends JFrame implements KeyListener {
     private final IEmulatorController controller;
 
-    EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller) {
+    EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller, Resolution resolution) {
         super("chipsekiz emulator");
         this.controller = controller;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(64 * 12, 32 * 12 + 88);
+        setSize((resolution == Resolution.High ? 128 : 64) * 12,
+            (resolution == Resolution.High ? 64 : 32) * 12 + 88);
 
         add(canvas);
 

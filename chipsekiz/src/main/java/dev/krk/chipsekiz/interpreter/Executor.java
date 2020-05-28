@@ -36,14 +36,24 @@ import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.vm.IVirtualMachine;
 
+import javax.annotation.Nullable;
+
 import java.util.Optional;
 
 public class Executor implements IExecutor {
+    private IVirtualMachine vm;
+    private final IHal hal;
+    private final ICharacterAddressLocator characterAddressLocator;
     private final boolean bitShiftsIgnoreVY;
     private final boolean saveDumpIncreasesI;
 
-    public Executor() {
-        this(false, false);
+    public Executor(IHal hal, ICharacterAddressLocator characterAddressLocator) {
+        this(null, hal, characterAddressLocator, false, false);
+    }
+
+    public Executor(@Nullable IVirtualMachine vm, IHal hal,
+        ICharacterAddressLocator characterAddressLocator) {
+        this(vm, hal, characterAddressLocator, false, false);
     }
 
     /**
@@ -52,13 +62,21 @@ public class Executor implements IExecutor {
      * @param loadDumpIncreasesI FX55 and FX65 register load-dump operations increase I.
      * https://en.wikipedia.org/wiki/CHIP-8#cite_note-increment-16
      */
-    public Executor(boolean bitShiftsIgnoreVY, boolean loadDumpIncreasesI) {
+    public Executor(@Nullable IVirtualMachine vm, IHal hal,
+        ICharacterAddressLocator characterAddressLocator, boolean bitShiftsIgnoreVY,
+        boolean loadDumpIncreasesI) {
+        this.vm = vm;
+        this.hal = hal;
+        this.characterAddressLocator = characterAddressLocator;
         this.bitShiftsIgnoreVY = bitShiftsIgnoreVY;
         this.saveDumpIncreasesI = loadDumpIncreasesI;
     }
 
-    @Override public void execute(IVirtualMachine vm, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, Opcode opcode) {
+    @Override public void setVM(IVirtualMachine vm) {
+        this.vm = vm;
+    }
+
+    @Override public void execute(Opcode opcode) {
         switch (opcode.getKind()) {
             case Op00E0 -> hal.clearScreen();
             case Op00EE -> vm.setPC(vm.pop());

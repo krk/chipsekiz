@@ -6,6 +6,7 @@ import dev.krk.chipsekiz.interpreter.IScreenHal;
 import java.util.Optional;
 import java.util.Random;
 
+
 public class Hal implements IHal {
     private final Random random;
     private final IScreenHal screen;

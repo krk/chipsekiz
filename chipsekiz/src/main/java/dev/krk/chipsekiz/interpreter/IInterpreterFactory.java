@@ -1,5 +1,5 @@
 package dev.krk.chipsekiz.interpreter;
 
-public interface IInterpreterFactory {
-    IInterpreter create(IHal hal);
+public interface IInterpreterFactory<THal> {
+    IInterpreter create(THal hal);
 }

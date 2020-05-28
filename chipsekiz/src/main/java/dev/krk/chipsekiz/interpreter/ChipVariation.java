@@ -1,19 +1,19 @@
 package dev.krk.chipsekiz.interpreter;
 
-public class ChipVariation implements IChipVariation {
-    private final IInterpreterFactory interpreterFactory;
+public class ChipVariation<THal extends IHal> implements IChipVariation<THal> {
+    private final IInterpreterFactory<THal> interpreterFactory;
     private final int displayWidth;
     private final int displayHeight;
     private final int demoOrigin;
     private final byte[] demoProgram;
     private final String name;
 
-    ChipVariation(String name, IInterpreterFactory interpreterFactory, int displayWidth,
+    ChipVariation(String name, IInterpreterFactory<THal> interpreterFactory, int displayWidth,
         int displayHeight) {
         this(name, interpreterFactory, displayWidth, displayHeight, 0, null);
     }
 
-    ChipVariation(String name, IInterpreterFactory interpreterFactory, int displayWidth,
+    ChipVariation(String name, IInterpreterFactory<THal> interpreterFactory, int displayWidth,
         int displayHeight, int demoOrigin, byte[] demoProgram) {
         this.name = name;
         this.interpreterFactory = interpreterFactory;
@@ -27,7 +27,7 @@ public class ChipVariation implements IChipVariation {
         return demoProgram != null;
     }
 
-    public IInterpreter createInterpreter(IHal hal) {
+    public IInterpreter createInterpreter(THal hal) {
         return interpreterFactory.create(hal);
     }
 

@@ -72,6 +72,10 @@ public class EmulatorController implements IEmulatorController {
         }
     }
 
+    @Override public void stop() {
+        emulator.stop();
+    }
+
     @Override public void pause() {
         emulator.pause();
     }

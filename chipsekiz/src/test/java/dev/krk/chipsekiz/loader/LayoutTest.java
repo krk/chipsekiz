@@ -45,8 +45,9 @@ class LayoutTest {
     }
 
     @Test void validLayouts() {
-        Layout layout = new Layout(Arrays.asList(new Section(1, new byte[] {(byte) 0xFF, (byte) 0x0F}),
-            new Section(0xF00, new byte[0xFF]), new Section(0xEA0, new byte[0x60])));
+        Layout layout = new Layout(Arrays
+            .asList(new Section(1, new byte[] {(byte) 0xFF, (byte) 0x0F}),
+                new Section(0xF00, new byte[0xFF]), new Section(0xEA0, new byte[0x60])));
 
         assertTrue(layout.isValid(0x200, 1, 0x1000));
         assertTrue(layout.isValid(0x200, 1000, 0x1000));
@@ -57,8 +58,8 @@ class LayoutTest {
     }
 
     @Test void overlappingSections() {
-        Layout layout = new Layout(Arrays
-            .asList(new Section(1, new byte[1]), new Section(0, new byte[2])));
+        Layout layout =
+            new Layout(Arrays.asList(new Section(1, new byte[1]), new Section(0, new byte[2])));
 
         assertFalse(layout.isValid(5, 1, 100));
     }

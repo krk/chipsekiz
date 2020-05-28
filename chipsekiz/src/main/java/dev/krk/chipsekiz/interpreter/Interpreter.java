@@ -1,24 +1,23 @@
 package dev.krk.chipsekiz.interpreter;
 
 import dev.krk.chipsekiz.IDecoder;
-import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.chipsekiz.loader.ILoader;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.opcodes.OpcodeOrData;
 import dev.krk.chipsekiz.tracer.ITracer;
-import dev.krk.chipsekiz.vm.VM;
+import dev.krk.chipsekiz.vm.IVirtualMachine;
+import dev.krk.chipsekiz.vm.IVirtualMachineFactory;
 
 import javax.annotation.Nullable;
 
 public class Interpreter implements IInterpreter {
-    private VM vm;
+    private IVirtualMachine vm;
     private final IDecoder decoder;
     private final IExecutor executor;
     private final ILoader loader;
     private final IHal hal;
-    private final ICharacterAddressLocator characterAddressLocator;
     @Nullable private ITracer tracer;
     @Nullable private IDebugger debugger;
     private final int memorySize;
@@ -29,34 +28,32 @@ public class Interpreter implements IInterpreter {
     private Opcode lastExecutedOpcode;
     private InterpreterStatus status;
     private long prevTimersTick;
+    private IVirtualMachineFactory vmFactory;
 
-    public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer, int origin,
-        byte[] program, int memorySize, Layout layout) {
-        this(loader, decoder, executor, hal, characterAddressLocator, tracer, null, memorySize,
-            layout, false);
-
-        load(origin, program);
-    }
-
-    public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
-        @Nullable IDebugger debugger, int origin, byte[] program, int memorySize, Layout layout,
-        boolean timersSixtyHertz) {
-        this(loader, decoder, executor, hal, characterAddressLocator, tracer, debugger, memorySize,
-            layout, timersSixtyHertz);
+    public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
+        IExecutor executor, IHal hal, @Nullable ITracer tracer, int origin, byte[] program,
+        int memorySize, Layout layout) {
+        this(vmFactory, loader, decoder, executor, hal, tracer, null, memorySize, layout, false);
 
         load(origin, program);
     }
 
-    public Interpreter(ILoader loader, IDecoder decoder, IExecutor executor, IHal hal,
-        ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
-        @Nullable IDebugger debugger, int memorySize, Layout layout, boolean timersSixtyHertz) {
+    public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
+        IExecutor executor, IHal hal, @Nullable ITracer tracer, @Nullable IDebugger debugger,
+        int origin, byte[] program, int memorySize, Layout layout, boolean timersSixtyHertz) {
+        this(vmFactory, loader, decoder, executor, hal, tracer, debugger, memorySize, layout,
+            timersSixtyHertz);
+
+        load(origin, program);
+    }
+
+    public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
+        IExecutor executor, IHal hal, @Nullable ITracer tracer, @Nullable IDebugger debugger,
+        int memorySize, Layout layout, boolean timersSixtyHertz) {
         this.loader = loader;
         this.decoder = decoder;
         this.executor = executor;
         this.hal = hal;
-        this.characterAddressLocator = characterAddressLocator;
         this.tracer = tracer;
         this.debugger = debugger;
         this.memorySize = memorySize;
@@ -64,6 +61,7 @@ public class Interpreter implements IInterpreter {
         this.timersSixtyHertz = timersSixtyHertz;
         this.status = InterpreterStatus.READY;
         this.prevTimersTick = System.nanoTime();
+        this.vmFactory = vmFactory;
     }
 
     private short fetch() {
@@ -78,7 +76,7 @@ public class Interpreter implements IInterpreter {
     }
 
     private void execute(Opcode opcode) {
-        executor.execute(vm, hal, characterAddressLocator, opcode);
+        executor.execute(opcode);
     }
 
     public void load(int origin, byte[] program) {
@@ -89,7 +87,8 @@ public class Interpreter implements IInterpreter {
         lastExecutedOpcode = null;
 
         byte[] memory = loader.load(origin, program, memorySize, layout);
-        this.vm = new VM(origin, memory, debugger);
+        this.vm = this.vmFactory.create(origin, memory, debugger);
+        executor.setVM(vm);
         if (debugger != null) {
             debugger.setVM(vm);
         }

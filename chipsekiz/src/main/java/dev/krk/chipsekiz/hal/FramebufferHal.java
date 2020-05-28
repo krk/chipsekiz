@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class FramebufferHal implements IHal {
     private final Random random;
-    private final Framebuffer fb;
+    protected Framebuffer fb;
     private boolean sound;
     private Byte key;
     private boolean dirty;

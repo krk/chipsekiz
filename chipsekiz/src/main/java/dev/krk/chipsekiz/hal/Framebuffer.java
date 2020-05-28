@@ -48,6 +48,32 @@ public class Framebuffer {
         return buffer[y][x];
     }
 
+    public void scroll(Direction direction, int pixels) {
+        checkArgument(pixels >= 0, "pixels out of bounds.");
+
+        if (direction == Direction.Left || direction == Direction.Up) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    switch (direction) {
+                        case Left -> buffer[i][j] =
+                            j >= width - pixels ? false : buffer[i][j + pixels];
+                        case Up -> buffer[i][j] =
+                            i >= height - pixels ? false : buffer[i + pixels][j];
+                    }
+                }
+            }
+        } else {
+            for (int i = height - 1; i >= 0; i--) {
+                for (int j = width - 1; j >= 0; j--) {
+                    switch (direction) {
+                        case Right -> buffer[i][j] = j >= pixels ? buffer[i][j - pixels] : false;
+                        case Down -> buffer[i][j] = i >= pixels ? buffer[i - pixels][j] : false;
+                    }
+                }
+            }
+        }
+    }
+
     @Override public String toString() {
         StringBuilder builder = new StringBuilder((height + 1) * width);
 

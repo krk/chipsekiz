@@ -1,6 +1,12 @@
 package dev.krk.chipsekiz;
 
 public class Rom {
+    private static final String[] SuperChipNames =
+        {"superchip-roms/ALIEN", "superchip-roms/ANT", "superchip-roms/BLINKY",
+            "superchip-roms/CAR", "superchip-roms/FIELD", "superchip-roms/JOUST",
+            "superchip-roms/PIPER", "superchip-roms/RACE", "superchip-roms/SCTEST",
+            "superchip-roms/SPACEFIG", "superchip-roms/UBOAT", "superchip-roms/WORM3",};
+
     private static final String[] Names = {"roms/BC_test.ch8", "roms/chipsekiz-demo.ch8",
 
         "roms/1dcell.ch8", "roms/chipwar.ch8", "roms/danm8ku.ch8", "roms/glitchGhost.ch8",
@@ -66,5 +72,9 @@ public class Rom {
 
     public static String[] Names() {
         return Names;
+    }
+
+    public static String[] SuperChipNames() {
+        return SuperChipNames;
     }
 }

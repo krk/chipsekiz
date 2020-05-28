@@ -10,10 +10,11 @@ import java.awt.Graphics;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+
 public class EmulatorCanvas extends JPanel implements IScreenHal {
-    private FramebufferRenderer renderer;
-    private final int emulatorWidth;
-    private final int emulatorHeight;
+    protected FramebufferRenderer renderer;
+    protected int emulatorWidth;
+    protected int emulatorHeight;
     private int scaleX;
     private int scaleY;
     private final Color emptyColor;
@@ -29,12 +30,10 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
         checkArgument(!emptyColor.equals(occupiedColor),
             "emptyColor color cannot be equal to occupiedColor color.");
 
-        this.emulatorWidth = emulatorWidth;
-        this.emulatorHeight = emulatorHeight;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
 
-        rescale(scaleX, scaleY);
+        resizeEmulator(emulatorWidth, emulatorHeight);
 
         setBackground(emptyColor);
     }
@@ -68,5 +67,15 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
                 occupiedColor);
 
         setSize(emulatorWidth * scaleX, emulatorHeight * scaleY);
+    }
+
+    public void resizeEmulator(int emulatorWidth, int emulatorHeight) {
+        checkArgument(emulatorWidth > 0, "emulatorWidth must be greater than zero.");
+        checkArgument(emulatorHeight > 0, "emulatorHeight must be greater than zero.");
+
+        this.emulatorWidth = emulatorWidth;
+        this.emulatorHeight = emulatorHeight;
+
+        rescale(scaleX, scaleY);
     }
 }

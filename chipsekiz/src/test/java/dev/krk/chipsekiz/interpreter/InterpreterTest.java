@@ -9,6 +9,8 @@ import dev.krk.chipsekiz.opcodes.Op00E0;
 import dev.krk.chipsekiz.opcodes.Op8XY4;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
+import dev.krk.chipsekiz.superchip.hal.SuperChipFramebufferHal;
+import dev.krk.chipsekiz.vm.VM;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -40,15 +41,15 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 1,
+            () -> new Interpreter(VM::new, loader, decoder, executor, hal, null, 0, new byte[1], 1,
                 Layout.empty()).tick());
 
         assertThrows(IllegalArgumentException.class,
-            () -> new Interpreter(loader, decoder, executor, hal, null, null, 1, new byte[1], 2,
+            () -> new Interpreter(VM::new, loader, decoder, executor, hal, null, 1, new byte[1], 2,
                 Layout.empty()).tick());
 
         assertDoesNotThrow(
-            () -> new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 2,
+            () -> new Interpreter(VM::new, loader, decoder, executor, hal, null, 0, new byte[1], 2,
                 Layout.empty()).tick());
     }
 
@@ -59,7 +60,7 @@ class InterpreterTest {
         IHal hal = mock(IHal.class);
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, null, null, 0, new byte[1], 2,
+            new Interpreter(VM::new, loader, decoder, executor, hal, null, 0, new byte[1], 2,
                 Layout.empty());
         Mockito.reset(hal);
 
@@ -77,17 +78,17 @@ class InterpreterTest {
         IExecutor executor = mock(IExecutor.class);
         IHal hal = mock(IHal.class);
 
-        Interpreter interpreter = new Interpreter(loader, decoder, executor, hal, null, null, 0,
+        Interpreter interpreter = new Interpreter(VM::new, loader, decoder, executor, hal, null, 0,
             new byte[] {(byte) 0x00, (byte) 0xE0, (byte) 0x80, 0x24}, 4, Layout.empty());
         Mockito.reset(hal);
 
         interpreter.tick();
-        verify(executor).execute(any(), any(), any(), opcodeCaptor.capture());
+        verify(executor).execute(opcodeCaptor.capture());
         assertTrue(opcodeCaptor.getValue() instanceof Op00E0);
 
         Mockito.reset(executor);
         interpreter.tick();
-        verify(executor).execute(any(), any(), any(), opcodeCaptor.capture());
+        verify(executor).execute(opcodeCaptor.capture());
         assertTrue(opcodeCaptor.getValue() instanceof Op8XY4);
         assertEquals(0, opcodeCaptor.getValue().getVx());
         assertEquals(2, opcodeCaptor.getValue().getVy());
@@ -109,14 +110,14 @@ class InterpreterTest {
     @Test void sound_NoHal() {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        IExecutor executor = new Executor(hal, null);
 
         for (int imm = Byte.MIN_VALUE; imm <= Byte.MAX_VALUE; imm++) {
             byte[] program = new byte[] {0x65, (byte) imm, (byte) 0xF5, 0x18, 0x10, 0x04};
 
             Interpreter interpreter =
-                new Interpreter(loader, decoder, executor, hal, null, null, 0, program,
+                new Interpreter(VM::new, loader, decoder, executor, hal, null, 0, program,
                     program.length, Layout.empty());
             Mockito.reset(hal);
 
@@ -148,11 +149,12 @@ class InterpreterTest {
 
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
         IHal fbhal = mock(IHal.class);
+        IExecutor executor = new Executor(fbhal, null);
+
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, fbhal, null, null, 0x200, program, 0x1000,
+            new Interpreter(VM::new, loader, decoder, executor, fbhal, null, 0x200, program, 0x1000,
                 CharacterSprites.DefaultLayout());
 
         assertThrows(IllegalStateException.class, interpreter::tick);
@@ -164,16 +166,15 @@ class InterpreterTest {
 
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
         Framebuffer fb = new Framebuffer(64, 32);
         FramebufferHal fbhal = new FramebufferHal(fb);
+        IExecutor executor = new Executor(fbhal, CharacterSprites.getAddressLocator());
 
         final int[] instructionCount = {0};
 
-        Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, fbhal, CharacterSprites.getAddressLocator(),
-                (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,
-                CharacterSprites.DefaultLayout());
+        Interpreter interpreter = new Interpreter(VM::new, loader, decoder, executor, fbhal,
+            (address, opcode) -> instructionCount[0]++, 0x200, program, 0x1000,
+            CharacterSprites.DefaultLayout());
 
         // Run roms for 600 cycles.
         for (int i = 0; i < 600; i++) {
@@ -188,15 +189,40 @@ class InterpreterTest {
                 instructionCount[0], fbhal.renderFramebuffer()));
     }
 
+    @ParameterizedTest @MethodSource("dev.krk.chipsekiz.Rom#SuperChipNames")
+    public void testRunSuperChip8Roms(String name) throws IOException {
+        byte[] program = getClass().getClassLoader().getResourceAsStream(name).readAllBytes();
+
+        SuperChipFramebufferHal hal = new SuperChipFramebufferHal();
+
+        final int[] instructionCount = {0};
+        IInterpreter interpreter = InterpreterFactory
+            .createSuperChip(hal, (address, opcode) -> instructionCount[0]++, null);
+        interpreter.load(0x200, program);
+
+        // Run roms for 20000 cycles.
+        for (int i = 0; i < 20000; i++) {
+            interpreter.tick();
+
+            if (interpreter.getStatus() != InterpreterStatus.READY) {
+                break;
+            }
+        }
+        System.out.println(String
+            .format("%s status %s in %d instructions\n%s", name, interpreter.getStatus(),
+                instructionCount[0], hal.renderFramebuffer()));
+    }
+
     private static void assertTicks(byte[] program, int ticks) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor();
         IHal hal = mock(IHal.class);
+        IExecutor executor = new Executor(hal, null);
+
 
         Interpreter interpreter =
-            new Interpreter(loader, decoder, executor, hal, null, null, 0, program, program.length,
-                Layout.empty());
+            new Interpreter(VM::new, loader, decoder, executor, hal, null, 0, program,
+                program.length, Layout.empty());
         Mockito.reset(hal);
 
         for (int i = 0; i < ticks; i++) {

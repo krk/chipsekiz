@@ -18,6 +18,8 @@ public interface IEmulatorController {
 
     void keyDown(char keyChar);
 
+    void stop();
+
     void pause();
 
     void resume();

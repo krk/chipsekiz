@@ -84,4 +84,243 @@ class FramebufferTest {
             └────────┘
             """, fb.toString());
     }
+
+    @Test void scrollRight() {
+        Framebuffer fb = new Framebuffer(8, 5);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Right, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.draw((byte) 0, (byte) 0, true);
+        assertEquals("""
+            ┌────────┐
+            │█       │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Right, 1);
+        assertEquals("""
+            ┌────────┐
+            │ █      │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Right, 6);
+        assertEquals("""
+            ┌────────┐
+            │       █│
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Right, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+    }
+
+    @Test void scrollLeft() {
+        Framebuffer fb = new Framebuffer(8, 5);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Left, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.draw((byte) 2, (byte) 2, true);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │  █     │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Left, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │ █      │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Left, 2);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+    }
+
+    @Test void scrollDown() {
+        Framebuffer fb = new Framebuffer(8, 5);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Down, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.draw((byte) 2, (byte) 2, true);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │  █     │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Down, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │  █     │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Down, 2);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+    }
+
+    @Test void scrollUp() {
+        Framebuffer fb = new Framebuffer(8, 5);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Up, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.draw((byte) 2, (byte) 2, true);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │  █     │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Up, 1);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │  █     │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+
+        fb.scroll(Direction.Up, 2);
+        assertEquals("""
+            ┌────────┐
+            │        │
+            │        │
+            │        │
+            │        │
+            │        │
+            └────────┘
+            """, fb.toString());
+    }
 }

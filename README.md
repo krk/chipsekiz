@@ -8,11 +8,17 @@ A [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter and emulator in jav
 
 This repository contains two different projects, the [chipsekiz interpreter](chipsekiz) and the [emulator](emulator-awt) implemented in Java.
 
-To build them both and run the emulator:
+To build them both and run the **CHIP-8** emulator:
 
 ```bash
 mvn clean install
 java --enable-preview -jar emulator-awt/target/emulator-awt-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+To emulate **SuperCHIP-8**:
+
+```bash
+java --enable-preview -jar emulator-awt/target/emulator-awt-1.0-SNAPSHOT-jar-with-dependencies.jar --superchip8
 ```
 
 Emulator will launch the chipsekiz demo ROM with the memory debug view, you can load other ROMs from the menu.
@@ -95,6 +101,10 @@ If there is an `ITracer` instance in the `Interpreter`, all executed opcodes wou
 Optional `IDebugger` instance receives notifications of memory and register changes.
 
 `InterpreterTest` executes included ROMs via `Interpreter` until they halt or until they ran for 600 (arbitrary) instruction cycles, whichever is first.
+
+#### SuperCHIP-8
+
+SuperCHIP-8 components live in the [dev.krk.chipsekiz.superchip](chipsekiz/src/main/java/dev/krk/chipsekiz/superchip) package. It has a decoder, a hal, an interpreter and a vm, all of which are extended from CHIP-8 components.
 
 #### Using the library
 
