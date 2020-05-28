@@ -59,8 +59,6 @@ public class App {
         }
         emulator.run();
 
-        if (tone != null) {
-            tone.close();
-        }
+        tone.close();
     }
 }
