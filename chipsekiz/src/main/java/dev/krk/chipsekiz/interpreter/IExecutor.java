@@ -5,5 +5,6 @@ import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.vm.IVirtualMachine;
 
 public interface IExecutor {
-    void execute(IVirtualMachine vm, IHal hal, ICharacterAddressLocator characterAddressLocator, Opcode opcode);
+    void execute(IVirtualMachine vm, IHal hal, ICharacterAddressLocator characterAddressLocator,
+        Opcode opcode);
 }

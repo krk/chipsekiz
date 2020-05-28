@@ -22,5 +22,9 @@ public interface IEmulatorController {
 
     void resume();
 
+    void run();
+
     void setInterpreter(IInterpreter interpreter, IDebugger debugger);
+
+    int getActualFrequency();
 }

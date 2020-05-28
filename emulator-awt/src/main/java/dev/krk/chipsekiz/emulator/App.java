@@ -1,5 +1,7 @@
 package dev.krk.chipsekiz.emulator;
 
+import dev.krk.chipsekiz.interpreter.ChipVariationFactory;
+import dev.krk.chipsekiz.interpreter.IChipVariation;
 import dev.krk.chipsekiz.interpreter.IDebugger;
 import dev.krk.chipsekiz.interpreter.IInterpreter;
 
@@ -9,10 +11,6 @@ import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
-/**
- * Hello world!
- */
 public class App {
     public static void main(String[] args) throws LineUnavailableException {
         EmulatorOptions options = new EmulatorOptions(true);
@@ -22,16 +20,39 @@ public class App {
     private static void runEmulator(EmulatorOptions options) throws LineUnavailableException {
         final Tone tone = new Tone(1600);
 
-        EmulatorCanvas canvas = new EmulatorCanvas(64, 32, 12, 12, Color.WHITE, Color.BLACK);
+        Emulatable e = createEmulatable(options, tone);
+        IEmulatorController controller = e.getController();
+        EmulatorWindow win = new EmulatorWindow(e.getCanvas(), controller);
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override public void run() {
+                win.setTitle(
+                    String.format("chipsekiz emulator - %d Hz", controller.getActualFrequency()));
+            }
+        }, 0, 100);
+
+        if (!e.hasDemoProgram()) {
+            controller.pause();
+        }
+        controller.run();
+
+        tone.close();
+    }
+
+    private static Emulatable createEmulatable(EmulatorOptions options, Tone tone) {
+        IChipVariation variation = ChipVariationFactory.createChip8();
+
+        EmulatorCanvas canvas =
+            new EmulatorCanvas(variation.getDisplayWidth(), variation.getDisplayHeight(), 12, 12,
+                Color.WHITE, Color.BLACK);
         Hal hal = new Hal(canvas, tone);
         IDebugger debugger = null;
         if (options.isDebuggerEnabled()) {
             debugger = new Debugger();
         }
 
-        IChipVariation variation = ChipVariationFactory.createChip8(hal);
-
-        IInterpreter interpreter = variation.getInterpreter();
+        IInterpreter interpreter = variation.createInterpreter(hal);
         interpreter.setDebugger(debugger);
 
         Emulator emulator = new Emulator(interpreter);
@@ -44,21 +65,31 @@ public class App {
                 .setLoadedProgram(variation.getDemoOrigin(), variation.getDemoProgram());
         }
 
-        EmulatorWindow win = new EmulatorWindow(canvas, emulatorController);
+        return new Emulatable(emulatorController, canvas, variation.hasDemoProgram());
+    }
+}
 
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override public void run() {
-                win.setTitle(
-                    String.format("chipsekiz emulator - %d Hz", emulator.getActualFrequency()));
-            }
-        }, 0, 100);
 
-        if (!variation.hasDemoProgram()) {
-            emulator.pause();
-        }
-        emulator.run();
+class Emulatable {
+    private final IEmulatorController controller;
+    private final EmulatorCanvas canvas;
+    private final boolean hasDemoProgram;
 
-        tone.close();
+    Emulatable(IEmulatorController controller, EmulatorCanvas canvas, boolean hasDemoProgram) {
+        this.controller = controller;
+        this.canvas = canvas;
+        this.hasDemoProgram = hasDemoProgram;
+    }
+
+    public IEmulatorController getController() {
+        return controller;
+    }
+
+    public EmulatorCanvas getCanvas() {
+        return canvas;
+    }
+
+    public boolean hasDemoProgram() {
+        return hasDemoProgram;
     }
 }

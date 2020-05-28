@@ -19,7 +19,7 @@ public class Interpreter implements IInterpreter {
     private final ILoader loader;
     private final IHal hal;
     private final ICharacterAddressLocator characterAddressLocator;
-    @Nullable private final ITracer tracer;
+    @Nullable private ITracer tracer;
     @Nullable private IDebugger debugger;
     private final int memorySize;
     private final Layout layout;
@@ -97,6 +97,10 @@ public class Interpreter implements IInterpreter {
 
     @Override public void setDebugger(IDebugger debugger) {
         this.debugger = debugger;
+    }
+
+    @Override public void setTracer(ITracer tracer) {
+        this.tracer = tracer;
     }
 
     public void tick() {

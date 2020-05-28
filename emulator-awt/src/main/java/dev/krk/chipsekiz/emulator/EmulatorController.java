@@ -87,4 +87,12 @@ public class EmulatorController implements IEmulatorController {
         this.interpreter = interpreter;
         emulator.resume();
     }
+
+    @Override public int getActualFrequency() {
+        return emulator.getActualFrequency();
+    }
+
+    @Override public void run() {
+        emulator.run();
+    }
 }

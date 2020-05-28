@@ -108,8 +108,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="chipsekiz" options="--enable-preview -XDcompilePolicy=simple &quot;-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -Xep:ExtendsAutoValue:OFF&quot; -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber" />
-      <module name="emulator-awt" options="--enable-preview -XDcompilePolicy=simple &quot;-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -Xep:ExtendsAutoValue:OFF&quot; -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber" />
+      <module name="chipsekiz" options="--enable-preview -XDcompilePolicy=simple &quot;-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -Xep:ExtendsAutoValue:OFF -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber&quot;" />
+      <module name="emulator-awt" options="--enable-preview -XDcompilePolicy=simple &quot;-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -Xep:ExtendsAutoValue:OFF -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber&quot;" />
     </option>
   </component>
 </project>

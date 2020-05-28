@@ -1,9 +1,7 @@
-package dev.krk.chipsekiz.emulator;
-
-import dev.krk.chipsekiz.interpreter.IInterpreter;
+package dev.krk.chipsekiz.interpreter;
 
 public interface IChipVariation {
-    IInterpreter getInterpreter();
+    IInterpreter createInterpreter(IHal hal);
 
     int getDisplayWidth();
 

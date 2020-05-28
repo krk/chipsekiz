@@ -1,22 +1,19 @@
-package dev.krk.chipsekiz.emulator;
-
-import dev.krk.chipsekiz.interpreter.IInterpreter;
-
+package dev.krk.chipsekiz.interpreter;
 
 public class ChipVariation implements IChipVariation {
-    private final IInterpreter interpreter;
+    private final IInterpreterFactory interpreterFactory;
     private final int displayWidth;
     private final int displayHeight;
     private final int demoOrigin;
     private final byte[] demoProgram;
 
-    ChipVariation(IInterpreter interpreter, int displayWidth, int displayHeight) {
-        this(interpreter, displayWidth, displayHeight, 0, null);
+    ChipVariation(IInterpreterFactory interpreterFactory, int displayWidth, int displayHeight) {
+        this(interpreterFactory, displayWidth, displayHeight, 0, null);
     }
 
-    ChipVariation(IInterpreter interpreter, int displayWidth, int displayHeight, int demoOrigin,
-        byte[] demoProgram) {
-        this.interpreter = interpreter;
+    ChipVariation(IInterpreterFactory interpreterFactory, int displayWidth, int displayHeight,
+        int demoOrigin, byte[] demoProgram) {
+        this.interpreterFactory = interpreterFactory;
         this.displayWidth = displayWidth;
         this.displayHeight = displayHeight;
         this.demoOrigin = demoOrigin;
@@ -27,8 +24,8 @@ public class ChipVariation implements IChipVariation {
         return demoProgram != null;
     }
 
-    public IInterpreter getInterpreter() {
-        return interpreter;
+    public IInterpreter createInterpreter(IHal hal) {
+        return interpreterFactory.create(hal);
     }
 
     public int getDisplayWidth() {

@@ -12,9 +12,17 @@ public class InterpreterFactory {
     public static Interpreter create(IHal hal,
         @Nullable ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
         @Nullable IDebugger debugger) {
+        // CHIP-48 executor.
+        IExecutor executor = new Executor(false, true);
+
+        return create(hal, characterAddressLocator, tracer, debugger, executor);
+    }
+
+    public static Interpreter create(IHal hal,
+        @Nullable ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
+        @Nullable IDebugger debugger, IExecutor executor) {
         Loader loader = new Loader();
         Decoder decoder = new Decoder();
-        IExecutor executor = new Executor(false, true);
 
         return new Interpreter(loader, decoder, executor, hal, characterAddressLocator, tracer,
             debugger, 0x1000, CharacterSprites.DefaultLayout(), true);
