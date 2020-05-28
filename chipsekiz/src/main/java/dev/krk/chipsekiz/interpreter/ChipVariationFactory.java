@@ -16,7 +16,7 @@ public class ChipVariationFactory {
             e.printStackTrace();
         }
 
-        return new ChipVariation(hal -> InterpreterFactory
+        return new ChipVariation("CHIP-8", hal -> InterpreterFactory
             .create(hal, CharacterSprites.getAddressLocator(), null, null,
                 new Executor(true, true)), 64, 32, 0x200, program);
     }
@@ -31,7 +31,7 @@ public class ChipVariationFactory {
             e.printStackTrace();
         }
 
-        return new ChipVariation(
+        return new ChipVariation("S-CHIP",
             hal -> InterpreterFactory.create(hal, CharacterSprites.getAddressLocator(), null, null),
             64, 32, 0x200, program);
     }

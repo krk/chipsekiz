@@ -6,13 +6,16 @@ public class ChipVariation implements IChipVariation {
     private final int displayHeight;
     private final int demoOrigin;
     private final byte[] demoProgram;
+    private final String name;
 
-    ChipVariation(IInterpreterFactory interpreterFactory, int displayWidth, int displayHeight) {
-        this(interpreterFactory, displayWidth, displayHeight, 0, null);
+    ChipVariation(String name, IInterpreterFactory interpreterFactory, int displayWidth,
+        int displayHeight) {
+        this(name, interpreterFactory, displayWidth, displayHeight, 0, null);
     }
 
-    ChipVariation(IInterpreterFactory interpreterFactory, int displayWidth, int displayHeight,
-        int demoOrigin, byte[] demoProgram) {
+    ChipVariation(String name, IInterpreterFactory interpreterFactory, int displayWidth,
+        int displayHeight, int demoOrigin, byte[] demoProgram) {
+        this.name = name;
         this.interpreterFactory = interpreterFactory;
         this.displayWidth = displayWidth;
         this.displayHeight = displayHeight;
@@ -42,5 +45,9 @@ public class ChipVariation implements IChipVariation {
 
     public byte[] getDemoProgram() {
         return demoProgram;
+    }
+
+    public String getName() {
+        return name;
     }
 }

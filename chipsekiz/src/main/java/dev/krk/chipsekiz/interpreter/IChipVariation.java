@@ -1,6 +1,8 @@
 package dev.krk.chipsekiz.interpreter;
 
 public interface IChipVariation {
+    String getName();
+
     IInterpreter createInterpreter(IHal hal);
 
     int getDisplayWidth();

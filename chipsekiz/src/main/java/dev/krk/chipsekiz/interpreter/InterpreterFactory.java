@@ -12,7 +12,6 @@ public class InterpreterFactory {
     public static Interpreter create(IHal hal,
         @Nullable ICharacterAddressLocator characterAddressLocator, @Nullable ITracer tracer,
         @Nullable IDebugger debugger) {
-        // CHIP-48 executor.
         IExecutor executor = new Executor(false, true);
 
         return create(hal, characterAddressLocator, tracer, debugger, executor);
