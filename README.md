@@ -17,6 +17,8 @@ java --enable-preview -jar emulator-awt/target/emulator-awt-1.0-SNAPSHOT-jar-wit
 
 To emulate **SuperCHIP-8**:
 
+Select `SuperCHIP-8` from the VM menu or start the emulator with:
+
 ```bash
 java --enable-preview -jar emulator-awt/target/emulator-awt-1.0-SNAPSHOT-jar-with-dependencies.jar --superchip8
 ```
@@ -142,7 +144,7 @@ interpreter.load(0x200, program)
     interpreter.tick();
 }
 ```
-
+__
 ## Further direction
 
 - Add VM save and load snapshot feature - save game support for all kinds of programs.

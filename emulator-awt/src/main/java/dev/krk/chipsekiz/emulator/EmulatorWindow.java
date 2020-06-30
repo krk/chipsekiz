@@ -3,6 +3,7 @@ package dev.krk.chipsekiz.emulator;
 import com.google.common.io.Files;
 import dev.krk.chipsekiz.superchip.interpreter.Resolution;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -15,19 +16,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EmulatorWindow extends JFrame implements KeyListener {
-    private final IEmulatorController controller;
+    private IEmulatable emulatable;
+    private EmulatorCanvas canvas;
+    private IEmulatorController controller;
+    private final Tone tone;
+    private String vmName = "CHIP-8";
 
-    EmulatorWindow(EmulatorCanvas canvas, IEmulatorController controller, Resolution resolution) {
+    EmulatorWindow(IEmulatableFactory factory, EmulatorOptions options, Resolution resolution)
+        throws LineUnavailableException {
         super("chipsekiz emulator");
-        this.controller = controller;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize((resolution == Resolution.High ? 128 : 64) * 12,
-            (resolution == Resolution.High ? 64 : 32) * 12 + 88);
 
-        add(canvas);
+        tone = new Tone(1600);
+
+        loadEmulator(factory, options, resolution);
 
         addKeyListener(this);
 
@@ -71,6 +78,31 @@ public class EmulatorWindow extends JFrame implements KeyListener {
             }
         });
 
+        menuBar.add(menu);
+
+        menu = new JMenu("VM");
+        menu.setMnemonic('v');
+
+        ButtonGroup vmGroup = new ButtonGroup();
+
+        JRadioButtonMenuItem vm = new JRadioButtonMenuItem("CHIP-8", true);
+        vm.setMnemonic(KeyEvent.VK_0);
+        menu.add(vm);
+        vm.addActionListener(e -> {
+            loadEmulator(new Chip8EmulatableFactory(), options, Resolution.Low);
+            vmName = "CHIP-8";
+            runAsync();
+        });
+        vmGroup.add(vm);
+
+        vm = new JRadioButtonMenuItem("Super CHIP-8", false);
+        menu.add(vm);
+        vm.addActionListener(e -> {
+            loadEmulator(new SuperChip8EmulatableFactory(), options, Resolution.High);
+            vmName = "SuperCHIP-8";
+            runAsync();
+        });
+        vmGroup.add(vm);
         menuBar.add(menu);
 
         // Sound menu
@@ -141,7 +173,7 @@ public class EmulatorWindow extends JFrame implements KeyListener {
         scale.addActionListener(scaleSetter);
         scaleGroup.add(scale);
 
-        scale = new JRadioButtonMenuItem("3x3", true);
+        scale = new JRadioButtonMenuItem("3x3", false);
         scale.setMnemonic(KeyEvent.VK_3);
         scale.setActionCommand("3");
         menu.add(scale);
@@ -237,6 +269,25 @@ public class EmulatorWindow extends JFrame implements KeyListener {
         setJMenuBar(menuBar);
 
         setVisible(true);
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override public void run() {
+                setTitle(String.format("chipsekiz %s emulator - %d Hz", vmName,
+                    controller.getActualFrequency()));
+            }
+        }, 0, 100);
+    }
+
+    public void run() {
+        if (!emulatable.hasDemoProgram()) {
+            controller.pause();
+        }
+        controller.run();
+    }
+
+    private void runAsync() {
+        new Thread(this::run).start();
     }
 
     private void loadROM() throws IOException {
@@ -250,6 +301,29 @@ public class EmulatorWindow extends JFrame implements KeyListener {
         }
     }
 
+    private void loadEmulator(IEmulatableFactory factory, EmulatorOptions options,
+        Resolution resolution) {
+
+        emulatable = factory.create(options, tone);
+        EmulatorCanvas canvas = emulatable.getCanvas();
+        IEmulatorController controller = emulatable.getController();
+
+        if (this.controller != null) {
+            this.controller.stop();
+        }
+
+        setSize((resolution == Resolution.High ? 128 : 64) * 12,
+            (resolution == Resolution.High ? 64 : 32) * 12 + 88);
+
+        if (this.canvas != null) {
+            remove(this.canvas);
+        }
+        add(canvas);
+
+        this.canvas = canvas;
+        this.controller = controller;
+    }
+
     @Override public void keyTyped(KeyEvent e) {
         // NOOP.
     }
@@ -260,5 +334,11 @@ public class EmulatorWindow extends JFrame implements KeyListener {
 
     @Override public void keyReleased(KeyEvent e) {
         controller.keyUp();
+    }
+
+    @Override public void dispose() {
+        super.dispose();
+
+        tone.close();
     }
 }

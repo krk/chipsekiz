@@ -74,6 +74,9 @@ public class EmulatorController implements IEmulatorController {
 
     @Override public void stop() {
         emulator.stop();
+        if (debugger != null) {
+            debugger.closeDebuggerWindow();
+        }
     }
 
     @Override public void pause() {
