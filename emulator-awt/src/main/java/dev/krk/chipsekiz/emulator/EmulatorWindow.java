@@ -153,8 +153,10 @@ public class EmulatorWindow extends JFrame implements KeyListener {
 
         ActionListener scaleSetter = e -> {
             int scale = Integer.parseInt(e.getActionCommand());
+            controller.pause();
             canvas.rescale(scale, scale);
             setSize(canvas.getWidth(), canvas.getHeight() + 88);
+            controller.resume();
         };
 
         ButtonGroup scaleGroup = new ButtonGroup();

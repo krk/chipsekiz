@@ -59,13 +59,21 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
         checkArgument(scaleX > 0, "scaleX must be greater than zero.");
         checkArgument(scaleY > 0, "scaleY must be greater than zero.");
 
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-
-        this.renderer =
+        FramebufferRenderer renderer =
             new FramebufferRenderer(emulatorWidth, emulatorHeight, scaleX, scaleY, emptyColor,
                 occupiedColor);
 
+        if (this.renderer != null) {
+            for (int y = 0; y < emulatorHeight; y++) {
+                for (int x = 0; x < emulatorWidth; x++) {
+                    renderer.draw((byte) x, (byte) y, this.renderer.getPixel((byte) x, (byte) y));
+                }
+            }
+        }
+
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.renderer = renderer;
         setSize(emulatorWidth * scaleX, emulatorHeight * scaleY);
     }
 
