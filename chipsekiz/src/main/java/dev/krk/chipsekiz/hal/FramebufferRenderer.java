@@ -54,4 +54,12 @@ public class FramebufferRenderer extends Framebuffer implements IScreenHal {
     public void render(Graphics g) {
         g.drawImage(buffer, 0, 0, null);
     }
+
+    @Override public int getHeight() {
+        return buffer.getHeight();
+    }
+
+    @Override public int getWidth() {
+        return buffer.getWidth();
+    }
 }

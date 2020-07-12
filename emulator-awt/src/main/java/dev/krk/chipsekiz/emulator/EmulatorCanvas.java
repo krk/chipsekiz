@@ -19,6 +19,8 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     private int scaleY;
     private final Color emptyColor;
     private final Color occupiedColor;
+    private int offsetX;
+    private int offsetY;
 
     EmulatorCanvas(int emulatorWidth, int emulatorHeight, int scaleX, int scaleY, Color emptyColor,
         Color occupiedColor) {
@@ -41,6 +43,11 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     @Override protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        // Center buffer on canvas.
+        this.offsetX = Math.max(0, (getWidth() - renderer.getWidth()) / 2);
+        this.offsetY = Math.max(0, (getHeight() - renderer.getHeight()) / 2);
+        g.translate(offsetX, offsetY);
+
         renderer.render(g);
     }
 
@@ -51,7 +58,7 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
 
     public boolean draw(byte x, byte y, boolean value) {
         boolean flipped = renderer.draw(x, y, value);
-        repaint(50, x * scaleX, y * scaleY, scaleX, scaleY);
+        repaint(50, x * scaleX + offsetX, y * scaleY + offsetY, scaleX, scaleY);
         return flipped;
     }
 
