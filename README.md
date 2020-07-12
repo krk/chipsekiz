@@ -155,6 +155,7 @@ __
 ## References
 
 - CHIP-8 ISA: https://en.wikipedia.org/wiki/CHIP-8
+- Super CHIP-8: http://devernay.free.fr/hacks/chip8/schip.txt
 - Opcode mnemonics: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 - Octo assembler and emulator: https://github.com/JohnEarnest/Octo
 - Octo shared ROMs https://johnearnest.github.io/chip8Archive/
