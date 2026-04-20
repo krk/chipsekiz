@@ -6,6 +6,11 @@ import dev.krk.chipsekiz.opcodes.OpFX1E;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.superchip.hal.ISuperChipCharacterAddressLocator;
 import dev.krk.chipsekiz.superchip.opcodes.Op00CN;
+import dev.krk.chipsekiz.superchip.opcodes.Op00FB;
+import dev.krk.chipsekiz.superchip.opcodes.Op00FC;
+import dev.krk.chipsekiz.superchip.opcodes.Op00FD;
+import dev.krk.chipsekiz.superchip.opcodes.Op00FE;
+import dev.krk.chipsekiz.superchip.opcodes.Op00FF;
 import dev.krk.chipsekiz.superchip.opcodes.OpDXY0;
 import dev.krk.chipsekiz.superchip.opcodes.OpFX30;
 import dev.krk.chipsekiz.superchip.opcodes.OpFX75;
@@ -41,15 +46,14 @@ public class SuperChipExecutor extends Executor implements IExecutor {
     }
 
     @Override public void execute(Opcode opcode) {
-        switch (opcode.getKind()) {
-            case Op00CN -> hal.scrollDown(((Op00CN) opcode).imm());
-            case Op00FB -> hal.scrollRight();
-            case Op00FC -> hal.scrollLeft();
-            case Op00FD -> hal.exit();
-            case Op00FE -> hal.setResolution(Resolution.Low);
-            case Op00FF -> hal.setResolution(Resolution.High);
-            case OpDXY0 -> {
-                OpDXY0 o = (OpDXY0) opcode;
+        switch (opcode) {
+            case Op00CN o -> hal.scrollDown(o.imm());
+            case Op00FB o -> hal.scrollRight();
+            case Op00FC o -> hal.scrollLeft();
+            case Op00FD o -> hal.exit();
+            case Op00FE o -> hal.setResolution(Resolution.Low);
+            case Op00FF o -> hal.setResolution(Resolution.High);
+            case OpDXY0 o -> {
                 boolean flipped = false;
                 int I = vm.getI();
 
@@ -63,32 +67,28 @@ public class SuperChipExecutor extends Executor implements IExecutor {
                 }
                 vm.setCarry(flipped);
             }
-            case OpFX1E -> {
-                int i = (0xFFFF & vm.getI() + (0xFF & vm.getRegister(((OpFX1E) opcode).vx())));
+            case OpFX1E o -> {
                 // Undocumented: Check FX1E (I = I + VX) buffer overflow. If buffer overflow,
                 // register VF must be set to 1, otherwise 0.
+                int i = (0xFFFF & vm.getI() + (0xFF & vm.getRegister(o.vx())));
                 vm.setCarry(i > 0xFFF);
                 vm.setI((short) (i & 0xFFF));
             }
-            case OpFX30 -> vm.setI(characterAddressLocator
-                .getLargeCharacterAddress(vm.getRegister(((OpFX30) opcode).vx())));
-            case OpFX75 -> {
-                OpFX75 o = (OpFX75) opcode;
+            case OpFX30 o -> vm.setI(characterAddressLocator
+                .getLargeCharacterAddress(vm.getRegister(o.vx())));
+            case OpFX75 o -> {
                 byte[] values = new byte[o.vx() + 1];
                 for (int x = 0; x <= o.vx(); x++) {
                     values[x] = vm.getRegister(x);
                 }
 
-                // Save registers in the "other" bank.
                 vm.swapRegisterBank();
                 for (int x = 0; x <= o.vx(); x++) {
                     vm.setRegister(x, values[x]);
                 }
                 vm.swapRegisterBank();
             }
-            case OpFX85 -> {
-                OpFX85 o = (OpFX85) opcode;
-
+            case OpFX85 o -> {
                 vm.swapRegisterBank();
                 byte[] values = new byte[o.vx() + 1];
                 for (int x = 0; x <= o.vx(); x++) {

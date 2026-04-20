@@ -8,7 +8,6 @@ public abstract class Opcode {
     private final Integer vx;
     private final Integer vy;
     private final Integer address;
-    private final OpcodeKind kind;
 
     public Integer getVx() {return vx;}
 
@@ -24,15 +23,6 @@ public abstract class Opcode {
         this.address = address;
         this.vx = vx;
         this.vy = vy;
-
-        // No type switch in java yet, use kind for switching.
-        OpcodeKind kind;
-        try {
-            kind = OpcodeKind.valueOf(getClass().getSimpleName());
-        } catch (IllegalArgumentException e) {
-            kind = OpcodeKind.Other;
-        }
-        this.kind = kind;
     }
 
     public abstract short getValue();
@@ -57,9 +47,5 @@ public abstract class Opcode {
 
     @Override public int hashCode() {
         return Objects.hash(vx, vy, address);
-    }
-
-    public OpcodeKind getKind() {
-        return kind;
     }
 }
