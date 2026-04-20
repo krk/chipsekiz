@@ -275,7 +275,7 @@ public class EmulatorWindow extends JFrame implements KeyListener {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override public void run() {
-                setTitle(String.format("chipsekiz %s emulator - %d Hz", vmName,
+                setTitle("chipsekiz %s emulator - %d Hz".formatted(vmName,
                     controller.getActualFrequency()));
             }
         }, 0, 100);

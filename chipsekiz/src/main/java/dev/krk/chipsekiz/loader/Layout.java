@@ -1,16 +1,15 @@
 package dev.krk.chipsekiz.loader;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Layout {
     private final List<Section> sections;
 
     public static Layout empty() {
-        return new Layout(Collections.emptyList());
+        return new Layout(List.of());
     }
 
     public List<Section> getSections() {
@@ -44,9 +43,8 @@ public class Layout {
         if (origin + programSize > memorySize) throw new IllegalArgumentException("program must fit in the memory.");
 
         // There must not be overlap between sections, including the code section.
-        List<SectionSize> allSections =
-            sections.stream().map(s -> new SectionSize(s.start(), s.data().length))
-                .collect(Collectors.toList());
+        List<SectionSize> allSections = new ArrayList<>(
+            sections.stream().map(s -> new SectionSize(s.start(), s.data().length)).toList());
         allSections.add(new SectionSize(origin, programSize));
         allSections.sort(Comparator.comparingInt(o -> o.origin));
 

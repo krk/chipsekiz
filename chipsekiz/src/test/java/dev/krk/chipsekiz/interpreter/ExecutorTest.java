@@ -105,7 +105,7 @@ public class ExecutorTest {
             ctx.executor().execute(new Op00EE());
             int pc = ctx.vm().getPC();
 
-            assertEquals(address, pc, String.format("address: %X", address));
+            assertEquals(address, pc, "address: %X".formatted(address));
         }
 
         verifyNoInteractions(ctx.hal());
@@ -120,7 +120,7 @@ public class ExecutorTest {
             ctx.executor().execute(new Op0NNN(address));
             int pc = ctx.vm().getPC();
 
-            assertEquals(ret, pc, String.format("address: %X", address));
+            assertEquals(ret, pc, "address: %X".formatted(address));
         }
 
         verifyNoInteractions(ctx.hal());
@@ -149,8 +149,8 @@ public class ExecutorTest {
             ctx.executor().execute(new Op2NNN(address));
             int pc = ctx.vm().getPC();
 
-            assertEquals(address, pc, String.format("address: %X", address));
-            assertEquals(ret, ctx.vm().pop(), String.format("address: %X", address));
+            assertEquals(address, pc, "address: %X".formatted(address));
+            assertEquals(ret, ctx.vm().pop(), "address: %X".formatted(address));
         }
 
         verifyNoInteractions(ctx.hal());
@@ -169,7 +169,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new Op3XNN(vx, (byte) imm));
 
                 assertEquals(imm == magic ? pc + 2 : pc, ctx.vm().getPC(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -189,7 +189,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new Op4XNN(vx, (byte) imm));
 
                 assertEquals(imm != magic ? pc + 2 : pc, ctx.vm().getPC(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -209,13 +209,13 @@ public class ExecutorTest {
                 ctx.vm().setPC(pc);
                 ctx.vm().setRegister(vy, magic);
                 ctx.executor().execute(new Op5XY0(vx, vy));
-                assertEquals(pc + 2, ctx.vm().getPC(), String.format("vx: %X, vy: %X", vx, vy));
+                assertEquals(pc + 2, ctx.vm().getPC(), "vx: %X, vy: %X".formatted(vx, vy));
 
                 if (vx != vy) {
                     ctx.vm().setPC(pc);
                     ctx.vm().setRegister(vy, notMagic);
                     ctx.executor().execute(new Op5XY0(vx, vy));
-                    assertEquals(pc, ctx.vm().getPC(), String.format("vx: %X, vy: %X", vx, vy));
+                    assertEquals(pc, ctx.vm().getPC(), "vx: %X, vy: %X".formatted(vx, vy));
                 }
             }
         }
@@ -232,7 +232,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new Op6XNN(vx, (byte) imm));
                 byte value = ctx.vm().getRegister(vx);
 
-                assertEquals(imm, value, String.format("vx: %X, imm: %X", vx, (byte) imm));
+                assertEquals(imm, value, "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -251,7 +251,7 @@ public class ExecutorTest {
                 byte value = ctx.vm().getRegister(vx);
 
                 assertEquals((byte) (magic + imm), value,
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -270,7 +270,7 @@ public class ExecutorTest {
                 ctx.vm().setRegister(vy, notMagic);
                 ctx.executor().execute(new Op8XY0(vx, vy));
                 assertEquals(ctx.vm().getRegister(vy), notMagic,
-                    String.format("vx: %X, vy: %X", vx, vy));
+                    "vx: %X, vy: %X".formatted(vx, vy));
             }
         }
 
@@ -288,7 +288,7 @@ public class ExecutorTest {
                 ctx.vm().setRegister(8, (byte) imm);
                 ctx.executor().execute(new Op8XY1(vx, 8));
                 assertEquals(vx == 8 ? (byte) imm : (byte) (magic | imm), ctx.vm().getRegister(vx),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -306,7 +306,7 @@ public class ExecutorTest {
                 ctx.vm().setRegister(8, (byte) imm);
                 ctx.executor().execute(new Op8XY2(vx, 8));
                 assertEquals(vx == 8 ? (byte) imm : (byte) (magic & imm), ctx.vm().getRegister(vx),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -324,7 +324,7 @@ public class ExecutorTest {
                 ctx.vm().setRegister(8, (byte) imm);
                 ctx.executor().execute(new Op8XY3(vx, 8));
                 assertEquals(vx == 8 ? 0 : (byte) (magic ^ imm), ctx.vm().getRegister(vx),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -345,11 +345,11 @@ public class ExecutorTest {
 
                 if (vx != 0xF) {
                     assertEquals((byte) expectedSum, ctx.vm().getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                 }
 
                 assertEquals(ctx.vm().hasCarry(), ((expectedSum & 0x1FF) != (expectedSum & 0xFF)),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -370,11 +370,11 @@ public class ExecutorTest {
 
                 if (vx != 0xF) {
                     assertEquals((byte) expectedDiff, ctx.vm().getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                 }
 
                 assertEquals(ctx.vm().hasCarry(), ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -401,9 +401,9 @@ public class ExecutorTest {
                         (imm & 0x1) == 0x1;
 
                     assertEquals((byte) expected, ctx.vm().getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                     assertEquals(ctx.vm().hasCarry(), hasCarry,
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                 }
             }
         }
@@ -425,11 +425,11 @@ public class ExecutorTest {
 
                 if (vx != 0xF) {
                     assertEquals((byte) expectedDiff, ctx.vm().getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                 }
 
                 assertEquals(ctx.vm().hasCarry(), ((expectedDiff & 0x1FF) == (expectedDiff & 0xFF)),
-                    String.format("vx: %X, imm: %X", vx, imm));
+                    "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -453,9 +453,9 @@ public class ExecutorTest {
                         (imm & 0xFF) << 1;
 
                     assertEquals((byte) (expected), ctx.vm().getRegister(vx),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                     assertEquals(ctx.vm().hasCarry(), ((expected & 0x100) == 0x100),
-                        String.format("vx: %X, imm: %X", vx, imm));
+                        "vx: %X, imm: %X".formatted(vx, imm));
                 }
             }
         }
@@ -476,13 +476,13 @@ public class ExecutorTest {
                 ctx.vm().setPC(pc);
                 ctx.vm().setRegister(vy, magic);
                 ctx.executor().execute(new Op9XY0(vx, vy));
-                assertEquals(pc, ctx.vm().getPC(), String.format("vx: %X, vy: %X", vx, vy));
+                assertEquals(pc, ctx.vm().getPC(), "vx: %X, vy: %X".formatted(vx, vy));
 
                 if (vx != vy) {
                     ctx.vm().setPC(pc);
                     ctx.vm().setRegister(vy, notMagic);
                     ctx.executor().execute(new Op9XY0(vx, vy));
-                    assertEquals(pc + 2, ctx.vm().getPC(), String.format("vx: %X, vy: %X", vx, vy));
+                    assertEquals(pc + 2, ctx.vm().getPC(), "vx: %X, vy: %X".formatted(vx, vy));
                 }
             }
         }
@@ -497,7 +497,7 @@ public class ExecutorTest {
         for (short address = 0; address <= 0xFFF; address++) {
             ctx.executor().execute(new OpANNN(address));
 
-            assertEquals(address, ctx.vm().getI(), String.format("address: %X", address));
+            assertEquals(address, ctx.vm().getI(), "address: %X".formatted(address));
         }
 
         verifyNoInteractions(ctx.hal());
@@ -514,11 +514,11 @@ public class ExecutorTest {
                     short finalAddress = address;
                     assertThrows(IllegalArgumentException.class,
                         () -> ctx.executor().execute(new OpBNNN(finalAddress)),
-                        String.format("imm: %X, address: %X", imm, address));
+                        "imm: %X, address: %X".formatted(imm, address));
                 } else {
                     ctx.executor().execute(new OpBNNN(address));
                     assertEquals(address + imm, ctx.vm().getPC(),
-                        String.format("imm: %X, address: %X", imm, address));
+                        "imm: %X, address: %X".formatted(imm, address));
                 }
             }
         }
@@ -540,7 +540,7 @@ public class ExecutorTest {
 
             verify(ctx.hal()).getRand();
             assertTrue(ctx.vm().getRegister(5) <= imm,
-                String.format("vx: %X, imm: %X", ctx.vm().getRegister(5), imm));
+                "vx: %X, imm: %X".formatted(ctx.vm().getRegister(5), imm));
 
             Mockito.reset(ctx.hal());
         }
@@ -596,7 +596,7 @@ public class ExecutorTest {
                                 vx == vy ? (byte) (coordY + 7 - dx) : (byte) (coordX + 7 - dx);
 
                             String message =
-                                String.format("vx: %d vy: %d dy: %d dx: %d", vx, vy, dy, dx);
+                                "vx: %d vy: %d dy: %d dx: %d".formatted(vx, vy, dy, dx);
 
                             assertEquals(col, xs.get(i), message);
                             assertEquals(row, ys.get(i), message);
@@ -621,7 +621,7 @@ public class ExecutorTest {
             ctx.vm().setPC(pc);
 
             ctx.executor().execute(new OpEX9E(vx));
-            assertEquals(pc, ctx.vm().getPC(), String.format("vx: %X", vx));
+            assertEquals(pc, ctx.vm().getPC(), "vx: %X".formatted(vx));
 
             for (byte key = 0; key <= 0xF; key++) {
                 ctx.vm().setPC(pc);
@@ -629,7 +629,7 @@ public class ExecutorTest {
 
                 ctx.executor().execute(new OpEX9E(vx));
                 assertEquals(key == magic ? pc + 2 : pc, ctx.vm().getPC(),
-                    String.format("vx: %X key :%X", vx, key));
+                    "vx: %X key :%X".formatted(vx, key));
             }
         }
 
@@ -646,7 +646,7 @@ public class ExecutorTest {
             ctx.vm().setPC(pc);
 
             ctx.executor().execute(new OpEXA1(vx));
-            assertEquals(pc + 2, ctx.vm().getPC(), String.format("vx: %X", vx));
+            assertEquals(pc + 2, ctx.vm().getPC(), "vx: %X".formatted(vx));
 
             for (byte key = 0; key <= 0xF; key++) {
                 ctx.vm().setPC(pc);
@@ -654,7 +654,7 @@ public class ExecutorTest {
 
                 ctx.executor().execute(new OpEXA1(vx));
                 assertEquals(key != magic ? pc + 2 : pc, ctx.vm().getPC(),
-                    String.format("vx: %X key :%X", vx, key));
+                    "vx: %X key :%X".formatted(vx, key));
             }
         }
 
@@ -670,7 +670,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX07(vx));
 
                 assertEquals(imm, ctx.vm().getRegister(vx),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -688,16 +688,16 @@ public class ExecutorTest {
 
             ctx.executor().execute(new OpFX0A(vx));
 
-            assertEquals(pc - 2, ctx.vm().getPC(), String.format("vx: %X", vx));
+            assertEquals(pc - 2, ctx.vm().getPC(), "vx: %X".formatted(vx));
 
             for (byte key = 0; key <= 0xF; key++) {
                 ctx.vm().setPC(pc);
                 when(ctx.hal().getKey()).thenReturn(Optional.of(key));
 
                 ctx.executor().execute(new OpFX0A(vx));
-                assertEquals(pc, ctx.vm().getPC(), String.format("vx: %X, key: %X", vx, key));
+                assertEquals(pc, ctx.vm().getPC(), "vx: %X, key: %X".formatted(vx, key));
                 assertEquals(key, ctx.vm().getRegister(vx),
-                    String.format("vx: %X, key: %X", vx, key));
+                    "vx: %X, key: %X".formatted(vx, key));
             }
         }
 
@@ -713,7 +713,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX15(vx));
 
                 assertEquals(ctx.vm().getDelayTimer(), (byte) imm,
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -730,7 +730,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX18(vx));
 
                 assertEquals(ctx.vm().hasSound(), imm != 0,
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -748,7 +748,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX1E(vx));
 
                 assertEquals((short) (I + (0xFF & imm)), ctx.vm().getI(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -769,7 +769,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX29(vx));
 
                 assertEquals(CharacterSprites.getAddressLocator().getCharacterAddress(imm),
-                    ctx.vm().getI(), String.format("vx: %X, imm: %X", vx, imm));
+                    ctx.vm().getI(), "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -785,9 +785,9 @@ public class ExecutorTest {
                 ctx.executor().execute(new Op6XNN(vx, (byte) imm));
                 ctx.executor().execute(new OpFX33(vx));
 
-                String num = String.format("%03d", Byte.toUnsignedInt((byte) imm));
+                String num = "%03d".formatted(Byte.toUnsignedInt((byte) imm));
 
-                String message = String.format("vx: %X, imm: %X", vx, (byte) imm);
+                String message = "vx: %X, imm: %X".formatted(vx, (byte) imm);
                 assertEquals(num.charAt(0) - '0', ctx.vm().getByte(I), message);
                 assertEquals(num.charAt(1) - '0', ctx.vm().getByte(I + 1), message);
                 assertEquals(num.charAt(2) - '0', ctx.vm().getByte(I + 2), message);
@@ -812,11 +812,11 @@ public class ExecutorTest {
 
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xC0 | x * 2 + 1), ctx.vm().getByte(I + x),
-                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                        "vx: %X, imm: %X, x: %X".formatted(vx, (byte) imm, x));
                 }
 
                 assertEquals(loadDumpIncreasesI ? I + vx + 1 : I, ctx.vm().getI(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
 
             }
             ctx.vm().setRegister(vx, (byte) (0xC0 | (vx * 2 + 1)));
@@ -846,18 +846,18 @@ public class ExecutorTest {
                 ctx.executor().execute(new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), ctx.vm().getRegister(x),
-                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                        "vx: %X, imm: %X, x: %X".formatted(vx, (byte) imm, x));
                 }
                 assertEquals(loadDumpIncreasesI ? I + vx + 1 : I, ctx.vm().getI(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
 
                 ctx.executor().execute(new OpFX65(vx));
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : 0xB0 | x * 2 + 1), ctx.vm().getRegister(x),
-                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                        "vx: %X, imm: %X, x: %X".formatted(vx, (byte) imm, x));
                 }
                 assertEquals(loadDumpIncreasesI ? I + 2 * (vx + 1) : I, ctx.vm().getI(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
             ctx.vm().setRegister(vx, (byte) (0xB0 | (vx * 2 + 1)));
         }

@@ -28,6 +28,6 @@ public abstract class OpPXYQ extends Opcode {
     }
 
     @Override public String encode() {
-        return String.format("%1X%1X%1X%1X", p, vx(), vy(), q);
+        return "%1X%1X%1X%1X".formatted(p, vx(), vy(), q);
     }
 }

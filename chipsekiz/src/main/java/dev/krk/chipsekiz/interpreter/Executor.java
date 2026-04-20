@@ -79,9 +79,9 @@ public class Executor implements IExecutor {
 
     @Override public void execute(Opcode opcode) {
         switch (opcode) {
-            case Op00E0 o -> hal.clearScreen();
-            case Op00EE o -> vm.setPC(vm.pop());
-            case Op0NNN o -> {}
+            case Op00E0 _ -> hal.clearScreen();
+            case Op00EE _ -> vm.setPC(vm.pop());
+            case Op0NNN _ -> {}
             case Op1NNN o -> vm.setPC(o.address());
             case Op2NNN o -> {
                 vm.push(vm.getPC());

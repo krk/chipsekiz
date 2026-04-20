@@ -177,7 +177,7 @@ public class SuperChipExecutorTest extends ExecutorTest {
                     byte row = (byte) (coordY + 0);
                     byte col = vx == vy ? (byte) (coordY + 15 - dx) : (byte) (coordX + 15 - dx);
 
-                    String message = String.format("vx: %d vy: %d dy: %d dx: %d", vx, vy, 0, dx);
+                    String message = "vx: %d vy: %d dy: %d dx: %d".formatted(vx, vy, 0, dx);
 
                     assertEquals(col, xs.get(i), message);
                     assertEquals(row, ys.get(i), message);
@@ -199,7 +199,7 @@ public class SuperChipExecutorTest extends ExecutorTest {
                 ctx.executor().execute(new OpFX1E(vx));
 
                 assertEquals((short) (0xFFF & (I + (0xFF & imm))), ctx.vm().getI(),
-                    String.format("vx: %X, imm: %X", vx, (byte) imm));
+                    "vx: %X, imm: %X".formatted(vx, (byte) imm));
             }
         }
 
@@ -221,7 +221,7 @@ public class SuperChipExecutorTest extends ExecutorTest {
 
                 assertEquals(
                     SuperChipCharacterSprites.getLargeAddressLocator().getCharacterAddress(imm),
-                    ctx.vm().getI(), String.format("vx: %X, imm: %X", vx, imm));
+                    ctx.vm().getI(), "vx: %X, imm: %X".formatted(vx, imm));
             }
         }
 
@@ -250,7 +250,7 @@ public class SuperChipExecutorTest extends ExecutorTest {
                 for (byte x = 0; x <= vx; x++) {
                     assertEquals((byte) (x == vx ? imm : (byte) (imm + 99 + x)),
                         ctx.vm().getRegister(x),
-                        String.format("vx: %X, imm: %X, x: %X", vx, (byte) imm, x));
+                        "vx: %X, imm: %X, x: %X".formatted(vx, (byte) imm, x));
                 }
             }
             ctx.vm().setRegister(vx, (byte) (0xB0 | (vx * 2 + 1)));

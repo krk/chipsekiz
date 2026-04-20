@@ -10,6 +10,6 @@ public class Op4XNN extends OpPXNN {
     }
 
     @Override public String toString() {
-        return String.format("SNE V%X, 0x%02X", vx(), imm());
+        return "SNE V%X, 0x%02X".formatted(vx(), imm());
     }
 }

@@ -40,19 +40,19 @@ public class SuperChipExecutor extends Executor implements IExecutor {
     @Override public void setVM(IVirtualMachine vm) {
         super.setVM(vm);
 
-        if (vm instanceof ISuperChipVirtualMachine) {
-            this.vm = (ISuperChipVirtualMachine) vm;
+        if (vm instanceof ISuperChipVirtualMachine svm) {
+            this.vm = svm;
         }
     }
 
     @Override public void execute(Opcode opcode) {
         switch (opcode) {
             case Op00CN o -> hal.scrollDown(o.imm());
-            case Op00FB o -> hal.scrollRight();
-            case Op00FC o -> hal.scrollLeft();
-            case Op00FD o -> hal.exit();
-            case Op00FE o -> hal.setResolution(Resolution.Low);
-            case Op00FF o -> hal.setResolution(Resolution.High);
+            case Op00FB _ -> hal.scrollRight();
+            case Op00FC _ -> hal.scrollLeft();
+            case Op00FD _ -> hal.exit();
+            case Op00FE _ -> hal.setResolution(Resolution.Low);
+            case Op00FF _ -> hal.setResolution(Resolution.High);
             case OpDXY0 o -> {
                 boolean flipped = false;
                 int I = vm.getI();

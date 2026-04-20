@@ -9,6 +9,6 @@ public class OpEXA1 extends OpPXQR {
     }
 
     @Override public String toString() {
-        return String.format("SKNP V%X", vx());
+        return "SKNP V%X".formatted(vx());
     }
 }

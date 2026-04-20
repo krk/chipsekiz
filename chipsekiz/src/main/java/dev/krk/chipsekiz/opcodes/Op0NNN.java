@@ -11,6 +11,6 @@ public class Op0NNN extends OpPNNN {
     }
 
     @Override public String toString() {
-        return String.format("SYS 0x%03X = nop", address());
+        return "SYS 0x%03X = nop".formatted(address());
     }
 }

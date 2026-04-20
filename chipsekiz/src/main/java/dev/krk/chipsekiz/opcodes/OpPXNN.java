@@ -24,7 +24,7 @@ public abstract class OpPXNN extends Opcode {
     }
 
     @Override public String encode() {
-        return String.format("%1X%1X%02X", p, vx(), imm());
+        return "%1X%1X%02X".formatted(p, vx(), imm());
     }
 }
 

@@ -10,6 +10,6 @@ public class OpFX65 extends OpPXQR {
     }
 
     @Override public String toString() {
-        return String.format("LD V%X, [I]", vx());
+        return "LD V%X, [I]".formatted(vx());
     }
 }

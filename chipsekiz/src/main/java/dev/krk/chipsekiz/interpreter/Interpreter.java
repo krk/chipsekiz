@@ -114,7 +114,7 @@ public class Interpreter implements IInterpreter {
         Word od = decode(instruction);
         if (!(od instanceof Word.Op)) {
             throw new IllegalStateException(
-                String.format("cannot execute data at %04X: %s", pc, od.encode()));
+                "cannot execute data at %04X: %s".formatted(pc, od.encode()));
         }
 
         execute(od.opcode());

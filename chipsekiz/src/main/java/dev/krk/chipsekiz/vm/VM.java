@@ -1,13 +1,14 @@
 package dev.krk.chipsekiz.vm;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 
 public class VM implements IVirtualMachine {
     private final int origin;
     private final byte[] memory;
     private final byte[] registers;
-    private final Stack<Integer> stack;
+    private final Deque<Integer> stack;
     private static final int StackLimit = 16;
     private final IVMDebugger debugger;
     private short regI;
@@ -32,7 +33,7 @@ public class VM implements IVirtualMachine {
         this.origin = origin;
         this.memory = memory;
         this.registers = new byte[16];
-        this.stack = new Stack<>();
+        this.stack = new ArrayDeque<>();
         setPC(origin);
     }
 

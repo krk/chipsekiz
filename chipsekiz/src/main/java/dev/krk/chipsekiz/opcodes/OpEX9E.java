@@ -9,7 +9,7 @@ public class OpEX9E extends OpPXQR {
     }
 
     @Override public String toString() {
-        return String.format("SKP V%X", vx());
+        return "SKP V%X".formatted(vx());
     }
 }
 

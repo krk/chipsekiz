@@ -9,6 +9,6 @@ public class OpANNN extends OpPNNN {
     }
 
     @Override public String toString() {
-        return String.format("LD I, 0x%03X", address());
+        return "LD I, 0x%03X".formatted(address());
     }
 }

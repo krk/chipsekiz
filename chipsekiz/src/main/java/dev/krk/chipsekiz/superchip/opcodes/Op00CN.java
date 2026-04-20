@@ -18,10 +18,10 @@ public class Op00CN extends Opcode {
     }
 
     @Override public String encode() {
-        return String.format("00C%01X", imm());
+        return "00C%01X".formatted(imm());
     }
 
     @Override public String toString() {
-        return String.format("SCD 0x%01X", imm());
+        return "SCD 0x%01X".formatted(imm());
     }
 }

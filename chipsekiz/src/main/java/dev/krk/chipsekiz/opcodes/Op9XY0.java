@@ -9,6 +9,6 @@ public class Op9XY0 extends OpPXYQ {
     }
 
     @Override public String toString() {
-        return String.format("SNE V%X, V%X", vx(), vy());
+        return "SNE V%X, V%X".formatted(vx(), vy());
     }
 }

@@ -9,6 +9,6 @@ public class OpFX18 extends OpPXQR {
     }
 
     @Override public String toString() {
-        return String.format("LD ST, V%X", vx());
+        return "LD ST, V%X".formatted(vx());
     }
 }

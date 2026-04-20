@@ -355,8 +355,8 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(opcode.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertOpcodeValid(Word od, Class type, int address, String s) {
@@ -372,8 +372,8 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(opcode.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertOpcodeValidVx(Word od, Class type, int vx, String s) {
@@ -390,8 +390,8 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(opcode.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertOpcodeValid(Word od, Class type, int vx, int address,
@@ -410,8 +410,8 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(opcode.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertOpcodeValid(Word od, Class type, int vx, int vy,
@@ -430,15 +430,15 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(opcode.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertIsData(Word od, String s) {
         assertInstanceOf(Word.Data.class, od);
 
         assertEquals(s, od.encode());
-        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
+        assertEquals(s, "%04X".formatted(od.getValue() & 0xFFFF));
     }
 
     protected static void assertIsOpcode(Word od) {

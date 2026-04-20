@@ -25,10 +25,10 @@ public class OpDXYN extends Opcode {
     }
 
     @Override public String encode() {
-        return String.format("D%1X%1X%1X", vx(), vy(), imm());
+        return "D%1X%1X%1X".formatted(vx(), vy(), imm());
     }
 
     @Override public String toString() {
-        return String.format("DRW V%X, V%X, %d", vx(), vy(), imm());
+        return "DRW V%X, V%X, %d".formatted(vx(), vy(), imm());
     }
 }

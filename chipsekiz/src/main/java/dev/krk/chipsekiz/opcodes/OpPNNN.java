@@ -20,6 +20,6 @@ public abstract class OpPNNN extends Opcode {
     }
 
     @Override public String encode() {
-        return String.format("%1X%03X", p, address());
+        return "%1X%03X".formatted(p, address());
     }
 }
