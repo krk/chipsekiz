@@ -1,0 +1,31 @@
+name: Nightly Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 25
+          cache: maven
+      - run: mvn -B clean package
+      - name: Rename artifact
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          cp emulator-awt/target/emulator-awt-*-jar-with-dependencies.jar \
+            chipsekiz-emulator-${VERSION}-nightly.jar
+      - name: Update nightly release
+        run: |
+          gh release delete nightly --yes || true
+          gh release create nightly chipsekiz-emulator-*-nightly.jar \
+            --title "Nightly" --prerelease --notes "Built from ${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
