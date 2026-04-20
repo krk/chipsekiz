@@ -1,12 +1,10 @@
 package dev.krk.chipsekiz;
 
-import com.google.common.collect.ImmutableList;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 public class Parser {
     private final IDecoder decoder;
@@ -15,12 +13,12 @@ public class Parser {
         this.decoder = decoder;
     }
 
-    public List<OpcodeOrData> parse(byte[] program) {
+    public List<Word> parse(byte[] program) {
         // All opcodes have the same length, 16 bits.
-        checkNotNull(program, "program");
+        Objects.requireNonNull(program, "program");
 
         boolean padEnd = program.length % 2 != 0;
-        ArrayList<OpcodeOrData> opcodes = new ArrayList<>();
+        ArrayList<Word> opcodes = new ArrayList<>();
         for (int i = 0; i < program.length; i += 2) {
             int b0 = (program[i] << 8) & 0xFFFF;
             int b1 = padEnd && (i + 1 == program.length) ? 0 : program[i + 1] & 0xFF;
@@ -28,6 +26,6 @@ public class Parser {
 
             opcodes.add(decoder.decode(value));
         }
-        return ImmutableList.copyOf(opcodes);
+        return List.copyOf(opcodes);
     }
 }

@@ -4,7 +4,7 @@ package dev.krk.chipsekiz.superchip.decoder;
 import dev.krk.chipsekiz.Decoder;
 import dev.krk.chipsekiz.IDecoder;
 import dev.krk.chipsekiz.opcodes.Opcode;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 import dev.krk.chipsekiz.superchip.opcodes.Op00CN;
 import dev.krk.chipsekiz.superchip.opcodes.Op00FB;
 import dev.krk.chipsekiz.superchip.opcodes.Op00FC;
@@ -19,14 +19,14 @@ import dev.krk.chipsekiz.superchip.opcodes.OpFX85;
 import java.util.HashMap;
 
 public class SuperChipDecoder extends Decoder implements IDecoder {
-    private final HashMap<Short, OpcodeOrData> cache;
+    private final HashMap<Short, Word> cache;
 
     public SuperChipDecoder() {
         cache = new HashMap<>();
     }
 
-    @Override public OpcodeOrData decode(short value) {
-        OpcodeOrData cached = cache.get(value);
+    @Override public Word decode(short value) {
+        Word cached = cache.get(value);
         if (cached != null) {
             return cached;
         }
@@ -58,8 +58,8 @@ public class SuperChipDecoder extends Decoder implements IDecoder {
             default -> null;
         };
 
-        OpcodeOrData opcodeOrData =
-            opcode == null ? super.decode(value) : OpcodeOrData.ofOpcode(opcode);
+        Word opcodeOrData =
+            opcode == null ? super.decode(value) : Word.op(opcode);
         cache.put(value, opcodeOrData);
         return opcodeOrData;
     }

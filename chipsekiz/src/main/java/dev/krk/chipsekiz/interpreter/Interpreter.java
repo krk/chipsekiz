@@ -5,12 +5,10 @@ import dev.krk.chipsekiz.loader.ILoader;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.opcodes.OpFX0A;
 import dev.krk.chipsekiz.opcodes.Opcode;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 import dev.krk.chipsekiz.tracer.ITracer;
 import dev.krk.chipsekiz.vm.IVirtualMachine;
 import dev.krk.chipsekiz.vm.IVirtualMachineFactory;
-
-import javax.annotation.Nullable;
 
 public class Interpreter implements IInterpreter {
     private IVirtualMachine vm;
@@ -18,8 +16,8 @@ public class Interpreter implements IInterpreter {
     private final IExecutor executor;
     private final ILoader loader;
     private final IHal hal;
-    @Nullable private ITracer tracer;
-    @Nullable private IDebugger debugger;
+    private ITracer tracer;
+    private IDebugger debugger;
     private final int memorySize;
     private final Layout layout;
     private final boolean timersSixtyHertz;
@@ -31,7 +29,7 @@ public class Interpreter implements IInterpreter {
     private IVirtualMachineFactory vmFactory;
 
     public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
-        IExecutor executor, IHal hal, @Nullable ITracer tracer, int origin, byte[] program,
+        IExecutor executor, IHal hal, ITracer tracer, int origin, byte[] program,
         int memorySize, Layout layout) {
         this(vmFactory, loader, decoder, executor, hal, tracer, null, memorySize, layout, false);
 
@@ -39,7 +37,7 @@ public class Interpreter implements IInterpreter {
     }
 
     public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
-        IExecutor executor, IHal hal, @Nullable ITracer tracer, @Nullable IDebugger debugger,
+        IExecutor executor, IHal hal, ITracer tracer, IDebugger debugger,
         int origin, byte[] program, int memorySize, Layout layout, boolean timersSixtyHertz) {
         this(vmFactory, loader, decoder, executor, hal, tracer, debugger, memorySize, layout,
             timersSixtyHertz);
@@ -48,7 +46,7 @@ public class Interpreter implements IInterpreter {
     }
 
     public Interpreter(IVirtualMachineFactory vmFactory, ILoader loader, IDecoder decoder,
-        IExecutor executor, IHal hal, @Nullable ITracer tracer, @Nullable IDebugger debugger,
+        IExecutor executor, IHal hal, ITracer tracer, IDebugger debugger,
         int memorySize, Layout layout, boolean timersSixtyHertz) {
         this.loader = loader;
         this.decoder = decoder;
@@ -71,7 +69,7 @@ public class Interpreter implements IInterpreter {
         return instruction;
     }
 
-    private OpcodeOrData decode(short instruction) {
+    private Word decode(short instruction) {
         return decoder.decode(instruction);
     }
 
@@ -113,8 +111,8 @@ public class Interpreter implements IInterpreter {
         int pc = vm.getPC();
         short instruction = fetch();
 
-        OpcodeOrData od = decode(instruction);
-        if (od.getKind() != OpcodeOrData.Kind.OPCODE) {
+        Word od = decode(instruction);
+        if (!(od instanceof Word.Op)) {
             throw new IllegalStateException(
                 String.format("cannot execute data at %04X: %s", pc, od.encode()));
         }

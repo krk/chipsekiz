@@ -2,9 +2,6 @@ package dev.krk.chipsekiz.vm;
 
 import java.util.Stack;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-
 
 public class VM implements IVirtualMachine {
     private final int origin;
@@ -28,8 +25,8 @@ public class VM implements IVirtualMachine {
     }
 
     public VM(int origin, byte[] memory, IVMDebugger debugger) {
-        checkArgument(memory.length > 0, "memory cannot be of zero length");
-        checkArgument(origin >= 0 && origin < memory.length, "origin must be inside the memory");
+        if (memory.length == 0) throw new IllegalArgumentException("memory cannot be of zero length");
+        if (origin < 0 || origin >= memory.length) throw new IllegalArgumentException("origin must be inside the memory");
 
         this.debugger = debugger;
         this.origin = origin;
@@ -44,7 +41,7 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public void setPC(int pc) {
-        checkArgument(pc >= 0 && pc <= getMemorySize() + 2, "PC out of bounds.");
+        if (pc < 0 || pc > getMemorySize() + 2) throw new IllegalArgumentException("PC out of bounds.");
 
         regPC = pc;
 
@@ -74,13 +71,13 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public byte getRegister(int i) {
-        checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
+        if (i < 0 || i > 0xF) throw new IllegalArgumentException("register index out of bounds.");
 
         return registers[i];
     }
 
     @Override public void setRegister(int i, byte value) {
-        checkArgument(i >= 0 && i <= 0xF, "register index out of bounds.");
+        if (i < 0 || i > 0xF) throw new IllegalArgumentException("register index out of bounds.");
 
         registers[i] = value;
     }
@@ -98,13 +95,13 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public void push(int value) {
-        checkState(stack.size() < StackLimit, "VM stack overflow: %s.", Integer.toHexString(value));
+        if (stack.size() >= StackLimit) throw new IllegalStateException("VM stack overflow: " + Integer.toHexString(value) + ".");
 
         stack.push(value);
     }
 
     @Override public int pop() {
-        checkState(stack.size() > 0, "VM stack underflow.");
+        if (stack.isEmpty()) throw new IllegalStateException("VM stack underflow.");
 
         return stack.pop();
     }
@@ -143,7 +140,7 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public void setByte(int address, byte value) {
-        checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
+        if (address < 0 || address >= memory.length) throw new IllegalArgumentException("address out of bounds.");
 
         memory[address] = value;
 
@@ -153,19 +150,19 @@ public class VM implements IVirtualMachine {
     }
 
     @Override public byte getByte(int address) {
-        checkArgument(address >= 0 && address < memory.length, "address out of bounds.");
+        if (address < 0 || address >= memory.length) throw new IllegalArgumentException("address out of bounds.");
 
         return memory[address];
     }
 
     public short getShort(int address) {
-        checkArgument(address >= 0 && address + 1 < memory.length, "address out of bounds.");
+        if (address < 0 || address + 1 >= memory.length) throw new IllegalArgumentException("address out of bounds.");
 
         return (short) (getByte(address) << 8 | (0xFF & getByte(address + 1)));
     }
 
     public int getInt(int address) {
-        checkArgument(address >= 0 && address + 3 < memory.length, "address out of bounds.");
+        if (address < 0 || address + 3 >= memory.length) throw new IllegalArgumentException("address out of bounds.");
 
         return (0xFF & getByte(address)) << 24 | (0xFF & getByte(address + 1)) << 16
             | (0xFF & getByte(address + 2)) << 8 | (0xFF & getByte(address + 3));

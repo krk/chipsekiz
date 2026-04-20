@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class EmulatorCanvas extends JPanel implements IScreenHal {
@@ -27,10 +26,9 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
         super();
         this.emptyColor = emptyColor;
         this.occupiedColor = occupiedColor;
-        checkArgument(emulatorWidth > 0, "emulatorWidth must be greater than zero.");
-        checkArgument(emulatorHeight > 0, "emulatorHeight must be greater than zero.");
-        checkArgument(!emptyColor.equals(occupiedColor),
-            "emptyColor color cannot be equal to occupiedColor color.");
+        if (emulatorWidth <= 0) throw new IllegalArgumentException("emulatorWidth must be greater than zero.");
+        if (emulatorHeight <= 0) throw new IllegalArgumentException("emulatorHeight must be greater than zero.");
+        if (emptyColor.equals(occupiedColor)) throw new IllegalArgumentException("emptyColor color cannot be equal to occupiedColor color.");
 
         this.scaleX = scaleX;
         this.scaleY = scaleY;
@@ -63,8 +61,8 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     }
 
     public void rescale(int scaleX, int scaleY) {
-        checkArgument(scaleX > 0, "scaleX must be greater than zero.");
-        checkArgument(scaleY > 0, "scaleY must be greater than zero.");
+        if (scaleX <= 0) throw new IllegalArgumentException("scaleX must be greater than zero.");
+        if (scaleY <= 0) throw new IllegalArgumentException("scaleY must be greater than zero.");
 
         FramebufferRenderer renderer =
             new FramebufferRenderer(emulatorWidth, emulatorHeight, scaleX, scaleY, emptyColor,
@@ -85,8 +83,8 @@ public class EmulatorCanvas extends JPanel implements IScreenHal {
     }
 
     public void resizeEmulator(int emulatorWidth, int emulatorHeight) {
-        checkArgument(emulatorWidth > 0, "emulatorWidth must be greater than zero.");
-        checkArgument(emulatorHeight > 0, "emulatorHeight must be greater than zero.");
+        if (emulatorWidth <= 0) throw new IllegalArgumentException("emulatorWidth must be greater than zero.");
+        if (emulatorHeight <= 0) throw new IllegalArgumentException("emulatorHeight must be greater than zero.");
 
         this.emulatorWidth = emulatorWidth;
         this.emulatorHeight = emulatorHeight;

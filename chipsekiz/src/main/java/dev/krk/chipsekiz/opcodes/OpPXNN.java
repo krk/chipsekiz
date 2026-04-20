@@ -1,16 +1,12 @@
 package dev.krk.chipsekiz.opcodes;
 
-import com.google.common.primitives.UnsignedBytes;
-
-import static com.google.common.base.Preconditions.checkArgument;
-
 public abstract class OpPXNN extends Opcode {
     private final byte p;
 
     public OpPXNN(int p, int vx, byte imm) {
-        super(vx, null, UnsignedBytes.toInt(imm));
-        checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
-        checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
+        super(vx, null, Byte.toUnsignedInt(imm));
+        if (p < 0 || p > 0xF) throw new IllegalArgumentException("p out of bounds");
+        if (vx < 0 || vx > 0xF) throw new IllegalArgumentException("register index out of bounds");
 
         this.p = (byte) p;
     }

@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class VMMemoryPanel extends JPanel implements MouseMotionListener {
@@ -28,12 +27,11 @@ public class VMMemoryPanel extends JPanel implements MouseMotionListener {
     VMMemoryPanel(IVirtualMachine vm, int bitWidth, int bitHeight, int scaleX, int scaleY,
         Color emptyColor, Color occupiedColor) {
         super();
-        checkArgument(bitWidth > 0, "bitWidth must be greater than zero.");
-        checkArgument(bitHeight > 0, "bitHeight must be greater than zero.");
-        checkArgument(scaleX > 0, "scaleX must be greater than zero.");
-        checkArgument(scaleY > 0, "scaleY must be greater than zero.");
-        checkArgument(!emptyColor.equals(occupiedColor),
-            "emptyColor color cannot be equal to occupiedColor color.");
+        if (bitWidth <= 0) throw new IllegalArgumentException("bitWidth must be greater than zero.");
+        if (bitHeight <= 0) throw new IllegalArgumentException("bitHeight must be greater than zero.");
+        if (scaleX <= 0) throw new IllegalArgumentException("scaleX must be greater than zero.");
+        if (scaleY <= 0) throw new IllegalArgumentException("scaleY must be greater than zero.");
+        if (emptyColor.equals(occupiedColor)) throw new IllegalArgumentException("emptyColor color cannot be equal to occupiedColor color.");
 
         this.vm = vm;
         this.bitWidth = bitWidth;

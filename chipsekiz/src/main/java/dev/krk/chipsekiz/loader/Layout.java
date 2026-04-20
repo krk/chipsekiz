@@ -1,17 +1,13 @@
 package dev.krk.chipsekiz.loader;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public class Layout {
-    private final ImmutableList<Section> sections;
+    private final List<Section> sections;
 
     public static Layout empty() {
         return new Layout(Collections.emptyList());
@@ -22,7 +18,7 @@ public class Layout {
     }
 
     public Layout(Collection<Section> sections) {
-        this.sections = ImmutableList.copyOf(sections);
+        this.sections = List.copyOf(sections);
     }
 
     private static class SectionSize {
@@ -41,11 +37,11 @@ public class Layout {
     }
 
     public boolean isValid(int origin, int programSize, int memorySize) {
-        checkArgument(memorySize > 0, "memory size must be greater than zero.");
-        checkArgument(programSize > 0, "program size must be greater than zero.");
-        checkArgument(origin >= 0, "program size must be positive.");
-        checkArgument(origin < memorySize, "origin must be inside the memory.");
-        checkArgument(origin + programSize <= memorySize, "program must fit in the memory.");
+        if (memorySize <= 0) throw new IllegalArgumentException("memory size must be greater than zero.");
+        if (programSize <= 0) throw new IllegalArgumentException("program size must be greater than zero.");
+        if (origin < 0) throw new IllegalArgumentException("program size must be positive.");
+        if (origin >= memorySize) throw new IllegalArgumentException("origin must be inside the memory.");
+        if (origin + programSize > memorySize) throw new IllegalArgumentException("program must fit in the memory.");
 
         // There must not be overlap between sections, including the code section.
         List<SectionSize> allSections =

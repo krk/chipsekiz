@@ -1,7 +1,6 @@
 package dev.krk.chipsekiz;
 
 
-import dev.krk.chipsekiz.opcodes.DataWord;
 import dev.krk.chipsekiz.opcodes.Op00E0;
 import dev.krk.chipsekiz.opcodes.Op00EE;
 import dev.krk.chipsekiz.opcodes.Op0NNN;
@@ -38,20 +37,20 @@ import dev.krk.chipsekiz.opcodes.OpFX33;
 import dev.krk.chipsekiz.opcodes.OpFX55;
 import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 
 import java.util.HashMap;
 import java.util.Optional;
 
 public class Decoder implements IDecoder {
-    private final HashMap<Short, OpcodeOrData> cache;
+    private final HashMap<Short, Word> cache;
 
     public Decoder() {
         cache = new HashMap<>();
     }
 
-    @Override public OpcodeOrData decode(short value) {
-        OpcodeOrData cached = cache.get(value);
+    @Override public Word decode(short value) {
+        Word cached = cache.get(value);
         if (cached != null) {
             return cached;
         }
@@ -118,9 +117,9 @@ public class Decoder implements IDecoder {
             default -> Optional.empty();
         };
 
-        OpcodeOrData opcodeOrData = opcode.isEmpty() ?
-            OpcodeOrData.ofData(new DataWord(value)) :
-            OpcodeOrData.ofOpcode(opcode.get());
+        Word opcodeOrData = opcode.isEmpty() ?
+            Word.data(value) :
+            Word.op(opcode.get());
         cache.put(value, opcodeOrData);
         return opcodeOrData;
     }

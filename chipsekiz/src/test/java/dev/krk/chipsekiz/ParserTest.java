@@ -1,14 +1,14 @@
 package dev.krk.chipsekiz;
 
 
-import com.google.common.base.Joiner;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,8 +42,8 @@ public class ParserTest {
         assertDoesNotThrow(() -> parser.parse(program));
     }
 
-    private void assertProgram(List<OpcodeOrData> program, String expected) {
+    private void assertProgram(List<Word> program, String expected) {
         assertEquals(expected,
-            Joiner.on("").join(program.stream().map(OpcodeOrData::encode).iterator()));
+            program.stream().map(Word::encode).collect(Collectors.joining()));
     }
 }

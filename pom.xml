@@ -19,11 +19,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
-        <junit-jupiter-version>5.6.2</junit-jupiter-version>
-        <auto-value.version>1.7.1</auto-value.version>
-        <auto-service.version>1.0-rc6</auto-service.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <junit-jupiter-version>5.8.2</junit-jupiter-version>
     </properties>
 
     <dependencies>
@@ -49,19 +46,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.auto.value</groupId>
-            <artifactId>auto-value-annotations</artifactId>
-            <version>${auto-value.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>3.3.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -84,10 +72,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.1</version>
-                    <configuration>
-                        <argLine>--enable-preview</argLine>
-                    </configuration>
+                    <version>3.5.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -116,36 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                        <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -Xep:ExtendsAutoValue:OFF -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber</arg>
-                    </compilerArgs>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.google.auto.value</groupId>
-                            <artifactId>auto-value</artifactId>
-                            <version>${auto-value.version}</version>
-                        </path>
-                        <path>
-                            <groupId>com.google.auto.service</groupId>
-                            <artifactId>auto-service</artifactId>
-                            <version>${auto-service.version}</version>
-                        </path>
-                        <path>
-                            <groupId>com.google.errorprone</groupId>
-                            <artifactId>error_prone_core</artifactId>
-                            <version>2.3.4</version>
-                        </path>
-                        <path>
-                            <groupId>com.uber.nullaway</groupId>
-                            <artifactId>nullaway</artifactId>
-                            <version>0.3.0</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
+                <version>3.14.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>

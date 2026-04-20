@@ -36,14 +36,13 @@ import dev.krk.chipsekiz.opcodes.OpFX33;
 import dev.krk.chipsekiz.opcodes.OpFX55;
 import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 import org.junit.jupiter.api.Test;
 
-import static com.google.common.base.Strings.padStart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DecoderTest {
@@ -344,7 +343,7 @@ public class DecoderTest {
         assertOpcodeValidVx(decoder.decode((short) 0xFF65), OpFX65.class, 0xF, "FF65");
     }
 
-    protected static void assertOpcodeValid(OpcodeOrData od, Class type, String s) {
+    protected static void assertOpcodeValid(Word od, Class type, String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
@@ -356,11 +355,11 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(opcode.getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertOpcodeValid(OpcodeOrData od, Class type, int address, String s) {
+    protected static void assertOpcodeValid(Word od, Class type, int address, String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
@@ -373,11 +372,11 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(opcode.getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertOpcodeValidVx(OpcodeOrData od, Class type, int vx, String s) {
+    protected static void assertOpcodeValidVx(Word od, Class type, int vx, String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
         assertTrue(type.isInstance(opcode));
@@ -391,11 +390,11 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(opcode.getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertOpcodeValid(OpcodeOrData od, Class type, int vx, int address,
+    protected static void assertOpcodeValid(Word od, Class type, int vx, int address,
         String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
@@ -411,11 +410,11 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(opcode.getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertOpcodeValid(OpcodeOrData od, Class type, int vx, int vy,
+    protected static void assertOpcodeValid(Word od, Class type, int vx, int vy,
         Integer address, String s) {
         assertIsOpcode(od);
         Opcode opcode = od.opcode();
@@ -431,24 +430,18 @@ public class DecoderTest {
 
         assertEquals(s, opcode.encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(opcode.getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",opcode.getValue() & 0xFFFF));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertIsData(OpcodeOrData od, String s) {
-        assertSame(od.getKind(), OpcodeOrData.Kind.DATA);
+    protected static void assertIsData(Word od, String s) {
+        assertInstanceOf(Word.Data.class, od);
 
-        assertEquals(s, od.data().encode());
         assertEquals(s, od.encode());
-        assertEquals(s, padStart(shortToHex(od.data().getValue()).toUpperCase(), 4, '0'));
-        assertEquals(s, padStart(shortToHex(od.getValue()).toUpperCase(), 4, '0'));
+        assertEquals(s, String.format("%04X",od.getValue() & 0xFFFF));
     }
 
-    protected static void assertIsOpcode(OpcodeOrData od) {
-        assertSame(od.getKind(), OpcodeOrData.Kind.OPCODE);
-    }
-
-    protected static String shortToHex(short s) {
-        return String.format("%02X%02X", (byte) ((s & 0xFF00) >> 8), (byte) (s & 0xFF));
+    protected static void assertIsOpcode(Word od) {
+        assertInstanceOf(Word.Op.class, od);
     }
 }

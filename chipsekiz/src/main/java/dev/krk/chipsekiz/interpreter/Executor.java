@@ -36,7 +36,6 @@ import dev.krk.chipsekiz.opcodes.OpFX65;
 import dev.krk.chipsekiz.opcodes.Opcode;
 import dev.krk.chipsekiz.vm.IVirtualMachine;
 
-import javax.annotation.Nullable;
 
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class Executor implements IExecutor {
         this(null, hal, characterAddressLocator, false, false);
     }
 
-    public Executor(@Nullable IVirtualMachine vm, IHal hal,
+    public Executor(IVirtualMachine vm, IHal hal,
         ICharacterAddressLocator characterAddressLocator) {
         this(vm, hal, characterAddressLocator, false, false);
     }
@@ -62,7 +61,7 @@ public class Executor implements IExecutor {
      * @param loadDumpIncreasesI FX55 and FX65 register load-dump operations increase I.
      * https://en.wikipedia.org/wiki/CHIP-8#cite_note-increment-16
      */
-    public Executor(@Nullable IVirtualMachine vm, IHal hal,
+    public Executor(IVirtualMachine vm, IHal hal,
         ICharacterAddressLocator characterAddressLocator, boolean bitShiftsIgnoreVY,
         boolean loadDumpIncreasesI) {
         this.vm = vm;

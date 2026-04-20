@@ -13,11 +13,9 @@ import dev.krk.chipsekiz.tracer.ITracer;
 import dev.krk.chipsekiz.vm.IVirtualMachineFactory;
 import dev.krk.chipsekiz.vm.VM;
 
-import javax.annotation.Nullable;
-
 public class InterpreterFactory {
-    public static IInterpreter create(IHal hal, @Nullable ITracer tracer,
-        @Nullable IDebugger debugger) {
+    public static IInterpreter create(IHal hal, ITracer tracer,
+        IDebugger debugger) {
         IDecoder decoder = new Decoder();
         IExecutor executor =
             new Executor(null, hal, CharacterSprites.getAddressLocator(), false, true);
@@ -25,8 +23,8 @@ public class InterpreterFactory {
         return create(VM::new, decoder, hal, tracer, debugger, executor);
     }
 
-    public static IInterpreter createSuperChip(ISuperChipHal hal, @Nullable ITracer tracer,
-        @Nullable IDebugger debugger) {
+    public static IInterpreter createSuperChip(ISuperChipHal hal, ITracer tracer,
+        IDebugger debugger) {
         IDecoder decoder = new SuperChipDecoder();
         IExecutor executor =
             new SuperChipExecutor(null, hal, SuperChipCharacterSprites.getLargeAddressLocator());
@@ -35,7 +33,7 @@ public class InterpreterFactory {
     }
 
     private static IInterpreter create(IVirtualMachineFactory vmFactory, IDecoder decoder, IHal hal,
-        @Nullable ITracer tracer, @Nullable IDebugger debugger, IExecutor executor) {
+        ITracer tracer, IDebugger debugger, IExecutor executor) {
         Loader loader = new Loader();
 
         return new Interpreter(vmFactory, loader, decoder, executor, hal, tracer, debugger, 0x1000,

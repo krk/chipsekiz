@@ -1,6 +1,6 @@
 package dev.krk.chipsekiz.emulator;
 
-import com.google.common.io.Files;
+import java.nio.file.Files;
 import dev.krk.chipsekiz.superchip.interpreter.Resolution;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -298,7 +298,7 @@ public class EmulatorWindow extends JFrame implements KeyListener {
         fc.setDialogTitle("Select CHIP-8 ROM");
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
         if (JFileChooser.APPROVE_OPTION == fc.showOpenDialog(this)) {
-            byte[] program = Files.toByteArray(fc.getSelectedFile());
+            byte[] program = Files.readAllBytes(fc.getSelectedFile().toPath());
             controller.load(0x200, program);
         }
     }

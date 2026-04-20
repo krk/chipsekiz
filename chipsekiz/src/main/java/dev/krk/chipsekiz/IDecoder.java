@@ -1,7 +1,7 @@
 package dev.krk.chipsekiz;
 
-import dev.krk.chipsekiz.opcodes.OpcodeOrData;
+import dev.krk.chipsekiz.opcodes.Word;
 
 public interface IDecoder {
-    OpcodeOrData decode(short value);
+    Word decode(short value);
 }

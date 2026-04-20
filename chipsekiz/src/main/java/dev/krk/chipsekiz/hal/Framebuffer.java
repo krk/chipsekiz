@@ -1,15 +1,13 @@
 package dev.krk.chipsekiz.hal;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public class Framebuffer {
     private final boolean[][] buffer;
     private final int width;
     private final int height;
 
     public Framebuffer(int width, int height) {
-        checkArgument(width > 0 && width <= 0xFF, "width out of bounds.");
-        checkArgument(height > 0 && height <= 0xFF, "height out of bound.");
+        if (width <= 0 || width > 0xFF) throw new IllegalArgumentException("width out of bounds.");
+        if (height <= 0 || height > 0xFF) throw new IllegalArgumentException("height out of bound.");
 
         this.width = width;
         this.height = height;
@@ -49,7 +47,7 @@ public class Framebuffer {
     }
 
     public void scroll(Direction direction, int pixels) {
-        checkArgument(pixels >= 0, "pixels out of bounds.");
+        if (pixels < 0) throw new IllegalArgumentException("pixels out of bounds.");
 
         if (direction == Direction.Left || direction == Direction.Up) {
             for (int i = 0; i < height; i++) {

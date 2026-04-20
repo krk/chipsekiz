@@ -3,15 +3,10 @@ package dev.krk.chipsekiz.superchip.opcodes;
 
 import dev.krk.chipsekiz.opcodes.Opcode;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-/**
- * Scroll the display down by 0 to 15 pixels.
- */
 public class Op00CN extends Opcode {
     public Op00CN(byte address) {
         super(address & 0xF);
-        checkArgument(address >= 0 && address <= 0xF, "immediate out of bounds");
+        if (address < 0 || address > 0xF) throw new IllegalArgumentException("immediate out of bounds");
     }
 
     public byte imm() {

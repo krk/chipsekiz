@@ -1,7 +1,5 @@
 package dev.krk.chipsekiz.opcodes;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public abstract class OpPXQR extends Opcode {
     private final byte p;
     private final byte q;
@@ -9,10 +7,10 @@ public abstract class OpPXQR extends Opcode {
 
     public OpPXQR(int p, int vx, int q, int r) {
         super(vx, null, null);
-        checkArgument(p >= 0 && p <= 0xF, "p out of bounds");
-        checkArgument(vx >= 0 && vx <= 0xF, "register index out of bounds");
-        checkArgument(q >= 0 && q <= 0xF, "q out of bounds");
-        checkArgument(r >= 0 && r <= 0xF, "r out of bounds");
+        if (p < 0 || p > 0xF) throw new IllegalArgumentException("p out of bounds");
+        if (vx < 0 || vx > 0xF) throw new IllegalArgumentException("register index out of bounds");
+        if (q < 0 || q > 0xF) throw new IllegalArgumentException("q out of bounds");
+        if (r < 0 || r > 0xF) throw new IllegalArgumentException("r out of bounds");
 
         this.p = (byte) p;
         this.q = (byte) q;

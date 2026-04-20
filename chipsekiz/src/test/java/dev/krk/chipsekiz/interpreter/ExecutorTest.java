@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.google.common.base.Strings.padStart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -786,7 +785,7 @@ public class ExecutorTest {
                 ctx.executor().execute(new Op6XNN(vx, (byte) imm));
                 ctx.executor().execute(new OpFX33(vx));
 
-                String num = padStart(Integer.toString(Byte.toUnsignedInt((byte) imm)), 3, '0');
+                String num = String.format("%03d", Byte.toUnsignedInt((byte) imm));
 
                 String message = String.format("vx: %X, imm: %X", vx, (byte) imm);
                 assertEquals(num.charAt(0) - '0', ctx.vm().getByte(I), message);

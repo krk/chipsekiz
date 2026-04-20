@@ -1,11 +1,12 @@
 package dev.krk.chipsekiz.superchip.sprites;
 
-import com.google.common.collect.ImmutableList;
 import dev.krk.chipsekiz.hal.ICharacterAddressLocator;
 import dev.krk.chipsekiz.loader.Layout;
 import dev.krk.chipsekiz.loader.Section;
 import dev.krk.chipsekiz.sprites.CharacterSprites;
 import dev.krk.chipsekiz.superchip.hal.ISuperChipCharacterAddressLocator;
+
+import java.util.List;
 
 public class SuperChipCharacterSprites {
     private static final ISuperChipCharacterAddressLocator locator =
@@ -68,7 +69,7 @@ public class SuperChipCharacterSprites {
     }
 
     public static Layout DefaultLayout() {
-        return new Layout(ImmutableList.of(new Section(0, CharacterSprites.get()),
+        return new Layout(List.of(new Section(0, CharacterSprites.get()),
             new Section(CharacterSprites.length(), get())));
     }
 }

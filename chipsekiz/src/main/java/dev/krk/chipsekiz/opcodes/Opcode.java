@@ -1,9 +1,7 @@
 package dev.krk.chipsekiz.opcodes;
 
 
-import com.google.common.base.Objects;
-
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 
 public abstract class Opcode {
@@ -22,7 +20,7 @@ public abstract class Opcode {
 
     public Opcode(int address) { this(null, null, address); }
 
-    public Opcode(@Nullable Integer vx, @Nullable Integer vy, @Nullable Integer address) {
+    public Opcode(Integer vx, Integer vy, Integer address) {
         this.address = address;
         this.vx = vx;
         this.vy = vy;
@@ -53,12 +51,12 @@ public abstract class Opcode {
             return false;
         }
         Opcode opcode = (Opcode) o;
-        return Objects.equal(vx, opcode.vx) && Objects.equal(vy, opcode.vy) && Objects
-            .equal(address, opcode.address);
+        return Objects.equals(vx, opcode.vx) && Objects.equals(vy, opcode.vy) && Objects
+            .equals(address, opcode.address);
     }
 
     @Override public int hashCode() {
-        return Objects.hashCode(vx, vy, address);
+        return Objects.hash(vx, vy, address);
     }
 
     public OpcodeKind getKind() {
